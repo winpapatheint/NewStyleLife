@@ -2,7 +2,7 @@
     {{-- Header --}}
     @slot('header')
         @component('mail::header', ['url' => config('app.url')])
-            伊豆釣宿＆天城山荘
+            {{ config('app.name') }}
         @endcomponent
     @endslot
 

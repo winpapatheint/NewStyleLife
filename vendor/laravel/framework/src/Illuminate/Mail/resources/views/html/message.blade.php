@@ -6,18 +6,15 @@
 @endcomponent
 @endslot
 
-<h1 style="text-align: center">Welcome to Asian Food Museum!</h1>
-<p>Thank you for registering  in Asian Food Museum!</p>
-<p>Please click the button below to verify your account.</p>
 {{-- Body --}}
 {{ $slot }}
+
 {{-- Subcopy --}}
 @isset($subcopy)
 @slot('subcopy')
 @component('mail::subcopy')
 {{ $subcopy }}
 @endcomponent
-Feel free to adjust the design elements and text to better fit your website's branding and style.
 @endslot
 @endisset
 
