@@ -12,7 +12,7 @@
     <meta name="author" content="pixelstrap">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{ asset('frontend/assets/logos/logos_foods.png') }}" type="image/x-icon">
-    <title>Asian food museum</title>
+    <title>New Style Life</title>
 
     <!-- Google font -->
 

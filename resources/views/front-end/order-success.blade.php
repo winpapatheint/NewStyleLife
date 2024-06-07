@@ -361,7 +361,7 @@
                                     align="center" style="margin: 8px auto 20px;">
                                     <tr>
                                         <td style="font-size: 19px; font-weight: 700;">Shop For <span
-                                                class="theme-color">Asian Food Museum</span></td>
+                                                class="theme-color">New Style Life</span></td>
                                     </tr>
                                 </table>
                                 <table border="0" cellpadding="0" cellspacing="0" class="footer-social-icon text-center"

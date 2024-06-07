@@ -222,7 +222,7 @@
                                     <tr>
                                         <td>
                                             <h4 style="font-size: 19px; font-weight: 700; margin: 0;">Shop For <span
-                                                    class="theme-color">Asian Food Museum</span></h4>
+                                                    class="theme-color">New Style Life</span></h4>
                                         </td>
                                     </tr>
                                 </table>

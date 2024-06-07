@@ -70,7 +70,7 @@
                         </svg>
                         <div class="service-detail">
                             <h3>Free Shipping</h3>
-                            <h6 class="text-content">Free Shipping world wide</h6>
+                            <h6 class="text-content">Free Shipping For Order Over ¥5000</h6>
                         </div>
                     </div>
                 </div>
@@ -347,7 +347,7 @@
                                                     @endif
                                                 @elseif ($coupon->product->first())
                                                     @if ($coupon->product->first()->coupon_status == 1)
-                                                    <h4 class="lh-base fw-bold offer-text">Publisher : Asian Food Museum</h4>
+                                                    <h4 class="lh-base fw-bold offer-text">Publisher : New Style Life</h4>
                                                     @endif
                                                 @endif
                                                 <h6 class="coupon-code">Use Code : {{ $coupon->coupon_code}}</h6>
@@ -705,9 +705,9 @@
                                         <img src="{{ asset('frontend/assets/images/furniture/arrow.svg') }}" alt="">
                                     </h4>
                                     <h2 class="mt-sm-3 mt-1 mb-2 text-content">Home Decor <span
-                                            class="theme-color fw-bold">LookBook</span> 2022</h2>
-                                    <p class="text-content">In publishing and graphic design, Lorem ipsum is a
-                                        placeholder text commonly used to demonstrate.</p>
+                                            class="theme-color fw-bold">The Summer Bargain Sale of</span> 2024!</h2>
+                                    <p class="text-content">The Summer Bargain Sale offers unbeatable deals on a wide range of products, 
+                                        making it the perfect opportunity to save money while fulfilling your shopping needs.</p>
                                     <button class="btn theme-bg-color mt-sm-4 mt-2 btn-md text-white fw-bold"
                                         onclick="location.href = '{{ route('show-discount-product', ['topic' => 'value-of-the-day']) }}';">
                                         Shop Now

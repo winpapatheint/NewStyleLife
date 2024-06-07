@@ -354,7 +354,7 @@
                                     @if ($couponSeller)
                                         <h4 class="lh-base fw-bold offer-text">Publisher : {{ $couponSeller->shop_name }}</h4>
                                     @elseif ($couponProduct)
-                                        <h4 class="lh-base fw-bold offer-text">Publisher : Asian Food Museum</h4>
+                                        <h4 class="lh-base fw-bold offer-text">Publisher : New Style Life</h4>
                                     @endif
                                     <h6 class="coupon-code">Use Code : {{ $coupon->coupon_code}}</h6>
                                 </div>

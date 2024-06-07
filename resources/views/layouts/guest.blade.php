@@ -654,7 +654,7 @@
                                 <a href="javascript:void(0)" class="light-text">
                                     <div class="inform-box">
                                         <i data-feather="phone"></i>
-                                        <p>Call us: (+81)03-3981-5092</p>
+                                        <p>Call us: (+81)03-3981-5090</p>
                                     </div>
                                 </a>
                             </li>

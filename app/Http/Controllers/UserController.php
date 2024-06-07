@@ -95,9 +95,9 @@ class UserController extends Controller
             $data = array('name'=>$name);
             if (!empty($request->email)) {
                 $mail = Mail::send([], $data, function($message) use ($request, $inquiry_email,$name,$email) {
-                    $message->to($inquiry_email, 'Asian Food Museum ')->subject($name);
+                    $message->to($inquiry_email, 'New Style Life ')->subject($name);
                     $message->from($email,$name);
-                    $message->setBody("The following notification was received from the Asian Food Museum official website.
+                    $message->setBody("The following notification was received from the New Style Life official website.
                     \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
                     \r\n"."Name".$name."
                     \r\n"."Email：　".$email."
@@ -113,9 +113,9 @@ class UserController extends Controller
             if (!empty(  $adminMails)) {
                 foreach ($adminMails as $email) {
                     Mail::send([], $data, function ($message) use ($request, $adminMails,$name,$email) {
-                        $message->to($email, 'Asian Food Museum')->subject($name);
+                        $message->to($email, 'New Style Life')->subject($name);
                         $message->from($email,$name);
-                        $message->setBody("The following notification was received from the Asian Food Museum official website.
+                        $message->setBody("The following notification was received from the New Style Life official website.
                         \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
                         \r\n"."Name".$name."
                         \r\n"."Email：　".$email."
