@@ -70,7 +70,7 @@
                         </svg>
                         <div class="service-detail">
                             <h3>Free Shipping</h3>
-                            <h6 class="text-content">Free Shipping For Order Over ¥5000</h6>
+                            <h6 class="text-content">Free Shipping world wide</h6>
                         </div>
                     </div>
                 </div>
@@ -102,8 +102,8 @@
                             <use xlink:href="{{ asset('frontend/assets/svg/svg/service-icon-4.svg#offer') }}"></use>
                         </svg>
                         <div class="service-detail">
-                            <h3>Festival Offer</h3>
-                            <h6 class="text-content">Super Sale Upto 50% off</h6>
+                            <h3>Discount</h3>
+                            <h6 class="text-content">Daily Mega Discounts</h6>
                         </div>
                     </div>
                 </div>
@@ -113,8 +113,8 @@
                             <use xlink:href="{{ asset('frontend/assets/svg/svg/service-icon-4.svg#return') }}"></use>
                         </svg>
                         <div class="service-detail">
-                            <h3>100% Original</h3>
-                            <h6 class="text-content">100% Money Back</h6>
+                            <h3>Coupon</h3>
+                            <h6 class="text-content">Get Cash Back By Using Coupon</h6>
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
                                             <ul class="product-option">
                                                 <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
                                                     <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#view-product{{ $couponProduct->id }}"
+                                                    data-bs-target="#view-product{{ $couponProduct->id }}" 
                                                     data-product="{{ $couponProduct->id }}">
                                                         <i data-feather="eye"></i>
                                                     </a>
@@ -444,13 +444,13 @@
                             <div class="product-box product-white-bg wow fadeIn" data-wow-delay="0.1s">
                                 <div class="product-image">
                                     <a href="{{ route('show-product-left-thumbnail', ['id' => $latestProduct->id]) }}">
-                                        <img src="{{ asset('upload/product_thambnail/'.$latestProduct->product_thambnail)}}"
+                                        <img src="{{ asset('upload/product_thambnail/'.$latestProduct->product_thambnail)}}" 
                                         class="img-fluid blur-up lazyload" alt="">
                                     </a>
                                     <ul class="product-option">
                                         <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
                                             <a href="javascript:void(0)" data-bs-toggle="modal"
-                                            data-bs-target="#view-newest-product{{ $latestProduct->id }}"
+                                            data-bs-target="#view-newest-product{{ $latestProduct->id }}" 
                                             data-product="{{ $latestProduct->id }}">
                                                 <i data-feather="eye"></i>
                                             </a>
@@ -485,23 +485,24 @@
                         </div>
                         <!-- Quick View Modal Box Start -->
                         @if ($latestProduct->status == 1)
-                            @php
-                                $starRating = 0;
-                                $count = 0;
-                            @endphp
-                            @foreach ($reviews as $review)
-                                @if ($latestProduct->id == $review->product_id)
-                                    @php
-                                        $count += 1;
-                                        $starRating += $review->stars_rated;
-                                    @endphp
-                                @endif
-                            @endforeach
-                            @if ($count != 0)
+                        @php
+                            $starRating = 0;
+                            $count = 0;
+                        @endphp
+                        @foreach ($reviews as $review)
+                            @if ($latestProduct->id == $review->product_id)
                                 @php
-                                    $starRating = $starRating / $count;
+                                    $count += 1;
+                                    $starRating += $review->stars_rated;
                                 @endphp
                             @endif
+                        @endforeach
+                        @if ($count != 0)
+                            @php
+                                $starRating = $starRating / $count;
+                            @endphp
+                        @endif
+                        @endif
                         <div class="modal fade theme-modal view-modal" id="view-newest-product{{ $latestProduct->id }}" tabindex="-1">
                             <div class="modal-dialog modal-dialog-centered modal-xl">
                                 <div class="modal-content">
@@ -601,7 +602,6 @@
                                 </div>
                             </div>
                         </div>
-                        @endif
                         <!-- Quick View Modal Box End -->
                         @endforeach
                     </div>
