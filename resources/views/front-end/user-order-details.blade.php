@@ -100,6 +100,19 @@
                                         type="button" role="tab" style="font-size: 14px; text-align: center;" href="{{route ('user_profile')}}"><i data-feather="user"></i>
                                         Profile</a>
                                 </li>
+                                @php
+                                    $buyer = DB::table('buyers')->where('user_id', $user->id)->first();
+                                    $noti = DB::table('user_notifications')->where('buyer_id', $buyer->id)->where('seen', 0)->count();
+                                @endphp
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="pills-profile-tab"
+                                        type="button" role="tab" style="font-size: 14px; text-align: center; display: flex; align-items: center;" href="{{route ('user_message')}}"><i data-feather="mail"></i>
+                                        Message
+                                        <span id="notification-badge" class="badge rounded-pill badge-theme" style="color: #ff6b6b; font-size: 12px; margin-left: auto;">
+                                            <b>{{ $noti > 0 ? 'new' : '' }}</b>
+                                        </span>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -189,10 +202,10 @@
                                                                     <td>
                                                                         @if ($order->payment_approved == 1)
                                                                             @if ($order->status != "Cancel")
-                                                                            <a type="button" class="btn btn-sm" style="background-color: #0da487; border:0.5px solid #0da487; margin-left:0.5em; color:white;"
+                                                                            <a type="button" class="btn btn-sm" style="background-color: var(--theme-color); border:0.5px solid var(--theme-color); margin-left:0.5em; color:white;"
                                                                                 href="{{route ('order_detail_tracking',['id' => $order->order_detail_id]) }}">Tracking</a>
                                                                             @else
-                                                                            <button type="button" class="btn btn-sm" style="background-color: #ff6b6b; border:0.5px solid #0da487; margin-left:0.5em; color:white;"
+                                                                            <button type="button" class="btn btn-sm" style="background-color: #ff6b6b; border:0.5px solid var(--theme-color); margin-left:0.5em; color:white;"
                                                                                 onclick="cancelReason({{ $order->order_detail_id }})">Canceled</button>
                                                                             @endif
                                                                         @endif

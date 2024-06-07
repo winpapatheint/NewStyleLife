@@ -41,7 +41,8 @@
                                 </div>
                                 <div class="col-sm-3" style="display: flex; justify-content: flex-end;">
                                     <div class="title-header option-title" id="japaneseBtnDiv">
-                                        <button class="align-items-center btn btn-theme d-flex" id="japaneseBtn" style="background-color: #0da487; color: #fff;">
+                                        <button class="align-items-center btn btn-theme d-flex" id="japaneseBtn" 
+                                        style="background-color: var(--theme-color); color: #fff;">
                                             日本語で確認する
                                         </button>
                                     </div>
@@ -147,7 +148,8 @@
                                 </div>
                                 <div class="col-sm-3" style="display: flex; justify-content: flex-end;">
                                     <div class="title-header option-title" id="englishBtnDiv">
-                                        <button class="align-items-center btn btn-theme d-flex" id="englishBtn" style="background-color: #0da487; color: #fff;">
+                                        <button class="align-items-center btn btn-theme d-flex" id="englishBtn" 
+                                        style="background-color: var(--theme-color); color: #fff;">
                                             Check in English
                                         </button>
                                     </div>

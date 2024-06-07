@@ -105,7 +105,7 @@ class AdminController extends Controller
             ->toArray();
         }
 
-        $topSaveTodayProducts = Product::where(function($query) {
+        $couponProducts = Product::where(function($query) {
             $query->whereHas('Seller', function ($query) {
                     $query->where('coupon_status', 1);
                 })
@@ -162,8 +162,13 @@ class AdminController extends Controller
             ->where('products.status', 1)
             ->pluck('products.id')->toArray();
 
-        return view('front-end.welcome',compact('blogs','categories','maxStarsRatedRow', 'productsGroupedByDiscount', 'topSaveTodayProducts', 'reviews',
-         'bestSellerProducts', 'trendingProducts', 'coupons', 'seafood', 'vegetable', 'meatHalfDiscount', 'vegetableHalfDiscount','customers'));
+        $latestProducts = Product::orderBy('created_at', 'DESC')->take(5)->get();
+
+        $shops = Seller::where('status', 1)->get();
+
+        return view('front-end.welcome',compact('blogs','categories','maxStarsRatedRow', 'productsGroupedByDiscount', 'couponProducts',
+         'reviews','bestSellerProducts', 'trendingProducts', 'coupons', 'seafood', 'vegetable', 'meatHalfDiscount', 
+         'vegetableHalfDiscount','customers', 'latestProducts', 'shops'));
     }
 
     public function news()

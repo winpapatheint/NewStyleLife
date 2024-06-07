@@ -166,7 +166,7 @@
                                     <label for="exampleFormControlInput3" class="form-label">Phone Number</label>
                                     <div class="custom-input">
                                         <input type="tel" class="form-control" id="phone"
-                                            placeholder="Enter Your Phone Number" maxlength="10" oninput="javascript: if (this.value.length > this.maxLength) this.value =
+                                            placeholder="Enter Phone Number" maxlength="10" oninput="javascript: if (this.value.length > this.maxLength) this.value =
                                             this.value.slice(0, this.maxLength);" name="phone"  value="{{ old('phone') }}">
                                         <i class="fa-solid fa-mobile-screen-button"></i>
 

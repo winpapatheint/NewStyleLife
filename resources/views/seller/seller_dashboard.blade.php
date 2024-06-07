@@ -13,7 +13,7 @@
     <link rel="icon" href="{{ asset('backend/assets/images/logo-food.png') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('backend/assets/images/logos_foods.png') }}" type="image/x-icon">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>アジア食彩館</title>
+    <title>新生活</title>
 
     <!-- Google font -->
 
@@ -139,7 +139,7 @@
                                     <h6 class="f-18 mb-0">Notitications</h6>
                                 </li>
                                 @php
-                                    $iro = ["#0da487","#9e65c2","#a927f9","#6670bd"];
+                                    $iro = ["#417394","#9e65c2","#a927f9","#6670bd"];
                                 @endphp
 
                                 @foreach($notifications as $key => $notify)

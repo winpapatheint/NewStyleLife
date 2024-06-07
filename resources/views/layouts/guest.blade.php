@@ -466,7 +466,7 @@
                             <div class="header-nav-right">
                                 <button class="btn deal-button" data-bs-toggle="modal">
                                     <i data-feather="zap"></i>
-                                <a href="{{ route('login') }}" style="color:#417394"><span> Deal Today</span></a>
+                                <a href="{{ route('login') }}" style="color: var(--theme-color)"><span> Deal Today</span></a>
                                 </button>
                             </div>
                         @endif
@@ -599,7 +599,7 @@
                                     <a href="{{route ('user_profile')}}" class="light-text">Your Account</a>
                                 </li>
                                 <li>
-                                    <a href="{{route ('footer_tracking') }}" class="light-text">Track Order</a>
+                                    <a href="{{route ('user_order')}}" class="light-text">Track Order</a>
                                 </li>
                                 @endif
                                 <li>
@@ -616,6 +616,9 @@
                                 </li>
                                 <li>
                                     <a href="{{ url('/term-and-condition') }}" class="light-text">Terms and Conditions</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url('/privacy-policy') }}" class="light-text">Privacy Policy</a>
                                 </li>
                         </ul>
                     </div>
@@ -862,7 +865,7 @@
     <div class="bg-overlay"></div>
     <!-- Bg overlay End -->
 
-    {{-- <!-- Bootstrap js-->
+    <!-- Bootstrap js-->
     <script src="{{ asset('frontend/assets/js/bootstrap/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/bootstrap/bootstrap-notify.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/bootstrap/popper.min.js') }}"></script>
@@ -899,7 +902,7 @@
     <script src="{{ asset('frontend/assets/js/script.js') }}"></script>
 
     <!-- theme setting js -->
-    <script src="{{ asset('frontend/assets/js/theme-setting.js') }}"></script> --}}
+    <script src="{{ asset('frontend/assets/js/theme-setting.js') }}"></script>
 
     <!-- latest jquery-->
     <script src="{{ asset('frontend/assets/js/jquery-3.6.0.min.js') }}"></script>

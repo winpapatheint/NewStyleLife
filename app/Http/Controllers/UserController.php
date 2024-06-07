@@ -2,27 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Middleware\Role;
-use App\Models\BankAccount;
+use Mail;
+use Carbon\Carbon;
 use App\Models\Cart;
 use App\Models\User;
 use App\Models\Buyer;
 use App\Models\Order;
+use App\Models\Coupon;
 use App\Models\Seller;
 use App\Models\Payment;
-use App\Models\Notification;
 use App\Models\Process;
 use App\Models\Product;
 use App\Models\Prefecture;
+use App\Models\BankAccount;
 use App\Models\OrderDetail;
 use App\Models\BuyerAddress;
 use App\Models\BuyerPayment;
-use App\Models\CashBankAccount;
-use App\Models\Coupon;
 use App\Models\CouponDetail;
-use Carbon\Carbon;
+use App\Models\Notification;
 use Illuminate\Http\Request;
+use App\Http\Middleware\Role;
 use Illuminate\Http\Response;
+use App\Models\CashBankAccount;
+use App\Models\UserNotification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +32,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Redirect;
-use Mail;
 
 
 class UserController extends Controller
@@ -1383,5 +1384,37 @@ class UserController extends Controller
 
         // return response()->json(['success' => 'Successfully set default address']);
         return response()->json(['success' => 'Successfully set default address']);
+    }
+
+    public function showMessage()
+    {
+        $limit = 5;
+        $user = DB::table('users')->where('id', Auth::user()->id)->first();
+        $buyer = Buyer::where('user_id', $user->id)->first();
+        $userNotis = UserNotification::with('orderDetail')->with('orderDetail.product')->with('orderDetail.order')
+                    ->with('orderDetail.seller')->where('buyer_id', $buyer->id)->orderBy('id', 'DESC')->paginate($limit);
+                    
+        // to be seen
+        UserNotification::where('buyer_id', $buyer->id)->update(['seen' => 1]);
+        $ttl = $userNotis->total();
+        $ttlpage = ceil($ttl / $limit);
+        return view('front-end.user_message', compact('user', 'userNotis', 'ttl', 'ttlpage'));
+    }
+
+    public function removeMessage($id)
+    {
+        $message = UserNotification::find($id);
+        if ($message)
+        {
+            $message->delete();
+        }
+        return redirect()->back()->with('success', 'Message is deleted successfully!');
+    }
+
+    public function removeMessageAll($id)
+    {
+        $messages = UserNotification::where('buyer_id', $id);
+        $messages->delete();
+        return redirect()->back()->with('success', 'Messages are deleted successfully!');
     }
 }

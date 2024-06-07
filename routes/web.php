@@ -60,6 +60,10 @@ Route::get('/user/profile', [UserController::class, 'showProfile'])->name('user_
 Route::post('/user/profile/edit-profile', [UserController::class, 'editProfile'])->name('edit_profile');
 Route::post('user/profile/edit-password', [UserController::class, 'editPassword'])->name('edit_password');
 
+Route::get('/user/message', [UserController::class, 'showMessage'])->name('user_message');
+Route::post('/user/message/{id}', [UserController::class, 'removeMessage'])->name('remove_message');
+Route::post('/user/message-all/{id}', [UserController::class, 'removeMessageAll'])->name('remove_message_all');
+
 Route::get('search', [ShowProductController::class, 'footerSearch'])->name('footer_search');
 Route::get('ordertracking', [UserController::class, 'footertracking'])->name('footer_tracking');
 
@@ -88,10 +92,10 @@ Route::get('/product-circle', function () {return view('front-end.product-circle
 Route::get('/shoplist', [AdminController::class, 'indexshoplist'])->name('shoplist');
 
 
-Route::get('categorysidebar/{categoryid}', [AdminController::class, 'indexcategoryproduct']);
+Route::get('categorysidebar/{categoryid}', [AdminController::class, 'indexcategoryproduct'])->name('show-category-left-side-bar');
 Route::get('subcategorysidebar/{subcategoryid}', [AdminController::class, 'indexsubcategoryproduct']);
 Route::get('specialsubcategorysidebar/{subcategoryid}', [AdminController::class, 'indexspecialsubcategoryproduct']);
-Route::get('shopleftsidebar/{shopid}', [AdminController::class, 'indexshopproduct']);
+Route::get('shopleftsidebar/{shopid}', [AdminController::class, 'indexshopproduct'])->name('show-shop-left-side-bar');
 
 
 Route::get('/news', [AdminController::class, 'news']);

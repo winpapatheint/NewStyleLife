@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="col-sm-3" style="display: flex; justify-content: flex-end;">
                                     <div class="title-header option-title" id="japaneseBtnDiv">
-                                        <button class="align-items-center btn btn-theme d-flex" id="japaneseBtn" style="background-color: #0da487; color: #fff;">
+                                        <button class="align-items-center btn btn-theme d-flex" id="japaneseBtn" style="background-color: var(--theme-color); color: #fff;">
                                             日本語で確認する
                                         </button>
                                     </div>
@@ -403,7 +403,7 @@
                                 </div>
                                 <div class="col-sm-3" style="display: flex; justify-content: flex-end;">
                                     <div class="title-header option-title" id="englishBtnDiv">
-                                        <button class="align-items-center btn btn-theme d-flex" id="englishBtn" style="background-color: #0da487; color: #fff;">
+                                        <button class="align-items-center btn btn-theme d-flex" id="englishBtn" style="background-color: var(--theme-color); color: #fff;">
                                             Check in English
                                         </button>
                                     </div>
@@ -564,7 +564,7 @@
                                         <div class="accordion-collapse collapse show">
                                             <div class="accordion-body">
                                                 <p>
-                                                    出店者は、国際取引をする場合、弊社サイト (“アジア食彩館”)に出品することができます。この場合出店者は当該商品の海外サイト登録および購入者の居住国への搬入可否などを事前に確認し関連する法令を遵守する義務があり、該当する商品の詳細ページに販売/搬入可能な国および海外配送と関連した制約事項など取引条件を明示しなくてはなりません。
+                                                    出店者は、国際取引をする場合、弊社サイト (“新生活”)に出品することができます。この場合出店者は当該商品の海外サイト登録および購入者の居住国への搬入可否などを事前に確認し関連する法令を遵守する義務があり、該当する商品の詳細ページに販売/搬入可能な国および海外配送と関連した制約事項など取引条件を明示しなくてはなりません。
                                                 </p>
                                             </div>
                                         </div>
@@ -648,7 +648,7 @@
                                         <div class="accordion-collapse collapse show">
                                             <div class="accordion-body">
                                                 <p>
-                                                    1.出店者は弊社サービス利用により取得した会員など他人の個人情報を弊社の利用者個人情報保護方針の「利用者により認められ、または利用者による本サービスの利用によって認められる他の利用者について」及び「アジア食彩館ウェブサイトにおいて利用者が受領した情報の利用方法について」に定められた目的以外の用途に使用することはできません。これに違反した場合、当該出店者は関連法令による全ての民事・刑事上の法的責任を負い、自身の努力と費用で弊社を免責しなければならず、弊社は当該出店者を退会させることができます。<br>
+                                                    1.出店者は弊社サービス利用により取得した会員など他人の個人情報を弊社の利用者個人情報保護方針の「利用者により認められ、または利用者による本サービスの利用によって認められる他の利用者について」及び「新生活ウェブサイトにおいて利用者が受領した情報の利用方法について」に定められた目的以外の用途に使用することはできません。これに違反した場合、当該出店者は関連法令による全ての民事・刑事上の法的責任を負い、自身の努力と費用で弊社を免責しなければならず、弊社は当該出店者を退会させることができます。<br>
                                                     2. 弊社は個人情報の保護のため配送などの目的で出店者に公開する購入会員の個人情報を一定期間経過後、非公開の措置をとる場合があります。<br>
                                                     3. 関連法令によって捜査機関など公共機関が弊社へ出店者に関する情報の提供を要請した場合、弊社は当該情報を提供でき、出店者はこれに対して異義を提起できません。
                                                 </p>

@@ -63,7 +63,7 @@
         }
 
         .password-button {
-            background-color: #0DA487;
+            background-color: #417394;
             border: none;
             color: #fff;
             padding: 14px 26px;
@@ -108,7 +108,7 @@
         }
 
         .theme-color {
-            color: #0DA487;
+            color: #417394;
         }
     </style>
 </head>
