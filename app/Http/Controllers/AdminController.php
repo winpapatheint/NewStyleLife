@@ -162,12 +162,12 @@ class AdminController extends Controller
             ->where('products.status', 1)
             ->pluck('products.id')->toArray();
 
-        $latestProducts = Product::orderBy('created_at', 'DESC')->take(5)->get();
+        $latestProducts = Product::orderBy('created_at', 'DESC')->where('status', 1)->take(5)->get();
 
         $shops = Seller::where('status', 1)->get();
 
         return view('front-end.welcome',compact('blogs','categories','maxStarsRatedRow', 'productsGroupedByDiscount', 'couponProducts',
-         'reviews','bestSellerProducts', 'trendingProducts', 'coupons', 'seafood', 'vegetable', 'meatHalfDiscount', 
+         'reviews','bestSellerProducts', 'trendingProducts', 'coupons', 'seafood', 'vegetable', 'meatHalfDiscount',
          'vegetableHalfDiscount','customers', 'latestProducts', 'shops'));
     }
 
