@@ -106,12 +106,28 @@
                         $splitIndex = mb_strpos($content, '.', $midIndex);
                         if ($splitIndex === false) {
                             $splitIndex = $midIndex;
+                            $firstHalf = $content;
+                            $secondHalf = '';
                         } else {
                             $splitIndex += 1;
-                        }
+                            $firstHalf = mb_substr($content, 0, $splitIndex);
+                            $secondHalf = mb_substr($content, $splitIndex);
 
-                        $firstHalf = mb_substr($content, 0, $splitIndex);
-                        $secondHalf = mb_substr($content, $splitIndex);
+                            $sentenceStartingChars = ['!', '?', ')', ']', '}', '–', '—', ':', ';', '。', '」', '』', '）', '？', '！', '〜'];
+                            if (in_array(mb_substr($secondHalf, 0, 1), $sentenceStartingChars)) {
+                                $firstHalf .= mb_substr($secondHalf, 0, 1);
+                                $secondHalf = mb_substr($secondHalf, 1);
+                            }
+
+                            $startOrEndChars = ["’", '"', '`', '、'];
+                            if (in_array(mb_substr($secondHalf, 0, 1), $startOrEndChars)) {
+                                $charCount = mb_substr_count($firstHalf, mb_substr($secondHalf, 0, 1));
+                                if (($charCount % 2) != 0) {
+                                    $firstHalf .= mb_substr($secondHalf, 0, 1);
+                                    $secondHalf = mb_substr($secondHalf, 1);
+                                }
+                            }
+                        }
                     @endphp
         
                     <div class="blog-detail-contain">

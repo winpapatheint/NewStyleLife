@@ -19,12 +19,14 @@
             <div class="row g-4">
                 <div class="col-xl-9 col-lg-8 ratio_50_1">
                     <div class="home-contain furniture-contain-2">
-                        <img src="{{ asset('frontend/assets/images/furniture/banner/1.jpg') }}" class="bg-img blur-up lazyload" alt="">
+                        <img src="{{ asset('frontend/assets/images/furniture/banner/' . $tops[0]->image) }}" class="bg-img blur-up lazyload" alt="">
                         <div class="home-detail p-top-left mend-auto w-100">
                             <div>
-                                <h6>Exclusive offer <span>30% Off</span></h6>
-                                <h1 class="text-uppercase poster-1 text-content furniture-heading">Stay home &
-                                    delivered your <span class="daily">Daily Needs</span></h1>
+                                <h6>Exclusive offer <span>{{ $tops[0]->discount }} Off</span></h6>
+                                <h1 class="text-uppercase poster-1 text-content furniture-heading">
+                                    {{ $tops[0]->phaseone }}
+                                    <span class="daily">{{ $tops[0]->phasetwo }}</span>
+                                </h1>
                                 @if ($productsGroupedByDiscount[30] != null)
                                 <button onclick="location.href = '{{ route('show-discount-product', ['ids' => $productsGroupedByDiscount[30]]) }}';"
                                     class="btn btn-furniture mt-xxl-4 mt-3 home-button mend-auto">Shop Now <i
@@ -37,14 +39,14 @@
 
                 <div class="col-xl-3 col-lg-4 d-lg-inline-block d-none">
                     <div class="home-contain h-100 home-furniture">
-                        <img src="{{ asset('frontend/assets/images/furniture/banner/2.jpg') }}" class="bg-img blur-up lazyload" alt="">
+                        <img src="{{ asset('frontend/assets/images/furniture/banner/' . $tops[1]->image ) }}" class="bg-img blur-up lazyload" alt="">
                         <div class="home-detail p-top-left home-p-sm feature-detail mend-auto">
                             <div>
                                 <h2 class="mt-0 text-danger">
-                                    50% <span class="discount text-title">OFF</span>
+                                    {{ $tops[1]->discount }} <span class="discount text-title">OFF</span>
                                 </h2>
-                                <h2 class="mt-0 theme-color text-kaushan fw-normal">Exclusive</h2>
-                                <h3 class="furniture-content">Furniture</h3>
+                                <h2 class="mt-0 theme-color text-kaushan fw-normal">{{ $tops[1]->phaseone }}</h2>
+                                <h3 class="furniture-content">{{ $tops[1]->phasetwo }}</h3>
                                 @if ($productsGroupedByDiscount[50] != null)
                                     <a href="{{ route('show-discount-product', ['ids' => $productsGroupedByDiscount[50]]) }}"
                                     class="shop-button btn btn-furniture mt-0 d-inline-block btn-md text-content">Shop
@@ -390,13 +392,13 @@
                         <div class="row g-md-4 g-3">
                             <div class="col-md-6">
                                 <div class="banner-contain hover-effect">
-                                    <img src="{{ asset('frontend/assets/images/furniture/banner/4.jpg') }}" class="bg-img blur-up lazyload"
+                                    <img src="{{ asset('frontend/assets/images/furniture/banner/' . $tops[2]->image ) }}" class="bg-img blur-up lazyload"
                                         alt="">
                                     <div class="banner-details p-center-left p-4">
                                         <div>
-                                            <h3 class="text-kaushan text-yellow">50% offer</h3>
+                                            <h3 class="text-kaushan text-yellow">{{ $tops[2]->discount }}</h3>
                                             <h4 class="theme-color mb-2 fw-normal"><span
-                                                    class="theme-color fw-bold">Restyling</span> your Home</h4>
+                                                    class="theme-color fw-bold">{{ $tops[2]->phaseone }}</span> {{ $tops[2]->phasetwo }}</h4>
                                             @if($meatHalfDiscount != null)
                                                 <button onclick="location.href = '{{ route('show-discount-product', ['ids' => $meatHalfDiscount]) }}';"
                                                     class="btn btn-furniture btn-sm mend-auto">Shop Now <i
@@ -408,13 +410,14 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="banner-contain hover-effect">
-                                    <img src="{{ asset('frontend/assets/images/furniture/banner/5.jpg') }}" class="bg-img blur-up lazyload"
+                                    <img src="{{ asset('frontend/assets/images/furniture/banner/' . $tops[3]->image) }}" class="bg-img blur-up lazyload"
                                         alt="">
                                     <div class="banner-details p-center-left p-4">
                                         <div>
-                                            <h3 class="text-kaushan text-yellow">50% offer</h3>
-                                            <h4 class="theme-color mb-2 fw-normal"><span class="theme-color fw-bold">New
-                                                    Elite</span> Collections</h4>
+                                            <h3 class="text-kaushan text-yellow">{{ $tops[3]->discount }}</h3>
+                                            <h4 class="theme-color mb-2 fw-normal"><span class="theme-color fw-bold">
+                                                {{ $tops[3]->phaseone }}
+                                                </span> {{ $tops[3]->phasetwo }}</h4>
                                             @if($vegetableHalfDiscount != null)
                                                 <button onclick="location.href = '{{ route('show-discount-product', ['ids' => $vegetableHalfDiscount]) }}';"
                                                     class="btn btn-furniture btn-sm mend-auto">Shop Now <i
@@ -610,18 +613,18 @@
 
                 <div class="col-xxl-3 col-xl-4 d-none d-xl-block">
                     <div class="p-sticky">
-                        @if(count($shops) > 0)
+                        @if(count($categories) > 0)
                         <div class="category-menu">
-                            <h3>Shop By Product</h3>
+                            <h3>Categories</h3>
                             <ul class="border-bottom-0">
-                                @foreach($shops as $shop)
+                                @foreach($categories as $categorie)
                                 <li>
                                     <div class="category-list">
-                                        <img src="{{ asset('upload/shop/'.($shop->shop_logo)) }}"
+                                        <img src="{{ asset('images/'.$categorie->category_icon) }}"
                                             class="blur-up lazyload" alt="">
                                         <h5>
-                                            <a href="{{ route('show-shop-left-side-bar', ['shopid' => $shop->user_id ]) }}">
-                                                {{ $shop->shop_name }}
+                                            <a href="{{ route('show-category-left-side-bar', ['categoryid' => $categorie->id]) }}">
+                                                {{ $categorie->category_name }}
                                             </a>
                                         </h5>
                                     </div>
@@ -633,13 +636,13 @@
 
                         <div class="ratio_156 section-t-space">
                             <div class="home-contain hover-effect">
-                                <img src="{{ asset('frontend/assets/images/furniture/banner/3.jpg') }}" class="bg-img blur-up lazyload"
+                                <img src="{{ asset('frontend/assets/images/furniture/banner/' . $tops[4]->image) }}" class="bg-img blur-up lazyload"
                                     alt="">
                                 <div class="home-detail p-top-left home-p-medium">
                                     <div>
-                                        <h4 class="text-yellow home-banner text-kaushan">New Arrival</h4>
-                                        <h3 class="text-uppercase theme-color fw-bold mb-1">Desk Table</h3>
-                                        <p class="text-content mb-3">Top Selling Of The Week! Exclusive Offer!</p>
+                                        <h4 class="text-yellow home-banner text-kaushan">{{ $tops[4]->discount }}</h4>
+                                        <h3 class="text-uppercase theme-color fw-bold mb-1">{{ $tops[4]->phaseone }}</h3>
+                                        <p class="text-content mb-3">{{ $tops[4]->phasetwo }} {{ $tops[4]->phasethree }}</p>
                                         <button onclick="location.href = '{{ route('show-discount-product', ['topic' => 'new-arrivals']) }}';"
                                             class="btn btn-furniture btn-md mend-auto">Shop Now <i
                                                 class="fa-solid fa-arrow-right icon"></i></button>
@@ -694,20 +697,21 @@
             <div class="row">
                 <div class="col-12">
                     <div class="banner-contain-3 section-b-space section-t-space hover-effect overflow-visible">
-                        <img src="{{ asset('frontend/assets/images/furniture/banner/6.jpg') }}" class="bg-img" alt="">
+                        <img src="{{ asset('frontend/assets/images/furniture/banner/' . $tops[5]->image) }}" class="bg-img" alt="">
                         <img src="{{ asset('frontend/assets/images/furniture/banner/7.jpg') }}" class="flower-pot img-fluid" alt="">
                         <div
                             class="banner-detail p-center-left position-relative d-block py-0 banner-furniture mend-auto">
                             <div class="row">
                                 <div class="col-xl-6 offset-xxl-2 offset-xl-1 col-md-8 col-sm-9">
                                     <h4 class="text-uppercase text-yellow text-kaushan furniture-title">
-                                        Value Of The Day
+                                        {{ $tops[5]->discount }}
                                         <img src="{{ asset('frontend/assets/images/furniture/arrow.svg') }}" alt="">
                                     </h4>
-                                    <h2 class="mt-sm-3 mt-1 mb-2 text-content">Home Decor <span
-                                            class="theme-color fw-bold">The Summer Bargain Sale of</span> 2024!</h2>
-                                    <p class="text-content">The Summer Bargain Sale offers unbeatable deals on a wide range of products, 
-                                        making it the perfect opportunity to save money while fulfilling your shopping needs.</p>
+                                    <h2 class="mt-sm-3 mt-1 mb-2 text-content">{{ $tops[5]->phaseone }} <span
+                                            class="theme-color fw-bold">{{ $tops[5]->phasetwo }}</span></h2>
+                                    <p class="text-content">
+                                        {{ $tops[5]->phasethree }}
+                                    </p>
                                     <button class="btn theme-bg-color mt-sm-4 mt-2 btn-md text-white fw-bold"
                                         onclick="location.href = '{{ route('show-discount-product', ['topic' => 'value-of-the-day']) }}';">
                                         Shop Now

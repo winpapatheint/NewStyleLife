@@ -166,9 +166,11 @@ class AdminController extends Controller
 
         $shops = Seller::where('status', 1)->get();
 
+        $tops = Top::all();
+
         return view('front-end.welcome',compact('blogs','categories','maxStarsRatedRow', 'productsGroupedByDiscount', 'couponProducts',
          'reviews','bestSellerProducts', 'trendingProducts', 'coupons', 'seafood', 'vegetable', 'meatHalfDiscount',
-         'vegetableHalfDiscount','customers', 'latestProducts', 'shops'));
+         'vegetableHalfDiscount','customers', 'latestProducts', 'shops', 'tops'));
     }
 
     public function news()
@@ -3170,7 +3172,7 @@ class AdminController extends Controller
    {
       if (!empty($request->image)) {
           $imageName = time().'.'.$request->image->extension();
-          $request->image->move(public_path('images'), $imageName);
+          $request->image->move(public_path('frontend/assets/images/furniture/banner'), $imageName);
       } else {
           $imageName = '';
       }

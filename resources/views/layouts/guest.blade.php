@@ -530,7 +530,10 @@
                         <a href="index.html" class="foot-logo theme-logo">
                             <img src="../assets/images/logo/4.png" class="img-fluid blur-up lazyload" alt="">
                         </a>
-                        <p class="information-text information-text-2">Specializing in Asian cuisine, we're dedicated to providing fresh, top-quality food to Japan daily.</p>
+                        <p class="information-text information-text-2">
+                            Infusing style into everyday living, our curated collection elevates your space. 
+                            Discover quality products that enhance your lifestyle, delivered with care and precision.
+                        </p>
                         <ul class="social-icon">
                             <li class="light-bg">
                                 <a href="https://www.facebook.com/" class="footer-link-color">
