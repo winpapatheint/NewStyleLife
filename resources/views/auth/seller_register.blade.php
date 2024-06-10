@@ -66,6 +66,18 @@
                                     </div>
                                 </div>
 
+                                <div class="col-md-12">
+                                    <div class="form-floating theme-form-floating">
+                                        <select class="form-control" name="country" value="{{ old('country') }}">
+                                            <option>Choose Country</option>
+                                            @foreach ($country as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <span class="error" style="color:red" id="error-country"></span>
+                                    </div>
+                                </div>
+
                                 <div class="col-md-6">
                                     <div class="form-floating theme-form-floating">
                                         <input type="number" id="zip_code" name="zip_code" class="form-control" placeholder="Zip Code" value="{{ old('zip_code') }}">
@@ -76,19 +88,8 @@
 
                                 <div class="col-md-6">
                                     <div class="form-floating theme-form-floating">
-                                        <input type="text" name="url" class="form-control" placeholder="Shop Link" value="{{ old('url') }}">
-                                        <label>Shop Link</label>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-12">
-                                    <div class="form-floating theme-form-floating">
-                                        <select class="form-control" name="prefecture" value="{{ old('prefecture') }}">
-                                            <option>Choose Prefecture</option>
-                                            @foreach ($prefecture as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input type="text" id="prefecture" name="prefecture" class="form-control" placeholder="Prefecture" value="{{ old('prefecture') }}">
+                                        <label>Prefecture</label>
                                         <span class="error" style="color:red" id="error-prefecture"></span>
                                     </div>
                                 </div>
@@ -247,7 +248,8 @@
             const shopLogoFile = shopLogoInput.files[0];
             const phone = document.getElementById('phone').value.trim();
             const zip_code = document.getElementById('zip_code').value.trim();
-            const prefecture = document.querySelector('select[name="prefecture"]').value;
+            const country = document.querySelector('select[name="country"]').value;
+            const prefecture = document.getElementById('prefecture').value.trim();
             const city = document.getElementById('city').value.trim();
             const chome = document.getElementById('chome').value.trim();
             const building = document.getElementById('building').value.trim();
@@ -302,9 +304,17 @@
                 document.getElementById('error-zip_code').textContent = 'Please provide a valid 7-digit zip code.';
             }
 
-            if (!prefecture || prefecture === 'Choose Prefecture') {
+            if (!country || country === 'Choose Country') {
                 isValid = false;
-                document.getElementById('error-prefecture').textContent = 'Please select a valid prefecture.';
+                document.getElementById('error-country').textContent = 'Please select a valid country.';
+            }
+
+            if (!prefecture) {
+                isValid = false;
+                document.getElementById('error-prefecture').textContent = 'Please provide your prefecture.';
+            } else if (prefecture.length > 255) {
+                isValid = false;
+                document.getElementById('error-prefecture').textContent = 'Your prefecture must not exceed 255 characters.';
             }
 
             if (!city) {

@@ -13,7 +13,6 @@ use App\Models\Seller;
 use App\Models\Product;
 use App\Models\Subseller;
 use App\Models\Transfer;
-use App\Models\Prefecture;
 use App\Models\OrderDetail;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -76,8 +75,7 @@ class SellerController extends Controller
         $user = Auth::user();
         $id = $user->created_by !== null ? $user->created_by : $user->id;
         $data = Seller::where('user_id', $id)->first();
-        $prefecture = Prefecture::get();
-        return view('seller.profile', compact('user', 'data', 'prefecture'));
+        return view('seller.profile', compact('user', 'data'));
     }
 
 
@@ -118,6 +116,7 @@ class SellerController extends Controller
             'shop_name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
             'zip_code' => 'required|string|max:255',
+            'prefecture' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'chome' => 'required|string|max:255',
             'building' => 'required|string|max:255',
@@ -146,6 +145,7 @@ class SellerController extends Controller
         $seller->shop_establish = $request->shop_establish;
         $seller->phone = $request->phone;
         $seller->zip_code = $request->zip_code;
+        $seller->prefecture = $request->prefecture;
         $seller->city = $request->city;
         $seller->chome = $request->chome;
         $seller->building = $request->building;
@@ -160,7 +160,7 @@ class SellerController extends Controller
         $seller->update();
 
         $msg = ('Data updated successfully');
-        return redirect('/seller')->with('success', $msg);
+        return redirect('/profile')->with('success', $msg);
     }
 
 
@@ -256,7 +256,7 @@ class SellerController extends Controller
         $email = Auth::user()->email;
         $name = Auth::user()->name;
         $mail = Mail::send('seller.help.helpEmail', ['name' => $name, 'email' => $email, 'title' => $request->title, 'reason' => $request->reason], function($message) use ($name, $inquiry_email) {
-            $message->to($inquiry_email, 'New Style Life')->subject($name.'Question form');
+            $message->to($inquiry_email, 'Asian Food Museum')->subject($name.'Question form');
             $message->from(Auth::user()->email, Auth::user()->name);
         });
         $notification = Notification::find(5);

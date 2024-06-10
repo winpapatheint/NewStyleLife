@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use App\Models\Seller;
+use App\Models\Country;
 use App\Models\Prefecture;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -18,8 +19,8 @@ class RegisterController extends Controller
 {
     public function SellerRegister()
     {
-        $prefecture = Prefecture::get();
-        return view('auth.seller_register',compact('prefecture'));
+        $country = Country::get();
+        return view('auth.seller_register',compact('country'));
     }
 
     public function SellerRegistered(Request $request)
@@ -42,7 +43,7 @@ class RegisterController extends Controller
 
         $seller = Seller::create([
             'user_id' => $user->id,
-            'prefecture_id' => $request->prefecture,
+            'country_id' =>$request->country,
             'bank_name' => $request->bank_name,
             'bank_branch' =>$request->bank_branch,
             'bank_acc_type' => $request->bank_acc_type,
@@ -53,6 +54,7 @@ class RegisterController extends Controller
             'shop_establish' => $request->shop_establish,
             'phone' => $request->phone,
             'zip_code' => $request->zip_code,
+            'prefecture' => $request->prefecture,
             'city' => $request->city,
             'chome' => $request->chome,
             'building' => $request->building,

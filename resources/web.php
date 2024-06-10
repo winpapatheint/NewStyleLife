@@ -220,11 +220,8 @@ Route::get('/seller/helpadd', [SellerController::class, 'addHelp'])->middleware(
 Route::post('/seller/helpstore', [SellerController::class, 'storeHelp'])->middleware(['auth','role:seller'])->name('help.store');
 Route::get('/seller/helpdetail/{id}', [SellerController::class, 'detailHelp'])->middleware(['auth','role:seller'])->name('help.detail');
 Route::get('/seller/help/{id}', [SellerController::class, 'deleteHelp'])->middleware(['auth','role:seller'])->name('help.delete');
+Route::post('/seller/brand', [ProductController::class, 'saveBrand'])->middleware(['auth','role:seller']);
 
-
-//Brand
-Route::get('/seller/brandadd', [BrandController::class, 'addBrand'])->middleware(['auth','role:seller'])->name('add.brand');
-Route::post('/seller/brandstore', [BrandController::class, 'storeBrand'])->middleware(['auth','role:seller'])->name('store.brand');
 
 //SellerProduct
 Route::get('/seller/productlist', [ProductController::class, 'allProduct'])->middleware(['auth','role:seller'])->name('all.product');

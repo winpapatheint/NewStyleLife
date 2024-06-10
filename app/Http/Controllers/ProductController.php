@@ -24,6 +24,27 @@ use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class ProductController extends Controller
 {
+
+    public function saveBrand(Request $request)
+    {
+        dd('Reached here!');
+        $brand = new Brand();
+        $validated = request()->validate([
+            'brand_name' => 'required|string|max:255',
+            'brand_icon' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $brand->brand_name = $validated['brand_name'];
+        if ($request->hasFile('brand_icon')) {
+            $imageName = time().'.'.$request->brand_icon->extension();
+            $request->brand_icon->move(public_path('upload/brand'), $imageName);
+            $brand->brand_icon = $imageName;
+        }
+        $brand->save();
+        return back();
+    }
+
+
     public function allProduct()
     {
         $validated = request()->validate([
@@ -124,6 +145,7 @@ class ProductController extends Controller
             'status' => $status,
             'estimate_date' => $request->estimate_date,
             'delivery_price' => $request->delivery_price,
+            'shipping_country' => $request->shipping_country,
             'created_at' => Carbon::now(),
         ]);
 
@@ -206,6 +228,7 @@ class ProductController extends Controller
         $product = Product::find($request->id);
         $old_img = $request->old_img;
         $request->validate([
+            'country_id'  => 'required|exists:countries,id',
             'category_id' => 'required|exists:categories,id',
             'sub_category_title_id' => 'present|exists:sub_category_titles,id',
             'sub_category_id' => 'present|exists:sub_categories,id',
@@ -219,6 +242,7 @@ class ProductController extends Controller
             'long_desc' => 'required|string',
             'care_instructions' => 'required|string',
             'estimate_date' => 'required|string',
+            'shipping_country'=> 'required',
         ]);
 
         if($request->hasFile('product_thambnail')) {
@@ -253,6 +277,7 @@ class ProductController extends Controller
         $product->estimate_date= $request->estimate_date;
         // $product->status= 1;
         $product->delivery_price= $request->delivery_price;
+        $product->shipping_country = $request->shipping_country;
         $product->updated_by = Auth::user()->id;
         $product->updated_at= Carbon::now();
         $product->update();

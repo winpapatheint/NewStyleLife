@@ -49,11 +49,9 @@
                                                         <option value="{{ $brand->id }}">{{ $brand->brand_name }}</option>
                                                     @endforeach
                                                 </select>
-                                                <a href="{{ route('add.brand') }}">
-                                                    <button type="button" class="btn btn-light" >
-                                                        <i data-feather="plus-square"></i>
-                                                    </button>
-                                                </a>
+                                                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#addBrandModal">
+                                                    <i data-feather="plus-square"></i>
+                                                </button>
                                             </div>
                                             <p class="error" style="color:red" id="error-brand_id"></p>
                                         </div>
@@ -216,6 +214,23 @@
                                         </div>
                                     </div>
 
+                                    <div class="mb-4 row align-items-center">
+                                        <label class="col-sm-3 form-label-title">Shipping Country</label>
+                                        <div class="col-sm-9">
+                                            <div class="d-flex align-items-center">
+                                                <div class="form-check me-3">
+                                                    <input class="form-check-input" type="radio" name="shipping_country" id="japan" value="1" {{ old('shipping_country') == '1' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="japan">Japan</label>
+                                                </div>
+                                                <div class="form-check me-3">
+                                                    <input class="form-check-input" type="radio" name="shipping_country" id="abroad" value="2" {{ old('shipping_country') == '2' ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="abroad">Abroad</label>
+                                                </div>
+                                            </div>
+                                            <p class="error" style="color:red; margin-top: 0.1rem;" id="error-shipping_country"></p>
+                                        </div>
+                                    </div>
+
                                     <button type="button" class="btn btn-animation btn-submit" data-bs-toggle="modal" data-bs-target="#confrimModal">Save</button>
 
                                     <!-- Confirm Modal Box -->
@@ -253,9 +268,60 @@
     <!-- New Product Add End -->
 </div>
 
+<!-- Add Brand Modal Box -->
+<div class="modal fade theme-modal remove-coupon" id="addBrandModal" aria-hidden="true" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-block text-center">
+                <h5 class="modal-title w-100" id="exampleModalLabel22">Add new brand</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url('/seller/brand') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="mb-3 row align-items-center">
+                        <label class="col-lg-2 col-md-3 col-form-label form-label-title">Name:</label>
+                        <div class="col-md-9 col-lg-10">
+                            <input class="form-control" id="brand_name" type="text" name="brand_name">
+                            <p style="display:none" class="brand_name error text-danger"></p>
+                                @if (!empty($error['brand_name']))
+                                    @foreach ($error['brand_name'] as  $key => $value)
+                                        <p class="brand_name error text-danger">{{ $value }}</p>
+                                    @endforeach
+                                @endif
+                        </div>
+                    </div>
+                    <div class="mb-3 row align-items-center">
+                        <label class="col-lg-2 col-md-3 col-form-label form-label-title">Icon:</label>
+                        <div class="col-md-9 col-lg-10">
+                            <input class="form-control" id="brand_icon" type="file" name="brand_icon" onchange="showBrand(this)">
+                            <img src="" id="showIcon">
+                            <p style="display:none" class="brand_icon error text-danger"></p>
+                                @if (!empty($error['brand_icon']))
+                                    @foreach ($error['brand_icon'] as  $key => $value)
+                                        <p class="brand_icon error text-danger">{{ $value }}</p>
+                                    @endforeach
+                                @endif
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-animation btn-brand">Yes</button>
+                        <button type="button" class="btn btn-animation btn-secondary" data-bs-dismiss="modal"
+                                style="background-color: #ff6b6b;border-color: #ff6b6b;">No</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add Brand Modal Box End-->
+
+
+
 <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
 <script src="{{ asset('backend/assets/js/jquery-3.6.0.min.js') }}"></script>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 <script>
@@ -280,6 +346,7 @@
     let product_qty = $.trim($("#product_qty").val());
     let estimate_date = $.trim($("#estimate_date").val());
     let delivery_price = $.trim($("#delivery_price").val());
+    let shipping_country = $('input[name="shipping_country"]:checked').val();
 
     let isValid = true;
 
@@ -414,13 +481,17 @@
         isValid = false;
     }
 
+    if (!shipping_country) {
+        $('#error-shipping_country').text('Please select a valid type.').show();
+        isValid = false;
+    }
+
     if (isValid) {
         $('#confirmModal').modal('show');
     }
 
     return false;
 });
-
 </script>
 
 <script>
@@ -634,5 +705,18 @@
             });
     });
 </script>
+
+<script>
+    function showBrand(input){
+        if(input.files && input.files[0]){
+            var reader = new FileReader();
+            reader.onload = function(e){
+                $('#showIcon').attr('src', e.target.result).width(80).height(80);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
 
 @endsection
