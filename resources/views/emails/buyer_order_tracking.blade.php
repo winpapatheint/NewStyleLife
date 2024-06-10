@@ -65,44 +65,58 @@
         <p>Dear {{ $orderItems->first()->buyer->name }},</p>
         <p>Your order has been {{ $orderItems->first()->status }} by {{ $orderItems->first()->seller->shop_name }}. 
             Here are the details:</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price(tax inc)</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($orderItems as $detail)
-                <tr>
-                    <td>{{ $detail->product->product_name }}</td>
-                    <td>{{ $detail->qty }}</td>
-                    <td>{{ $detail->price }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <table>
-            <tbody>
-                <tr>
-                    <td class="subtotal">Subtotal :</td>
-                    <td>¥{{ number_format($orderItems->first()->order->sub_total_amount , 0, '.', ',') }}</td>
-                </tr>
-                <tr>
-                    <td class="subtotal">Shipping Fee :</td>
-                    <td>¥{{ number_format($orderItems->first()->order->shipping_fee , 0, '.', ',') }}</td>
-                </tr>
-                <tr>
-                    <td class="subtotal">Coupon Discounted :</td>
-                    <td>¥{{ number_format($orderItems->first()->order->coupon_discount_amount , 0, '.', ',') }}</td>
-                </tr>
-                <tr>
-                    <td class="subtotal">Total Price :</td>
-                    <td>¥{{ number_format($orderItems->first()->order->total_amount , 0, '.', ',') }}</td>
-                </tr>
-            </tbody>
-        </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price(tax inc)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $amount = 0;
+                        $delivery_price = 0;
+                        $coupon_discount = 0;
+                    @endphp
+                    @foreach($orderItems as $detail)
+                    <tr>
+                        <td>{{ $detail->product->product_name }}</td>
+                        <td>{{ $detail->qty }}</td>
+                        <td>{{ $detail->price }}</td>
+                    </tr>
+                    @php
+                        $amount += $detail->amount;
+                        if ($detail->used_delivery_price == 1) {
+                            $delivery_price = $detail->delivery_price;
+                        }
+                        if ($detail->used_shop_coupon_status == 1 || $detail->used_product_coupon_status == 1 ) {
+                            $coupon_discount = $detail->order->coupon_discount_amount;
+                        }
+                    @endphp
+                    @endforeach
+                </tbody>
+            </table>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="subtotal">Amount :</td>
+                        <td>¥{{ number_format($amount , 0, '.', ',') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="subtotal">Shipping Fee :</td>
+                        <td>¥{{ number_format($delivery_price , 0, '.', ',') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="subtotal">Coupon Discounted :</td>
+                        <td>¥{{ number_format($coupon_discount , 0, '.', ',') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="subtotal">Total Price :</td>
+                        <td>¥{{ number_format((($amount + $delivery_price) - $coupon_discount) , 0, '.', ',') }}</td>
+                    </tr>
+                </tbody>
+            </table>
         
         <p>Thank you for shopping with us.</p>
         <div class="footer">
