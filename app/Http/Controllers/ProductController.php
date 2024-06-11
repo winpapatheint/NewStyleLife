@@ -27,7 +27,6 @@ class ProductController extends Controller
 
     public function saveBrand(Request $request)
     {
-        dd('Reached here!');
         $brand = new Brand();
         $validated = request()->validate([
             'brand_name' => 'required|string|max:255',

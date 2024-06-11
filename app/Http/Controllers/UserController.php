@@ -600,7 +600,7 @@ class UserController extends Controller
     }
 
     public function showCarts(Request $request)
-    {dd($request->all());
+    {
         $user = DB::table('users')->where('id', Auth::user()->id)->first();
         $productid = $request->id;
 
