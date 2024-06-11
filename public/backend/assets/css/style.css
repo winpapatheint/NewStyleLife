@@ -2543,7 +2543,7 @@ button:focus {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: rgba(13, 164, 135, 0.5);
+    background-color: var(--theme-color);
     border-radius: 5px
 }
 
