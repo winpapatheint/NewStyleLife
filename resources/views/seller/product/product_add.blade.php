@@ -219,11 +219,11 @@
                                         <div class="col-sm-9">
                                             <div class="d-flex align-items-center">
                                                 <div class="form-check me-3">
-                                                    <input class="form-check-input" type="radio" name="shipping_country" id="japan" value="1" {{ old('shipping_country') == '1' ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="shipping_country" id="japan" value="0" {{ old('shipping_country') == '0' ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="japan">Japan</label>
                                                 </div>
                                                 <div class="form-check me-3">
-                                                    <input class="form-check-input" type="radio" name="shipping_country" id="abroad" value="2" {{ old('shipping_country') == '2' ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="shipping_country" id="abroad" value="1" {{ old('shipping_country') == '1' ? 'checked' : '' }}>
                                                     <label class="form-check-label" for="abroad">Abroad</label>
                                                 </div>
                                             </div>
@@ -279,18 +279,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ url('/seller/brand') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('store.brand') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3 row align-items-center">
                         <label class="col-lg-2 col-md-3 col-form-label form-label-title">Name:</label>
                         <div class="col-md-9 col-lg-10">
                             <input class="form-control" id="brand_name" type="text" name="brand_name">
-                            <p style="display:none" class="brand_name error text-danger"></p>
-                                @if (!empty($error['brand_name']))
-                                    @foreach ($error['brand_name'] as  $key => $value)
-                                        <p class="brand_name error text-danger">{{ $value }}</p>
-                                    @endforeach
-                                @endif
+                            <p class="error" style="color:red" id="error-brand_name"></p>
                         </div>
                     </div>
                     <div class="mb-3 row align-items-center">
@@ -298,12 +293,7 @@
                         <div class="col-md-9 col-lg-10">
                             <input class="form-control" id="brand_icon" type="file" name="brand_icon" onchange="showBrand(this)">
                             <img src="" id="showIcon">
-                            <p style="display:none" class="brand_icon error text-danger"></p>
-                                @if (!empty($error['brand_icon']))
-                                    @foreach ($error['brand_icon'] as  $key => $value)
-                                        <p class="brand_icon error text-danger">{{ $value }}</p>
-                                    @endforeach
-                                @endif
+                            <p class="error" style="color:red" id="error-brand_icon"></p>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -318,11 +308,43 @@
 </div>
 <!-- Add Brand Modal Box End-->
 
-
-
 <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
 <script src="{{ asset('backend/assets/js/jquery-3.6.0.min.js') }}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<script>
+    $('.btn-brand').click(function() {
+        $('.error').hide();
+
+        let brand_name = $.trim($("#brand_name").val());
+        let brand_icon = $("#brand_icon")[0].files[0];
+
+        let isValid = true;
+
+        if (!brand_name) {
+            $('#error-brand_name').text('Please provide brand name.').show();
+            isValid = false;
+        } else if (brand_name.length > 255) {
+            $('#error-brand_name').text('Brand name must not exceed 255 characters.').show();
+            isValid = false;
+        }
+
+        if (!brand_icon) {
+            $('#error-brand_icon').text('Please provide brand image.').show();
+            isValid = false;
+        } else if (brand_icon.size > 2 * 1024 * 1024) {
+            $('#error-brand_icon').text('Brand image must not exceed 2MB.').show();
+            isValid = false;
+        }
+
+        if (isValid) {
+            $(this).closest('form').submit();
+        }
+
+        return false;
+    });
+</script>
+
 
 <script>
     $('.btn-submit').click(function() {

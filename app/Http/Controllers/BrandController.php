@@ -7,9 +7,17 @@ use Illuminate\Http\Request;
 
 class BrandController extends Controller
 {
-    public function addBrand()
+    public function storeBrand(Request $request)
     {
-        return view('seller.brand.brand_add');
-    }
+        $brands = new Brand();
 
+        if ($request->hasFile('brand_icon')) {
+            $imageName = time().'.'.$request->brand_icon->extension();
+            $request->brand_icon->move(public_path('upload/brand'), $imageName);
+            $brands->brand_icon = $imageName;
+        }
+        $brands->brand_name = $request->input('brand_name');
+        $brands->save();
+        return back();
+    }
 }

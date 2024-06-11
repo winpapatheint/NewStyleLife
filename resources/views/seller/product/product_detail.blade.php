@@ -174,8 +174,14 @@
                                                 <p>¥{{number_format($data->delivery_price) }}</p>
                                             </div>
                                         </div>
+                                        <div class="mb-2 row align-items-center">
+                                            <label class="form-label-title col-sm-3 mb-0">Shipping Country:</label>
+                                            <div class="col-sm-9">
+                                                <p>{{ $data->shipping_country == 1 ? 'Abroad' : 'Japan' }}</p>
+                                            </div>
+                                        </div>
                                         <a href="{{ route('edit.product',$data->id) }}">
-                                            <button type="button" class="btn btn-animation">Edit</button>
+                                            <button type="button" class="btn btn-animation mt-4">Edit</button>
                                         </a>
                                     </form>
                                 </div>

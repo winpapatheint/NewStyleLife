@@ -299,9 +299,9 @@
             if (!zip_code) {
                 isValid = false;
                 document.getElementById('error-zip_code').textContent = 'Please provide your zip code.';
-            } else if (zip_code.length !== 7 || !/^\d{7}$/.test(zip_code)) {
+            } else if (!/^\d{7}$/.test(zip_code)) {
                 isValid = false;
-                document.getElementById('error-zip_code').textContent = 'Please provide a valid 7-digit zip code.';
+                document.getElementById('error-zip_code').textContent = 'Please provide a valid digit.';
             }
 
             if (!country || country === 'Choose Country') {

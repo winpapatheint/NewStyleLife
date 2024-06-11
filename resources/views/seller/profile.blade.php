@@ -141,6 +141,13 @@
                                 </div>
 
                                 <div class="mb-4 row align-items-center">
+                                    <label class="form-label-title col-sm-2 mb-0">Country</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="country" name="country" class="form-control"  value="{{ $data->country }}" @if(!empty(Auth::user()->created_by)) readonly @endif>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4 row align-items-center">
                                     <label class="form-label-title col-sm-2 mb-0">Zip Code</label>
                                     <div class="col-sm-10">
                                         <input class="form-control" type="text" name="zip_code" value="{{ $data->zip_code }}" @if(!empty(Auth::user()->created_by)) readonly @endif>
@@ -150,7 +157,7 @@
                                 <div class="mb-4 row align-items-center">
                                     <label class="form-label-title col-sm-2 mb-0">Prefecture</label>
                                     <div class="col-sm-10">
-                                        <input type="text" id="prefecture" name="prefecture" class="form-control" placeholder="Prefecture" value="{{ $data->prefecture }}" @if(!empty(Auth::user()->created_by)) readonly @endif>
+                                        <input type="text" id="prefecture" name="prefecture" class="form-control"  value="{{ $data->prefecture }}" @if(!empty(Auth::user()->created_by)) readonly @endif>
                                     </div>
                                 </div>
 

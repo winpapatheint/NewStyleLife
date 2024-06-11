@@ -24,26 +24,6 @@ use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class ProductController extends Controller
 {
-
-    public function saveBrand(Request $request)
-    {
-        $brand = new Brand();
-        $validated = request()->validate([
-            'brand_name' => 'required|string|max:255',
-            'brand_icon' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $brand->brand_name = $validated['brand_name'];
-        if ($request->hasFile('brand_icon')) {
-            $imageName = time().'.'.$request->brand_icon->extension();
-            $request->brand_icon->move(public_path('upload/brand'), $imageName);
-            $brand->brand_icon = $imageName;
-        }
-        $brand->save();
-        return back();
-    }
-
-
     public function allProduct()
     {
         $validated = request()->validate([
@@ -174,7 +154,7 @@ class ProductController extends Controller
                 \r\n"."Name".$name."
                 \r\n"."Email：　".$email."
                 \r\n
-                \r\n"."Notice：　
+                \r\n"."Notice：
                 \r\n
                 \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
             });
@@ -191,7 +171,7 @@ class ProductController extends Controller
                     \r\n"."Name".$name."
                     \r\n"."Email：　".$email."
                     \r\n
-                    \r\n"."Notice：　
+                    \r\n"."Notice：
                     \r\n
                     \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
                 });
