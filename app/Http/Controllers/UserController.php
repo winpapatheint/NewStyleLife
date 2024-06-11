@@ -600,7 +600,7 @@ class UserController extends Controller
     }
 
     public function showCarts(Request $request)
-    {
+    {dd($request->all());
         $user = DB::table('users')->where('id', Auth::user()->id)->first();
         $productid = $request->id;
 
@@ -614,6 +614,8 @@ class UserController extends Controller
                     'seller_id' => $product->seller_id,
                     'buyer_id' => $buyer->id,
                     'quantity' => '1',
+                    'size' => $request->size,
+                    'color' => $request->color,
                 ]);
         }
 
@@ -1066,6 +1068,7 @@ class UserController extends Controller
 
             foreach ($productIds as $key => $product_id) {
                 $orderedProduct = Product::where('id', $product_id)->first();
+                $cart = Cart::where('product_id', $product_id)->where('buyer_id', $buyerId)->first();
                 $usedDeliStatus = 0;
                 $usedShopCouponStatus = 0;
                 $usedProductCouponStatus = 0;
@@ -1092,8 +1095,8 @@ class UserController extends Controller
                         'seller_id' => $sellerId[$key],
                         'product_id' => (int)$product_id,
                         'prefecture_id' => $prefectureId,
-                        'color' => $colors[$key],
-                        'size' => $sizes[$key],
+                        'color' => $cart->color,
+                        'size' => $cart->size,
                         'qty' => $quantities[$key],
                         'price' => $orderedProduct->selling_price,
                         'delivery_price' => $orderedProduct->delivery_price,
@@ -1256,6 +1259,7 @@ class UserController extends Controller
 
             foreach ($productIds as $key => $product_id) {
                 $orderedProduct = Product::where('id', $product_id)->first();
+                $cart = Cart::where('product_id', $product_id)->where('buyer_id', $buyerId)->first();
                 $usedDeliStatus = 0;
                 $usedShopCouponStatus = 0;
                 $usedProductCouponStatus = 0;
@@ -1282,8 +1286,8 @@ class UserController extends Controller
                         'seller_id' => $sellerId[$key],
                         'product_id' => (int)$product_id,
                         'prefecture_id' => $prefectureId,
-                        'color' => $colors[$key],
-                        'size' => $sizes[$key],
+                        'color' => $cart->color,
+                        'size' => $cart->size,
                         'qty' => $quantities[$key],
                         'price' => $orderedProduct->selling_price,
                         'delivery_price' => $orderedProduct->delivery_price,

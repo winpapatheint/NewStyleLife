@@ -92,9 +92,18 @@
                                         @else
                                             <h5>¥{{ number_format($cartlist->selling_price, 0, '.', ',') }}</h5>
                                         @endif
+                                            <div class="product-detail" style="width: 100px;">
+                                                <ul>
+                                                    <li class="text-content"><span class="text-title">
+                                                            Size :</span>{{ $cartlist->size }}
+                                                    </li>
+                                                    <li class="text-content"><span class="text-title">
+                                                            Color :</span>{{ $cartlist->color }}
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </td>
                       
-                
                                         <td class="quantity">
                                             <div class="quantity-price">
                                                 <div class="cart_qty">
@@ -102,9 +111,6 @@
                                                         <button type="button" class="btn qty-left-minus" data-type="minus" data-field="">
                                                             <i class="fa fa-minus ms-0"></i>
                                                         </button>
-
-        
-                                                        
                                                         @if(session()->has('instockCheck'))
                                                             @php
                                                                 $instockCheck = session()->get('instockCheck', []);
