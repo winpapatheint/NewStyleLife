@@ -2823,60 +2823,54 @@ class AdminController extends Controller
                 'email' => 'required|string|email|max:255',
                 'phone' => 'required|string|max:255',
                 'message' => 'required',
-
             );
             $request->validate($valarr);
 
-            $data = array('name'=>$request->name);
+            $data = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'message' => $request->message
+            ];
 
             if (!empty($request->email)) {
-                $mail = Mail::send([], $data, function($message) use ($request, $inquiry_email) {
-                    $message->to($inquiry_email, 'Ecommerce ')->subject($request->name.'Question form');
-                    $message->from($request->email,$request->name);
-                    $message->setBody("We received the following inquiry from the official e-commerce website.
-                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                    \r\nName：　".$request->name."
-                    \r\n"."Email：　".$request->email."
-                    \r\n
-                    \r\n"."Message：　
-                    \r\n".$request->message."
-                    \r\n
-                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+
+                Mail::send([], $data, function ($message) use ($data, $inquiry_email) {
+                    $message->to($inquiry_email, 'New Style Life')->subject( 'FAQ Notice From ' . '&nbsp;' . $data['name']);
+                    $message->from($data['email'] , $data['name']);
+                    $message->setBody("We received the following inquiry from the official New Style Life website:\n\n"
+                        . "Name: " . $data['name'] . "\n"
+                        . "Email: " . $data['email'] . "\n"
+                        . "Phone: " . $data['phone'] . "\n"
+                        . "Message: " . $data['message'] . "\n"
+                        . "============================\n");
                 });
             }
 
-            $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();;
+            $adminEmails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();
+            $data = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'message' => $request->message
+            ];
 
-            $inquiry_email = 'info-test@asia-hd.com';
-            $data = array('title' => $request->title);
-
-            if (!empty(  $adminMails)) {
-                foreach ($adminMails as $email) {
-                    Mail::send([], $data, function ($message) use ($request, $adminMails) {
-                        $message->to($email, 'Ecommerce ')->subject($request->name.'Question form');
-                        $message->from($request->email,$request->name);
-                        $message->setBody("We received the following inquiry from the official e-commerce website.
-                            \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                            \r\nName：　" . $request->title . "
-                            \r\nEmail：　" .  $inquiry_email . "
-                            \r\n
-                            \r\nMessage：　
-                            \r\n" . $request->message . "
-                            \r\n
-                            \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+            if (!empty($adminEmails)) {
+                foreach ($adminEmails as $email) {
+                    Mail::send([], $data, function ($message) use ($data,$inquiry_email) {
+                        $message->to($data['email'])->subject('FAQ Notice From ' . '&nbsp;' . $data['name']);
+                        $message->from($inquiry_email, $data['name']);
+                        $message->setBody("We received the following inquiry from the official New Style Life website:\n\n"
+                            . "Name: " . $data['name'] . "\n"
+                            . "Email: " . $data['email'] . "\n"
+                            . "Phone: " . $data['phone'] . "\n"
+                            . "Message: " . $data['message'] . "\n"
+                            . "============================\n");
                     });
                 }
             }
 
-            $notification = Notification::find(6);
-            $newval = array('time' => Carbon::now(),
-                            'created_at' => Carbon::now(),
-                            );
-            $notification->update( $newval);
-
             return redirect('/faq#ts-form')->with('success','Your inquiry has been successfully sent');
-
-
         }
 
         else if( $request->from == 'contact')
@@ -2890,52 +2884,49 @@ class AdminController extends Controller
                 'message' => 'required',
             ]);
 
-            $data = array('name'=>$request->name);
-            if (!empty($request->email)) {
-                $mail = Mail::send([], $data, function ($message) use ($request, $inquiry_email) {
-                    $message->to($inquiry_email, 'New Style Life')->subject('Question form From ' . $request->name);
-                    $message->from($request->email, $request->name);
-                    $message->setBody("We received the following inquiry from the official new style life website
-                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                    \r\nName：　" . $request->name . "
-                    \r\nEmail：　" . $request->email . "
-                    \r\n
-                    \r\nMessage：　" . $request->message . "
-                    \r\n
-                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+            $data = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'message' => $request->message
+            ];
 
+            if (!empty($request->email)) {
+
+                Mail::send([], $data, function ($message) use ($data, $inquiry_email) {
+                    $message->to($inquiry_email, 'New Style Life')->subject( 'Contact Notice From ' . '&nbsp;' . $data['name']);
+                    $message->from($data['email'] , $data['name']);
+                    $message->setBody("We received the following inquiry from the official New Style Life website:\n\n"
+                        . "Name: " . $data['name'] . "\n"
+                        . "Email: " . $data['email'] . "\n"
+                        . "Phone: " . $data['phone'] . "\n"
+                        . "Message: " . $data['message'] . "\n"
+                        . "============================\n");
                 });
             }
 
-            $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();
-            $data = array('title' => $request->title);
+            $adminEmails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();
+            $data = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'message' => $request->message
+            ];
 
-            foreach ($adminMails as $email) {
-                $mailData = array('name' => $request->name);
-
-                if (!empty($request->email)) {
-                    $mail = Mail::send([], $mailData, function ($message) use ($request, $email) {
-                        $message->to($email, 'New Style Life')->subject('Question form From ' . $request->name);
-                        $message->from($request->email, $request->name);
-                        $message->setBody("We received the following inquiry from the official new style life website
-                        \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                        \r\nName：　" . $request->name . "
-                        \r\nEmail：　" . $request->email . "
-                        \r\n
-                        \r\nMessage：　" . $request->message . "
-                        \r\n
-                        \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-
+            if (!empty($adminEmails)) {
+                foreach ($adminEmails as $email) {
+                    Mail::send([], $data, function ($message) use ($data,$inquiry_email) {
+                        $message->to($data['email'])->subject('Contact Notice From ' . '&nbsp;' . $data['name']);
+                        $message->from($inquiry_email, $data['name']);
+                        $message->setBody("We received the following inquiry from the official New Style Life website:\n\n"
+                            . "Name: " . $data['name'] . "\n"
+                            . "Email: " . $data['email'] . "\n"
+                            . "Phone: " . $data['phone'] . "\n"
+                            . "Message: " . $data['message'] . "\n"
+                            . "============================\n");
                     });
                 }
             }
-
-
-            $notification = Notification::find(7);
-            $newval = array('time' => Carbon::now(),
-                            'created_at' => Carbon::now(),
-                            );
-            $notification->update( $newval);
             return redirect('/contact#contact-form')->with('success','Your inquiry has been successfully sent');
 
         }
@@ -2950,53 +2941,51 @@ class AdminController extends Controller
                 'message' => 'required',
             ]);
 
-            $data = array('name'=>$request->name);
+            $data = [
+                'title' => $request->title,
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'message' => $request->message
+            ];
+
             if (!empty($request->email)) {
-                $mail = Mail::send([], $data, function($message) use ($request, $inquiry_email) {
 
-                    $message->to($inquiry_email, 'Ecommerce ')->subject($request->name.'Question form');
-                    $message->from($request->email,$request->name);
-                    $message->setBody("We received the following inquiry from the official e-commerce website
-                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                    \r\nName：　".$request->name."
-                    \r\n"."Email：　：　".$request->email."
-                    \r\n
-                    \r\n"."Message：　
-                    \r\n".$request->message."
-                    \r\n
-                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-
+                Mail::send([], $data, function ($message) use ($data, $inquiry_email) {
+                    $message->to($inquiry_email, 'New Style Life')->subject( 'Privacy Notice From ' . '&nbsp;' . $data['name']);
+                    $message->from($data['email'] , $data['name']);
+                    $message->setBody("We received the following inquiry from the official New Style Life website:\n\n"
+                        . "Name: " . $data['name'] . "\n"
+                        . "Email: " . $data['email'] . "\n"
+                        . "Phone: " . $data['phone'] . "\n"
+                        . "Message: " . $data['message'] . "\n"
+                        . "============================\n");
                 });
             }
 
-            $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();
+            $adminEmails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();
+            $data = [
+                'title' => $request->title,
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'message' => $request->message
+            ];
 
-            $inquiry_email = 'info-test@asia-hd.com';
-            $data = array('title' => $request->title);
-
-            if (!empty(  $adminMails)) {
-                foreach ($adminMails as $email) {
-                    Mail::send([], $data, function ($message) use ($request, $adminMails) {
-                        $message->to($email, 'Ecommerce ')->subject($request->name.'Question form');
-                        $message->from($request->email,$request->name);
-                        $message->setBody("We received the following inquiry from the official e-commerce website.
-                            \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                            \r\nName：　" . $request->title . "
-                            \r\nEmail：　" .  $inquiry_email . "
-                            \r\n
-                            \r\nMessage：　
-                            \r\n" . $request->message . "
-                            \r\n
-                            \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+            if (!empty($adminEmails)) {
+                foreach ($adminEmails as $email) {
+                    Mail::send([], $data, function ($message) use ($data,$inquiry_email) {
+                        $message->to($data['email'])->subject('Privacy Notice From ' . '&nbsp;' . $data['name']);
+                        $message->from($inquiry_email, $data['name']);
+                        $message->setBody("We received the following inquiry from the official New Style Life website:\n\n"
+                            . "Name: " . $data['name'] . "\n"
+                            . "Email: " . $data['email'] . "\n"
+                            . "Phone: " . $data['phone'] . "\n"
+                            . "Message: " . $data['message'] . "\n"
+                            . "============================\n");
                     });
                 }
             }
-
-            $notification = Notification::find(8);
-            $newval = array('time' => Carbon::now(),
-                            'created_at' => Carbon::now(),
-                            );
-            $notification->update( $newval);
 
             return redirect('/privacy-policy#privacy-form')->with('success','Your inquiry has been successfully sent');
 
@@ -3171,7 +3160,7 @@ class AdminController extends Controller
    {
       if (!empty($request->image)) {
           $imageName = time().'.'.$request->image->extension();
-          $request->image->move(public_path('frontend/assets/images/furniture/banner'), $imageName);
+          $request->image->move(public_path('images'), $imageName);
       } else {
           $imageName = '';
       }

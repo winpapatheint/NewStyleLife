@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\MultiImg;
 use App\Models\SubCategory;
 use App\Models\Notification;
+use App\Models\SellerNotification;
 use App\Models\Seller;
 use Illuminate\Http\Request;
 use App\Models\SubCategoryTitle;
@@ -275,6 +276,55 @@ class ProductController extends Controller
             File::delete($img->photo_name);
             MultiImg::where('product_id', $id)->delete();
         }
+        $inquiry_email = 'info-test@asia-hd.com';
+        $user = User::where('id', Auth::user()->id)->select('email', 'name')->first();
+        $email = $user->email;
+        $name = $user->name;
+        $data = array('name'=>$name);
+        if (!empty($request->email)) {
+            $mail = Mail::send([], $data, function($message) use ($request, $inquiry_email,$name,$email) {
+                $message->to($inquiry_email, 'Asian Food Museum ')->subject($name);
+                $message->from($email,$name);
+                $message->setBody("The following notification was received from the Asian Food Museum official website.
+                \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+                \r\n"."Name".$name."
+                \r\n"."Email".$email."
+                \r\n
+                \r\n"."Notice：　Product deleted successfully.
+                \r\n
+                \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+            });
+        }
+
+        $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();
+        if (!empty(  $adminMails)) {
+            foreach ($adminMails as $email) {
+                Mail::send([], $data, function ($message) use ($request, $adminMails,$name,$email) {
+                    $message->to($email, 'Asian Food Museum')->subject($name);
+                    $message->from($email,$name);
+                    $message->setBody("The following notification was received from the Asian Food Museum official website.
+                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+                    \r\n"."Name".$name."
+                    \r\n"."Email：　".$email."
+                    \r\n
+                    \r\n"."Notice：　Product deleted successfully
+                    \r\n
+                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+                });
+            }
+        }
+
+        $notification = Notification::find(6);
+        $newval = array('time' => Carbon::now(),
+                        'created_at' => Carbon::now(),
+                        );
+        $notification->update( $newval);
+
+        $sellernotification = SellerNotification::find(3);
+        $newval = array('time' => Carbon::now(),
+                        'created_at' => Carbon::now(),
+                        );
+        $sellernotification->update( $newval);
         $msg = ('Product deleted Successfully');
         return back()->with('success', $msg);
     }
