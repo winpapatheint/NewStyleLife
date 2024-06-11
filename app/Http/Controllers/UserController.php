@@ -20,6 +20,7 @@ use App\Models\BuyerAddress;
 use App\Models\BuyerPayment;
 use App\Models\CouponDetail;
 use App\Models\Notification;
+use App\Models\SellerNotification;
 use Illuminate\Http\Request;
 use App\Http\Middleware\Role;
 use Illuminate\Http\Response;
@@ -961,7 +962,7 @@ class UserController extends Controller
                             ->first();
                 $cartItem->shop_name = $shopName->shopname;
             }
-        
+
         $bankAccounts = BankAccount::all();
 
             return view('front-end.checkout',compact('buyerAddress','buyerPayment','cartLists','subTotal','couponDiscount',
@@ -1084,7 +1085,7 @@ class UserController extends Controller
                     $usedShopCouponStatus = 1;
                 if ($order->coupon_used_product_id == (int)$product_id)
                     $usedProductCouponStatus = 1;
-                
+
                     $orderdetailsData = [
                         'order_id' => $order->id,
                         'buyer_id' => (int)$buyerId,
@@ -1274,7 +1275,7 @@ class UserController extends Controller
                     $usedShopCouponStatus = 1;
                 if ($order->coupon_used_product_id == (int)$product_id)
                     $usedProductCouponStatus = 1;
-                
+
                     $orderdetailsData = [
                         'order_id' => $order->id,
                         'buyer_id' => (int)$buyerId,
@@ -1317,7 +1318,7 @@ class UserController extends Controller
 
             DB::commit();
             \Mail::to($orderedBuyer->email)->send(new \App\Mail\OrderConfirmation($orderDetails, $bankInfo, $totalAmount, $transferPersonName, $transferDate, $name));
-            
+
             $admins = User::where('role', 'admin')->get();
             foreach ($admins as $admin) {
                 \Mail::to($admin->email)->send(new \App\Mail\AdminOrderConfirmation($orderDetails, $bankInfo, $totalAmount, $transferPersonName, $transferDate, $name));
@@ -1421,7 +1422,7 @@ class UserController extends Controller
         $buyer = Buyer::where('user_id', $user->id)->first();
         $userNotis = UserNotification::with('orderDetail')->with('orderDetail.product')->with('orderDetail.order')
                     ->with('orderDetail.seller')->where('buyer_id', $buyer->id)->orderBy('id', 'DESC')->paginate($limit);
-                    
+
         // to be seen
         UserNotification::where('buyer_id', $buyer->id)->update(['seen' => 1]);
         $ttl = $userNotis->total();

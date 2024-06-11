@@ -107,7 +107,7 @@
                                                     <input type="file" name="image" id="image" class="form-control" >
                                                     <img id="preview-image-before-upload" alt="your image"
                                                         @if(!empty($data->image))
-                                                            src="{{ asset('images/'.($data->image ?? 'blog/blog-details.jpg')   ) }}"
+                                                            src="{{ asset('images/'.($data->image ?? 'images/'.($data->image))  ) }}"
                                                             style="max-width: 100%;"
                                                         @else
                                                             style="display: none; max-width: 100%;"
@@ -129,7 +129,7 @@
                                                     Register
                                                 @else
                                                     <i class="fa fa-edit" aria-hidden="true"></i>
-                                                     Edit
+                                                     Updated
                                                 @endif
                                             </button>
 
@@ -221,7 +221,7 @@
         }
     </script>
 
-<script>
+    <script>
     $(".btn-submit").click(function(e){
 
         e.preventDefault();
@@ -231,6 +231,42 @@
 
         });
 
+    </script>
+    <script>
+        document.getElementById("image").addEventListener("change", function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImage = document.getElementById("preview-image-before-upload");
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = "block";
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+    <script>
+        document.getElementById("image").addEventListener("change", function() {
+            const file = this.files[0];
+            const allowedTypes = ["image/jpeg", "image/png", "image/jpg", "image/gif"]; // Add more types if needed
+            if (file && allowedTypes.includes(file.type)) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImage = document.getElementById("preview-image-before-upload");
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = "block";
+                    document.querySelector(".image.error").style.display = "none";
+                }
+                reader.readAsDataURL(file);
+            } else {
+                // Show error message
+                document.querySelector(".image.error").style.display = "block";
+                document.querySelector(".image.error").innerText = "Please select a valid image file (JPEG, JPG, PNG, GIF).";
+                // Clear the file input
+                this.value = null;
+            }
+        });
     </script>
 
 </x-auth-layout>

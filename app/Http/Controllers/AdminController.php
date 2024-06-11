@@ -2528,7 +2528,6 @@ class AdminController extends Controller
         $data = DB::table('tops')
                     ->find($id);
         $editmode = true;
-
         return view('admin.registertop',compact('data','editmode'));
 
     }
@@ -2893,17 +2892,15 @@ class AdminController extends Controller
 
             $data = array('name'=>$request->name);
             if (!empty($request->email)) {
-                $mail = Mail::send([], $data, function($message) use ($request, $inquiry_email) {
-
-                    $message->to($inquiry_email, 'Ecommerce ')->subject($request->name.'Question form');
-                    $message->from($request->email,$request->name);
-                    $message->setBody("We received the following inquiry from the official e-commerce website
+                $mail = Mail::send([], $data, function ($message) use ($request, $inquiry_email) {
+                    $message->to($inquiry_email, 'New Style Life')->subject('Question form From ' . $request->name);
+                    $message->from($request->email, $request->name);
+                    $message->setBody("We received the following inquiry from the official new style life website
                     \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                    \r\nName：　".$request->name."
-                    \r\n"."Email：　".$request->email."
+                    \r\nName：　" . $request->name . "
+                    \r\nEmail：　" . $request->email . "
                     \r\n
-                    \r\n"."Message：　
-                    \r\n".$request->message."
+                    \r\nMessage：　" . $request->message . "
                     \r\n
                     \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
 
@@ -2911,29 +2908,30 @@ class AdminController extends Controller
             }
 
             $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();
-
-            $inquiry_email = 'info-test@asia-hd.com';
             $data = array('title' => $request->title);
 
-            if (!empty(  $adminMails)) {
-                foreach ($adminMails as $email) {
-                    Mail::send([], $data, function ($message) use ($request, $adminMails) {
-                        $message->to($email, 'Ecommerce ')->subject($request->name.'Question form');
-                        $message->from($request->email,$request->name);
-                        $message->setBody("We received the following inquiry from the official e-commerce website.
-                            \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                            \r\nName：　" . $request->title . "
-                            \r\nEmail：　" .  $inquiry_email . "
-                            \r\n
-                            \r\nMessage：　
-                            \r\n" . $request->message . "
-                            \r\n
-                            \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+            foreach ($adminMails as $email) {
+                $mailData = array('name' => $request->name);
+
+                if (!empty($request->email)) {
+                    $mail = Mail::send([], $mailData, function ($message) use ($request, $email) {
+                        $message->to($email, 'New Style Life')->subject('Question form From ' . $request->name);
+                        $message->from($request->email, $request->name);
+                        $message->setBody("We received the following inquiry from the official new style life website
+                        \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+                        \r\nName：　" . $request->name . "
+                        \r\nEmail：　" . $request->email . "
+                        \r\n
+                        \r\nMessage：　" . $request->message . "
+                        \r\n
+                        \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
+
                     });
                 }
             }
 
-            $notification = Notification::find(8);
+
+            $notification = Notification::find(7);
             $newval = array('time' => Carbon::now(),
                             'created_at' => Carbon::now(),
                             );
@@ -2994,7 +2992,7 @@ class AdminController extends Controller
                 }
             }
 
-            $notification = Notification::find(7);
+            $notification = Notification::find(8);
             $newval = array('time' => Carbon::now(),
                             'created_at' => Carbon::now(),
                             );
@@ -3178,23 +3176,24 @@ class AdminController extends Controller
           $imageName = '';
       }
 
-      $time = new DateTime();
+       $time = new DateTime();
 
-          $updval = array('phaseone' => $request->phaseone,
-                            'phasetwo' => $request->phasetwo,
-                            'phasethree' => $request->phasethree,
-                            'updated_at' => $time->format('Y-m-d H:i:s')
-                          );
+           $updval = array('phaseone' => $request->phaseone,
+                             'phasetwo' => $request->phasetwo,
+                             'phasethree' => $request->phasethree,
+                             'updated_at' => $time->format('Y-m-d H:i:s')
+                           );
 
-          if (!empty($request->image)) {
-              $updval['image'] = $imageName;
-          }
+           if (!empty($request->image)) {
+               $updval['image'] = $imageName;
+           }
 
-          DB::table('tops')->where('id',$request->id)->update($updval);
+           DB::table('tops')->where('id',$request->id)->update($updval);
 
-          return redirect('/admin/top')->with('success','「'.$request->title.'」'.__('auth.doneedit'));
+           return redirect('/admin/top')->with('success','「'.$request->title.'」'.__('auth.doneedit'));
 
-      }
+       }
+
 
       public function storecustomer(Request $request)
       {

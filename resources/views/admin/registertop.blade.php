@@ -79,8 +79,7 @@
                                         <div class="mb-4 row  align-items-center">
                                             <label class="form-label-title col-sm-3 mb-0">Phase three</label>
                                             <div class="col-sm-9">
-                                                <input class="form-control" type="text" placeholder="Blog Name" name="phasethree" id="phasethree"
-                                                    value="{{ old('phasethree') ?? $data->phasethree ?? '' }}">
+                                                <textarea class="form-control" placeholder="Blog Name" name="phasethree" id="phasethree" rows="4">{{ old('phasethree') ?? $data->phasethree ?? '' }}</textarea>
                                                 <p style="display:none" class="phasethree error text-danger"></p>
                                                     @if (!empty($error['phasethree']))
                                                         @foreach ($error['phasethree'] as  $key => $value)
@@ -97,7 +96,7 @@
                                                 <input type="file" name="image" id="image" class="form-control" >
                                                 <img id="preview-image-before-upload" alt="your image"
                                                     @if(!empty($data->image))
-                                                        src="{{ asset('frontend/assets/images/homepage/'.($data->image ?? 'blog/blog-details.jpg')   ) }}"
+                                                        src="{{ asset('frontend/assets/images/furniture/banner/'.($data->image ?? 'images/'.($data->image))  ) }}"
                                                         style="max-width: 100%;"
                                                     @else
                                                         style="display: none; max-width: 100%;"
@@ -112,13 +111,14 @@
                                             </div>
                                         </div>
 
-                                        <button class="btn btn-submit btn-animation ms-auto fw-bold" type="submit">
+                                        <button class="btn btn-submit btn-animation ms-auto fw-bold" type="button"data-bs-toggle="modal"
+                                                data-bs-target="#confirmModal">
                                             @if (!$editmode)
                                                 <i class="fa fa-user-plus" aria-hidden="true"></i>
                                                 Save
                                             @else
                                                 <i class="fa fa-edit" aria-hidden="true"></i>
-                                                Edit
+                                                Updated
                                             @endif
                                         </button>
 
@@ -209,56 +209,42 @@
         }
     </script>
     <script>
-        $(".btn-submit").click(function(e){
+        document.getElementById("image").addEventListener("change", function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImage = document.getElementById("preview-image-before-upload");
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = "block";
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 
-            e.preventDefault();
-                var _token = $("input[name='_token']").val();
-                let formData = new FormData(registertop);
+    <script>
+        document.getElementById("image").addEventListener("change", function() {
+            const file = this.files[0];
+            const allowedTypes = ["image/jpeg", "image/png", "image/gif"]; // Add more types if needed
+            if (file && allowedTypes.includes(file.type)) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImage = document.getElementById("preview-image-before-upload");
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = "block";
+                    document.querySelector(".image.error").style.display = "none";
+                }
+                reader.readAsDataURL(file);
+            } else {
+                // Show error message
+                document.querySelector(".image.error").style.display = "block";
+                document.querySelector(".image.error").innerText = "Please select a valid image file (JPEG, PNG, GIF).";
+                // Clear the file input
+                this.value = null;
+            }
+        });
+    </script>
 
-                $.ajax({
-                    url: "{{ $action }}",
-                    type:'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-
-                    success: function(data) {
-                        if($.isEmptyObject(data.error)){
-                        // alert("success");
-                            console.log(data.success);
-                            $('.error').hide()
-                            $('#confirmModal').modal('show');
-                        }else{
-                            // alert("err");
-                            console.log(data.error);
-                            $('.error').hide()
-                            $.each( data.error, function( key, value ) {
-                                if (key == 'password') {
-                                    $.each( value, function( k, val ) {
-                                        if (val == 'パスワードが一致しません') {
-                                            $('.error.password_confirmation').text(val)
-                                            $('.error.password_confirmation').show()
-                                            // alert('unset')
-                                        } else {
-                                            $('.error.'+key).text(val)
-                                            $('.error.'+key).show()
-                                        }
-                                    });
-                                } else {
-
-                                    $('.error.'+key).text(value[0])
-                                    $('.error.'+key).show()
-                                }
-                            });
-                        }
-                    },
-                    fail: function(data) {
-                        alert("エラー：ajax error");
-                    }
-                });
-
-            });
-
-        </script>
 
     </x-auth-layout>

@@ -11,7 +11,7 @@
         content="admin template, Fastkart admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="pixelstrap">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" href="{{ asset('frontend/assets/logos/logos_foods.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('frontend/assets/logos/newstyle_slogo.png') }}" type="image/x-icon">
     <title>New Style Life</title>
 
     <!-- Google font -->
@@ -202,14 +202,14 @@
                 <div class="header-logo-wrapper p-0">
                     <div class="logo-wrapper">
                         <a href="{{route('admin.dashboard')}}">
-                            <img class="img-fluid main-logo" src="{{ asset('backend/assets/images/logo/logo-h4.png') }}" alt="logo">
+                            <img class="img-fluid main-logo" src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" alt="logo">
 
                         </a>
                     </div>
                     <div class="toggle-sidebar">
                         <i class="status_toggle middle sidebar-toggle" data-feather="align-center"></i>
                         <a href="{{route('admin.dashboard')}}">
-                            <img src="{{ asset('backend/assets/images/logo/logo-h4.png') }}" class="img-fluid" alt="">
+                            <img src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" class="img-fluid" alt="">
                         </a>
                     </div>
                 </div>
@@ -310,7 +310,7 @@
                 <div>
                     <div class="logo-wrapper logo-wrapper-center">
                         <a href="{{route('admin.dashboard')}}" data-bs-original-title="" title="">
-                            <img class="img-fluid for-white" src="{{ asset('images/logos/logo-h4.png') }}" alt="logo">
+                            <img class="img-fluid for-white" src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" alt="logo">
                         </a>
                         <div class="back-btn">
                             <i class="fa fa-angle-left"></i>

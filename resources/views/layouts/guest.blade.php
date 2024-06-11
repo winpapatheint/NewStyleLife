@@ -682,6 +682,9 @@
 
                 <ul class="payment-box">
                     <li>
+                        <img src="{{ asset('frontend/assets/images/icon/paymant/paypal.png') }}" style="width:80px" class="blur-up lazyload" alt="">
+                    </li>
+                    <li>
                         <img src="{{ asset('frontend/assets/images/icon/paymant/visa.png') }}" class="blur-up lazyload" alt="">
                     </li>
                     <li>

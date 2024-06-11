@@ -38,7 +38,13 @@
                                                 <td data-label="タイトル">{{ $list->discount }}</td>
                                                 <td style="text-align:left;min-width: 250px">{{ $list->phaseone }}</td>
                                                 <td style="text-align:left;min-width: 250px">{{ $list->phasetwo }}</td>
-                                                <td style="text-align:left;">{{ $list->phasethree }}</td>
+                                                <td style="text-align:left;">
+                                                @if(mb_strlen($list->phasethree) > 30)
+                                                    {!! mb_substr($list->phasethree, 0, (mb_strlen($list->phasethree) /2)) . '<br>' . mb_substr($list->phasethree, (mb_strlen($list->phasethree) /2)) !!}
+                                                @else
+                                                    {!! nl2br(e($list->phasethree)) !!}
+                                                @endif
+                                                </td>
 
                                               <td>
                                                 <ul>
