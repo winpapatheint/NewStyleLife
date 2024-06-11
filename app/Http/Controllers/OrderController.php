@@ -104,7 +104,7 @@ class OrderController extends Controller
         $data = OrderDetail::find($request->id);
         $order_id = $data->order_id;
         $status = $request->input('status');
-        $orderItems = OrderDetail::where('order_id', $order_id)->where('seller_id', Auth::user()->id)
+        $orderItems = OrderDetail::where('order_id', $order_id)->where('seller_id', Auth::user()->id)->where('status', '!=','Cancel')
                     ->with('product')->with('buyer')->with('seller')->with('order')->get();
         $mailSendStatus = 0;
 

@@ -38,6 +38,7 @@ use DateTime;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Models\BankAccount;
 use App\Models\Blog;
+use App\Models\Buyer;
 use App\Models\Faq;
 use Illuminate\Support\Facades\File;
     /**
@@ -4062,6 +4063,33 @@ class AdminController extends Controller
             }
 
             DB::commit();
+            // mail sent to buyer
+            $orderedBuyer = Buyer::where('id', $order->buyer_id)->first();
+            \Mail::to($orderedBuyer->email)->send(new \App\Mail\BuyerCashOrderSuccess($orderDetails, $orderedBuyer));
+
+            // mail sent to seller
+            $sellerIds = $orderDetails->pluck('seller_id')->unique();
+            $sellers = User::whereIn('id', $sellerIds)->orWhereIn('created_by', $sellerIds)->get();
+            foreach ($sellers as $seller) {
+                if ($seller->created_by) {
+                    $orderDetails = OrderDetail::with('order')->with('buyer')->with('seller')
+                                    ->where('buyer_id', $order->buyer_id)->where('order_id', $order->id)
+                                    ->where('seller_id', $seller->created_by)->get();
+                }
+                else {
+                    $orderDetails = OrderDetail::with('order')->with('buyer')->with('seller')
+                                    ->where('buyer_id', $order->buyer_id)->where('order_id', $order->id)
+                                    ->where('seller_id', $seller->id)->get();
+                }
+                \Mail::to($seller->email)->send(new \App\Mail\SellerOrderSuccess($orderDetails, $seller));
+            }
+
+            // mail sent to admin
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                \Mail::to($admin->email)->send(new \App\Mail\AdminOrderSuccess($orderDetails));
+            }
+
             return redirect()->back()->with('success', 'Payment approved successfully for the order code '. $order->order_code);
         } catch (\Exception $e) {
             DB::rollBack();
