@@ -94,7 +94,7 @@ class ProductController extends Controller
 
         $img = $request->file('product_thambnail');
         $filename = time() . '.' . $img->getClientOriginalExtension();
-        $img->move(public_path('upload/product_thambnail'), $filename);
+        $img->move(public_path('images'), $filename);
 
         $id = Auth::user()->created_by ?? Auth::id();
         $sellerData = Seller::where('user_id', $id)->first();
@@ -231,7 +231,7 @@ class ProductController extends Controller
             }
             $img = $request->file('product_thambnail');
             $filename = time() . '.' . $img->getClientOriginalExtension();
-            $img->move(public_path('upload/product_thambnail'), $filename);
+            $img->move(public_path('images'), $filename);
         } else {
             $filename = $old_img;
         }

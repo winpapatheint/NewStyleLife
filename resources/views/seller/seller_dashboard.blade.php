@@ -329,7 +329,7 @@
                     </div>
                     <div class="logo-icon-wrapper">
                         <a href="{{ route('seller.dashboard') }}">
-                            <img class="img-fluid main-logo main-white" src="{{ asset('backend/assets/images/logo-food.png') }}" alt="logo">
+                            <img class="img-fluid main-logo main-white" src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" alt="logo">
                             <img class="img-fluid main-logo main-dark" src="{{ asset('backend/assets/images/logo/logo-white.png') }}"
                                 alt="logo">
                         </a>

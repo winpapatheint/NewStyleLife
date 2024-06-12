@@ -47,4 +47,7 @@ class Seller extends Model
         return $this->hasMany(Product::class);
     }
 
+    function Country() {
+        return $this->belongsTo(Country::class,'country_id');
+    }
 }

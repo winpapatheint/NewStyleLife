@@ -345,7 +345,6 @@
     });
 </script>
 
-
 <script>
     $('.btn-submit').click(function() {
     $('.error').hide();

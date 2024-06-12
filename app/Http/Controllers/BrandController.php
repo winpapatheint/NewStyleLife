@@ -13,7 +13,7 @@ class BrandController extends Controller
 
         if ($request->hasFile('brand_icon')) {
             $imageName = time().'.'.$request->brand_icon->extension();
-            $request->brand_icon->move(public_path('upload/brand'), $imageName);
+            $request->brand_icon->move(public_path('images'), $imageName);
             $brands->brand_icon = $imageName;
         }
         $brands->brand_name = $request->input('brand_name');

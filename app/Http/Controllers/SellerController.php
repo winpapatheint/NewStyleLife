@@ -10,9 +10,10 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Reply;
 use App\Models\Seller;
+use App\Models\Country;
 use App\Models\Product;
-use App\Models\Subseller;
 use App\Models\Transfer;
+use App\Models\Subseller;
 use App\Models\OrderDetail;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -73,11 +74,11 @@ class SellerController extends Controller
     public function profile()
     {
         $user = Auth::user();
+        $countries = Country::latest()->get();
         $id = $user->created_by !== null ? $user->created_by : $user->id;
         $data = Seller::where('user_id', $id)->first();
-        return view('seller.profile', compact('user', 'data'));
+        return view('seller.profile', compact('user', 'data','countries'));
     }
-
 
 
     public function storeProfile(Request $request)
@@ -88,12 +89,13 @@ class SellerController extends Controller
         $img = $request->file('photo');
         if ($img) {
             $filename = time() . '.' . $img->getClientOriginalExtension();
-            $img->move(public_path('upload/profile'), $filename);
+            $img->move(public_path('images'), $filename);
             $data->user_photo = $filename;
         }
 
         $data->name = $request->name;
         $data->email = $request->email;
+        $data->phone = $request->phone;
 
         if ($request->password !== $data->password) {
             $data->password = Hash::make($request->password);
@@ -135,11 +137,12 @@ class SellerController extends Controller
             }
             $img = $request->file('shop_logo');
             $filename = time() . '.' . $img->getClientOriginalExtension();
-            $img->move(public_path('upload/shop'), $filename);
+            $img->move(public_path('images'), $filename);
         } else {
             $filename = $old_img;
         }
 
+        $seller->country_id = $request->country_id;
         $seller->shop_name = $request->shop_name;
         $seller->shop_logo = $filename;
         $seller->shop_establish = $request->shop_establish;
@@ -292,7 +295,7 @@ class SellerController extends Controller
         {
             $img = $request->file('image');
             $filename = time() . '.' . $img->getClientOriginalExtension();
-            $img->move(public_path('upload/shop'), $filename);
+            $img->move(public_path('images'), $filename);
             $help->img = $filename;
         }
         $shopName = Seller::where('user_id', Auth::user()->id)->value('shop_name');
