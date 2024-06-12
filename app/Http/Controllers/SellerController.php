@@ -328,7 +328,7 @@ class SellerController extends Controller
     {
         $id = $request->id;
         $help = Help::findOrFail($id);
-        $imagePath = public_path('upload/shop/' . $help->img);
+        $imagePath = public_path('images' . $help->img);
         $help->delete();
         if (File::exists($imagePath)) {
             File::delete($imagePath);
