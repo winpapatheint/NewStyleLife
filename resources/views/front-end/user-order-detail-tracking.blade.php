@@ -192,20 +192,20 @@
     
                                     <div class="order-details-name">
                                         <h5 class="text-content">From</h5>
-                                        <h4>〒{{ formatZipCode($orderDetail->seller->zip_code) }} </h4>
-                                        <h4>{{ $orderDetail->seller->prefecture->name }} </h4>
+                                        <h4>〒{{ $orderDetail->seller->zip_code }} </h4>
+                                        <h4>{{ $orderDetail->seller->country->name }} {{ $orderDetail->seller->prefecture }} </h4>
                                         <h4>{{ $orderDetail->seller->city }} {{ $orderDetail->seller->chome }} </h4>
                                         <h4>{{ $orderDetail->seller->building }} {{ $orderDetail->seller->room }}</h4>
                                     </div>
                                 </div>
                             </div>
-    
+
                             <div class="col-xl-4 col-sm-6">
                                 <div class="order-details-contain">
                                     <div class="order-tracking-icon">
                                         <i class="text-content" data-feather="map-pin"></i>
                                     </div>
-    
+
                                     <div class="order-details-name">
                                         <h5 class="text-content">Destination</h5>
                                         <h4>〒{{ formatZipCode($orderDetail->cus_post_code) }} </h4>
@@ -215,7 +215,7 @@
                                     </div>
                                 </div>
                             </div>
-    
+
                             <div class="col-xl-4 col-sm-6">
                                 <div class="order-details-contain">
                                     <div class="order-tracking-icon">
@@ -224,7 +224,12 @@
     
                                     <div class="order-details-name">
                                         <h5 class="text-content">Estimated Date</h5>
-                                        <h4>{{ date('Y/m/d', strtotime($orderDetail->order_detail_created_at . ' + ' . $orderDetail->estimate_date . ' days')) }}</h4>
+                                        @if ($orderDetail->expected_from || $orderDetail->expected_to)
+                                            <h4>From : {{ date('Y/m/d', strtotime($orderDetail->expected_from )) }}</h4>
+                                            <h4>To : {{ date('Y/m/d', strtotime($orderDetail->expected_to )) }}</h4>
+                                        @else
+                                            <h4>{{ date('Y/m/d', strtotime($orderDetail->order_detail_created_at . ' + ' . $orderDetail->estimate_date . ' days')) }}</h4>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

@@ -53,8 +53,8 @@
                                     </div>
 
                                     <div class="contact-detail">
-                                        <h5>Address: <span> 〒{{ formatZipCode($seller->zip_code) }}</span>
-                                            <span> {{ $seller->city }} {{ $seller->chome }} {{ $seller->building }} {{ $seller->room }}</span></h5>
+                                        <h5>Address: <span> 〒{{ $seller->zip_code }}</span>
+                                            <span>{{ $seller->country->name}} {{ $seller->prefecture }} {{ $seller->city }} {{ $seller->chome }} {{ $seller->building }} {{ $seller->room }}</span></h5>
                                     </div>
                                 </div>
 

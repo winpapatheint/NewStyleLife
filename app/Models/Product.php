@@ -36,7 +36,8 @@ class Product extends Model
         'coupon_status',
         'coupon_id',
         'estimate_date',
-        'updated_name',
+        'shipping_country',
+        'updated_by',
     ];
 
     function Country() {

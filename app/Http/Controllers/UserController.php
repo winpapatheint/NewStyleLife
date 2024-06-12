@@ -236,7 +236,7 @@ class UserController extends Controller
     public function showOrderDetailTracking(Request $request)
     {
         $user = DB::table('users')->where('id', Auth::user()->id)->first();
-        $orderDetail = OrderDetail::with('prefecture')->with('seller')->with('seller.prefecture')
+        $orderDetail = OrderDetail::with('prefecture')->with('seller')->with('seller.country')
                                     ->select('order_details.*', 'products.*','order_details.post_code as cus_post_code', 'order_details.city as cus_city',
                                             'order_details.chome as cus_chome','order_details.building as cus_building',
                                             'order_details.room_no as cus_room', 'order_details.created_at as order_detail_created_at')

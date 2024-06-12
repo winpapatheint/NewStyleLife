@@ -299,10 +299,10 @@
                                                                 <h4>Shipping address</h4>
                                                                 <ul class="order-details">
                                                                     <li><h5>{{ $order->order_details_name }}</h5></li><br>
-                                                                    <li>〒{{ $order->post_code }}</li><br>
-                                                                    <li>{{ $order->prefecture->name }}</li>
-                                                                    <li>{{ $order->city }}</li>
-                                                                    <li>{{ $order->chome }}</li>
+                                                                    <li>〒{{ formatZipCode($order->post_code) }}</li><br>
+                                                                    <li>{{ $order->prefecture->name }}</li><br>
+                                                                    <li>{{ $order->city }}</li><br>
+                                                                    <li>{{ $order->chome }}</li><br>
                                                                     <li>{{ $order->building }} {{ $order->room_no }}</li><br>
                                                                     <li>{{ $order->order_details_phone }}</li>
                                                                 </ul>
