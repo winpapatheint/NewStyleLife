@@ -344,10 +344,10 @@
                 </div>
                 <div class="col-custom-">
                     <div class="banner-contain-2 hover-effect">
-                        <img src="{{ asset('upload/shop/shop_banner.jpg'   ) }}" class="bg-img rounded-3 blur-up lazyload" alt="">
+                        <img src="{{ asset('images/shop_banner.jpg'   ) }}" class="bg-img rounded-3 blur-up lazyload" alt="">
                         <div class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
                             <div style="width: 150%;display: flex;">
-                                <img src="{{ asset('upload/shop/'.($shopInfo->shop_logo)) }}" class="blur-up lazyload" alt="" style="width: 100px;">
+                                <img src="{{ asset('images/'.($shopInfo->shop_logo)) }}" class="blur-up lazyload" alt="" style="width: 100px;">
                                 <h2 style="margin-left: 20px;">{{ $shopInfo->shop_name }}
                                 <div class="product-rating" style="margin-top: 20px;">
                                     <ul class="rating">
@@ -477,7 +477,7 @@
                                     <div class="product-image">
 
                                         <a href="{{ route('show-product-left-thumbnail', ['id' => $list->id]) }}">
-                                            <img src="{{ asset('upload/product_thambnail/'.($list->product_thambnail)) }}"
+                                            <img src="{{ asset('images/'.($list->product_thambnail)) }}"
                                                 class="img-fluid blur-up lazyload" alt="">
                                         </a>
 
@@ -576,7 +576,7 @@
                     <div class="row g-sm-4 g-2">
                         <div class="col-lg-6">
                             <div class="slider-image">
-                                <img src="{{ asset('upload/product_thambnail/'.$product-> product_thambnail) }}"
+                                <img src="{{ asset('images/'.$product-> product_thambnail) }}"
                                     class="img-fluid blur-up lazyload" alt="">
                             </div>
                         </div>

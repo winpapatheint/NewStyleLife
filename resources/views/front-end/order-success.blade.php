@@ -289,7 +289,7 @@
                                             <tr>
                                                 <td
                                                     style="padding: 28px 0;border-bottom: 1px solid rgba(217, 217, 217, 0.5);">
-                                                    <img src="{{ asset('upload/product_thambnail/'.$orderDetail->product-> product_thambnail) }}" alt=""  style="width: 50px; height: 50px;">
+                                                    <img src="{{ asset('images/'.$orderDetail->product-> product_thambnail) }}" alt=""  style="width: 50px; height: 50px;">
                                                 </td>
                                                 <td
                                                     style="padding: 28px 0;border-bottom: 1px solid rgba(217, 217, 217, 0.5);">

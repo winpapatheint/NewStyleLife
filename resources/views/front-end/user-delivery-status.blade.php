@@ -163,7 +163,7 @@
                                                             <td>{{ ($ttl+1) - ($orders->firstItem() + $key) }}</td>
                                                             <td><h6>{{ $order->order_code }}</h6></td>
                                                             <td>
-                                                                <img src="{{ asset('upload/product_thambnail/'.$order->product_thambnail) }}"
+                                                                <img src="{{ asset('images/'.$order->product_thambnail) }}"
                                                                 class="img-fluid blur-up lazyload" alt="" style="width: 60px; height: 60px;">
                                                             </td>
                                                             <td>

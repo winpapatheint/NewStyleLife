@@ -100,7 +100,7 @@
                                 </div>
 
                                 <div class="grid-image">
-                                    <img src="{{ asset('upload/shop/'.($seller->shop_logo)   ) }}" alt="" class="img-fluid">
+                                    <img src="{{ asset('images/'.($seller->shop_logo)   ) }}" alt="" class="img-fluid">
                                 </div>
                             </div>
                         </div>

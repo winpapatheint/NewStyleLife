@@ -34,7 +34,7 @@
                         <div class="product-header">
                             <div class="product-image">
                                 <a href="{{ route('show-product-left-thumbnail', ['id' => $wishlistProduct->id]) }}">
-                                    <img src="{{ asset('upload/product_thambnail/'.$wishlistProduct-> product_thambnail) }}" class="img-fluid blur-up lazyload"
+                                    <img src="{{ asset('images/'.$wishlistProduct-> product_thambnail) }}" class="img-fluid blur-up lazyload"
                                         alt="">
                                 </a>
 

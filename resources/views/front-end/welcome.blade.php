@@ -158,7 +158,7 @@
                                     <div class="product-box product-white-bg wow fadeIn" data-wow-delay="0.1s">
                                         <div class="product-image">
                                             <a href="{{ route('show-product-left-thumbnail', ['id' => $couponProduct->id]) }}">
-                                                <img src="{{ asset('upload/product_thambnail/'.$couponProduct->product_thambnail)}}"
+                                                <img src="{{ asset('images/'.$couponProduct->product_thambnail)}}"
                                                     class="img-fluid blur-up lazyload" alt="">
                                             </a>
                                             <ul class="product-option">
@@ -231,7 +231,7 @@
                                                 <div class="row g-sm-4 g-2">
                                                     <div class="col-lg-6">
                                                         <div class="slider-image">
-                                                            <img src="{{ asset('upload/product_thambnail/'.$couponProduct-> product_thambnail) }}"
+                                                            <img src="{{ asset('images/'.$couponProduct-> product_thambnail) }}"
                                                                 class="img-fluid blur-up lazyload" alt="">
                                                         </div>
                                                     </div>
@@ -481,7 +481,7 @@
                             <div class="product-box product-white-bg wow fadeIn" data-wow-delay="0.1s">
                                 <div class="product-image">
                                     <a href="{{ route('show-product-left-thumbnail', ['id' => $latestProduct->id]) }}">
-                                        <img src="{{ asset('upload/product_thambnail/'.$latestProduct->product_thambnail)}}" 
+                                        <img src="{{ asset('images/'.$latestProduct->product_thambnail)}}" 
                                         class="img-fluid blur-up lazyload" alt="">
                                     </a>
                                     <ul class="product-option">
@@ -552,7 +552,7 @@
                                         <div class="row g-sm-4 g-2">
                                             <div class="col-lg-6">
                                                 <div class="slider-image">
-                                                    <img src="{{ asset('upload/product_thambnail/'.$latestProduct-> product_thambnail) }}"
+                                                    <img src="{{ asset('images/'.$latestProduct-> product_thambnail) }}"
                                                         class="img-fluid blur-up lazyload" alt="">
                                                 </div>
                                             </div>
@@ -729,7 +729,7 @@
                                     <li>
                                         <div class="offer-product">
                                             <a href="{{ route('show-product-left-thumbnail', ['id' => $trending->id]) }}" class="offer-image">
-                                                <img src="{{ asset('upload/product_thambnail/'.$trending->product_thambnail)}}"
+                                                <img src="{{ asset('images/'.$trending->product_thambnail)}}"
                                                 class="blur-up lazyload" alt="">
                                             </a>
 
@@ -826,7 +826,7 @@
                             <li>
                                 <div class="offer-product">
                                     <a href="{{ route('show-product-left-thumbnail', ['id' => $product->id]) }}" class="offer-image">
-                                        <img src="{{ asset('upload/product_thambnail/'.$product->product_thambnail)}}"
+                                        <img src="{{ asset('images/'.$product->product_thambnail)}}"
                                             class="blur-up lazyload" alt="">
                                     </a>
 

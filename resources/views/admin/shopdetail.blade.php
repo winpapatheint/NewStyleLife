@@ -25,7 +25,7 @@
                                                     class="col-sm-3 col-form-label form-label-title">Shop Logo
                                                     </label>
                                                 <div class="col-sm-9">
-                                                    <img width="100" src="{{ asset('/upload/shop/'.$shop-> shop_logo) }}">
+                                                    <img width="100" src="{{ asset('images/'.$shop-> shop_logo) }}">
                                                 </div>
                                             </div>
                                             <div class="mb-2 row align-items-center">

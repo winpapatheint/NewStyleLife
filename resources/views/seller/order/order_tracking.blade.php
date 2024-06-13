@@ -33,7 +33,7 @@
                                                         <tr>
                                                             <td>
                                                                 <a href="javascript:void(0)">
-                                                                    <img src="{{ asset('upload/product_thambnail/'.$order->product-> product_thambnail) }}">
+                                                                    <img src="{{ asset('images/'.$order->product-> product_thambnail) }}">
                                                                 </a>
                                                             </td>
 

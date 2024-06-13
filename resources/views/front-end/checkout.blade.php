@@ -249,7 +249,7 @@
                                 @endphp
 
                                 <li>
-                                <img src="{{ asset('upload/product_thambnail/'.$cartlist-> product_thambnail) }}"
+                                <img src="{{ asset('images/'.$cartlist-> product_thambnail) }}"
                                                             class="img-fluid blur-up lazyload" alt="" style="width: 50px; height: 50px;">
                                     <h4>{{ $cartlist->product_name }} <span>X {{ $cartlist->quantity }}</span></h4>
                                             @php

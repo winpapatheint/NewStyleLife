@@ -470,7 +470,7 @@
                                     <div class="product-image">
                                    
                                         <a href="{{ route('show-product-left-thumbnail', ['id' => $list->id]) }}">
-                                        <img width="100" src="{{ asset('upload/product_thambnail/'.$list-> product_thambnail) }}"
+                                        <img width="100" src="{{ asset('images/'.$list-> product_thambnail) }}"
                                                 class="img-fluid blur-up lazyload" alt="">
                                         </a>
 
@@ -572,7 +572,7 @@
                     <div class="row g-sm-4 g-2">
                         <div class="col-lg-6">
                             <div class="slider-image">
-                                <img src="{{ asset('upload/product_thambnail/'.$product-> product_thambnail) }}"
+                                <img src="{{ asset('images/'.$product-> product_thambnail) }}"
                                     class="img-fluid blur-up lazyload" alt="">
                             </div>
                         </div>

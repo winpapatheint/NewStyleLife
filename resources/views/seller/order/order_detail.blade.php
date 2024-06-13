@@ -50,7 +50,7 @@
                                                     <tr class="table-order">
                                                         <td>
                                                             <a href="javascript:void(0)">
-                                                                <img width="80" src="{{ asset('upload/product_thambnail/'.$order->product-> product_thambnail) }}">
+                                                                <img width="80" src="{{ asset('images/'.$order->product-> product_thambnail) }}">
                                                             </a>
                                                         </td>
 

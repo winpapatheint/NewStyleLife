@@ -39,7 +39,7 @@
                                                 <tr>
                                                     <td data-label="" class="text-center">{{ ($ttl+1) - ($lists->firstItem() + $key) }}</td>
                                                     <td data-label="登録日">{{ date('Y/m/d', strtotime($list->created_at)) }}<br>{{ date('H:i', strtotime($list->created_at)) }}</td>
-                                                    <td data-label="{{ __('auth.image') }}"><img src="{{ asset('upload/shop/'.($list->shop_logo)   ) }}" alt="thumb"  style="width: 50px;"></td>
+                                                    <td data-label="{{ __('auth.image') }}"><img src="{{ asset('images/'.($list->shop_logo)   ) }}" alt="thumb"  style="width: 50px;"></td>
                                                     <td data-label="氏名"><a
                                                       href="{{ url('/shoptakeremote/'.rand ( 10000 , 99999 ).$list->user_id ) }}"
                                                       >{{ $list->shop_name }}</a></td>

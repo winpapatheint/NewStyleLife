@@ -124,7 +124,7 @@
     
                         {{--<div class="col-xl-4 col-sm-6">
                                 <div class="order-image">
-                                    <img src="{{ asset('upload/product_thambnail/1713779105.jpeg') }}" class="img-fluid blur-up lazyload" alt="">
+                                    <img src="{{ asset('images/1713779105.jpeg') }}" class="img-fluid blur-up lazyload" alt="">
                                 </div>
                             </div> --}}
     

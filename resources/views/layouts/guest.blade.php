@@ -222,7 +222,7 @@
                                                         <li class="product-box-contain">
                                                             <div class="drop-cart">
                                                                 <a href="{{ route('show-product-left-thumbnail', ['id' => $cart->product_id]) }}">
-                                                                    <img src="{{ asset('upload/product_thambnail/'.$cart-> product_thambnail) }}"
+                                                                    <img src="{{ asset('images/'.$cart-> product_thambnail) }}"
                                                                         class="blur-up lazyload" alt="" width="87" height="73">
                                                                 </a>
 
@@ -754,7 +754,7 @@
                             <li class="list-1">
                                 <div class="deal-offer-contain">
                                     <a href="{{ route('show-product-left-thumbnail', ['id' => $list->id]) }}" class="deal-image">
-                                        <img src="{{ asset('upload/product_thambnail/'.$list-> product_thambnail) }}" class="blur-up lazyload"
+                                        <img src="{{ asset('images/'.$list-> product_thambnail) }}" class="blur-up lazyload"
                                             alt="">
                                     </a>
 

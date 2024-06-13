@@ -114,7 +114,7 @@
                                                     class="col-sm-3 col-form-label form-label-title">Thumbnail
                                                     Image:</label>
                                                 <div class="col-sm-9">
-                                                    <img width="80" src="{{ asset('upload/product_thambnail/'.$data-> product_thambnail) }}">
+                                                    <img width="80" src="{{ asset('images/'.$data-> product_thambnail) }}">
                                                 </div>
                                             </div>
     

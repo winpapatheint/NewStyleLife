@@ -154,7 +154,7 @@
                                         <label class="col-sm-3 form-label-title">Thambnail Image</label>
                                         <div class="col-sm-9">
                                             <input type="file" class="form-control" name="product_thambnail">
-                                            <img id="prev_thambnail" src="{{ asset('upload/product_thambnail/'.$products->product_thambnail)}}" width="80">
+                                            <img id="prev_thambnail" src="{{ asset('images/'.$products->product_thambnail)}}" width="80">
                                         </div>
                                     </div>
 

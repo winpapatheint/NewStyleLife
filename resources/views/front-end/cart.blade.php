@@ -66,7 +66,7 @@
                                         <td class="product-detail">
                                             <div class="product border-0">
                                                 <a href="{{ route('show-product-left-thumbnail', ['id' => $cartlist->product_id]) }}">
-                                                    <img src="{{ asset('upload/product_thambnail/'.$cartlist-> product_thambnail) }}"
+                                                    <img src="{{ asset('images/'.$cartlist-> product_thambnail) }}"
                                                             class="img-fluid blur-up lazyload" alt="" style="width: 60px; height: 60px;">
                                                 </a>
                                                 <div class="product-detail" style="width: 100px;">

@@ -41,8 +41,8 @@
                                         <div class="product-main-2 no-arrow">
                                             <div>
                                                 <div class="slider-image">
-                                                    <img src="{{ asset('upload/product_thambnail/'.$product-> product_thambnail) }}" id="img-1"
-                                                        data-zoom-image="{{ asset('upload/product_thambnail/'.$product-> product_thambnail) }}"
+                                                    <img src="{{ asset('images/'.$product-> product_thambnail) }}" id="img-1"
+                                                        data-zoom-image="{{ asset('images/'.$product-> product_thambnail) }}"
                                                         class="img-fluid image_zoom_cls-0 blur-up lazyload" alt="">
                                                 </div>
                                             </div>
@@ -62,7 +62,7 @@
                                         <div class="left-slider-image-2 left-slider no-arrow slick-top">
                                             <div>
                                                 <div class="sidebar-image">
-                                                    <img src="{{ asset('upload/product_thambnail/'.$product-> product_thambnail) }}"
+                                                    <img src="{{ asset('images/'.$product-> product_thambnail) }}"
                                                         class="img-fluid blur-up lazyload" alt="">
                                                 </div>
                                             </div>
@@ -494,7 +494,7 @@
                         <div class="vendor-box">
                             <div class="vendor-contain">
                                 <div class="vendor-image">
-                                    <img src="{{ asset('upload/shop/'.$product->user->seller->shop_logo) }}" class="blur-up lazyload" alt="">
+                                    <img src="{{ asset('images/'.$product->user->seller->shop_logo) }}" class="blur-up lazyload" alt="">
                                 </div>
 
                                 <div class="vendor-name">
@@ -556,13 +556,13 @@
                                     <li>
                                         <div class="offer-product">
                                             <a href="{{ route('show-product-left-thumbnail', ['id' => $prod->id]) }}" class="offer-image">
-                                                <img src="{{ asset('upload/product_thambnail/'.$prod-> product_thambnail) }}"
+                                                <img src="{{ asset('images/'.$prod-> product_thambnail) }}"
                                                     class="img-fluid blur-up lazyload" alt="">
                                             </a>
 
                                             <div class="offer-detail">
                                                 <div>
-                                                    <a href="{{ asset('upload/product_thambnail/'.$prod-> product_thambnail) }}">
+                                                    <a href="{{ asset('images/'.$prod-> product_thambnail) }}">
                                                         <h6 class="name">{{ $prod->product_name }}</h6>
                                                     </a>
                                                     @if ($prod->discount_percent != 0)
@@ -626,7 +626,7 @@
                                 <div class="product-header">
                                     <div class="product-image">
                                         <a href="{{ route('show-product-left-thumbnail', ['id' => $relatedProduct->id]) }}">
-                                            <img src="{{ asset('upload/product_thambnail/'.$relatedProduct-> product_thambnail) }}"
+                                            <img src="{{ asset('images/'.$relatedProduct-> product_thambnail) }}"
                                                 class="img-fluid blur-up lazyload" alt="">
                                         </a>
 
@@ -726,7 +726,7 @@
                     <div class="row g-sm-4 g-2">
                         <div class="col-lg-6">
                             <div class="slider-image">
-                                <img src="{{ asset('upload/product_thambnail/'.$relproduct-> product_thambnail) }}"
+                                <img src="{{ asset('images/'.$relproduct-> product_thambnail) }}"
                                     class="img-fluid blur-up lazyload" alt="">
                             </div>
                         </div>
@@ -834,7 +834,7 @@
                     <div class="product-wrapper">
                         <div class="product-image">
                             <img class="img-fluid" alt="{{ $product->product_name }}"
-                                    src="{{ asset('upload/product_thambnail/'.$product-> product_thambnail) }}">
+                                    src="{{ asset('images/'.$product-> product_thambnail) }}">
                         </div>
                         <div class="product-content">
                             <h5 class="name">{{ $product->product_name }}</h5>

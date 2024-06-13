@@ -47,7 +47,7 @@
                                     @foreach($comparelistProducts as $product)
                                     <td>
                                         <a href="{{ route('show-product-left-thumbnail', ['id' => $product->id]) }}" class="compare-image">
-                                            <img src="{{ asset('upload/product_thambnail/'.$product-> product_thambnail) }}"
+                                            <img src="{{ asset('images/'.$product-> product_thambnail) }}"
                                                 class="img-fluid blur-up lazyload" alt="">
                                         </a>
                                     </td>

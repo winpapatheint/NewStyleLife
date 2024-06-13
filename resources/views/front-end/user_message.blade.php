@@ -206,7 +206,7 @@
                                                         <div class="col-md-10">
                                                             <div class="row">
                                                                 <div class="col-md-1">
-                                                                    <img src="{{ asset('upload/product_thambnail/'.$userNoti->orderDetail->product->product_thambnail) }}"
+                                                                    <img src="{{ asset('images/'.$userNoti->orderDetail->product->product_thambnail) }}"
                                                                     class="img-fluid blur-up lazyload" alt="" style="width: 40px;height: 40px;">
                                                                 </div>
                                                                 <div class="col-md-11">

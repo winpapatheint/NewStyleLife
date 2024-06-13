@@ -121,7 +121,7 @@
                                         @if(empty(Auth::user()->created_by))
                                             <input class="form-control" type="file" name="shop_logo">
                                         @endif
-                                        <img src="{{ asset('upload/shop/'.$data->shop_logo) }}" width="100">
+                                        <img src="{{ asset('images/'.$data->shop_logo) }}" width="100">
                                     </div>
                                 </div>
 
