@@ -203,7 +203,7 @@
                     <div class="logo-wrapper">
                         <a href="{{route('admin.dashboard')}}">
                             <img class="img-fluid main-logo" src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" alt="logo">
-
+                            <img class="img-fluid white-logo" src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" alt="logo">
                         </a>
                     </div>
                     <div class="toggle-sidebar">
@@ -318,6 +318,13 @@
                         <div class="toggle-sidebar">
                             <i class="ri-apps-line status_toggle middle sidebar-toggle"></i>
                         </div>
+                    </div>
+                    <div class="logo-icon-wrapper">
+                        <a href="{{ route('admin.dashboard') }}">
+                            <img class="img-fluid main-logo main-white" src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" alt="logo">
+                            <img class="img-fluid main-logo main-dark" src="{{ asset('backend/assets/images/logo/logo-white.png') }}"
+                                alt="logo">
+                        </a>
                     </div>
                     <nav class="sidebar-main">
                         <div class="left-arrow" id="left-arrow">
@@ -469,19 +476,6 @@
             <!-- Page Sidebar Ends-->
 
            {{$slot}}
-
-           <!-- footer start-->
-            <div class="container-fluid">
-                <footer class="footer">
-                    <div class="row">
-                        <div class="col-md-12 footer-copyright text-center">
-                            <p class="mb-0">©2024 Asia Human Development, Inc. All rights reserved</p>
-                        </div>
-                    </div>
-                </footer>
-            </div>
-            <!-- footer End-->
-
         </div>
         <!-- Page Body End-->
     </div>
