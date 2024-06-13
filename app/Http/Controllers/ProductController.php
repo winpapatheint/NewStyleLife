@@ -95,7 +95,6 @@ class ProductController extends Controller
         $img = $request->file('product_thambnail');
         $filename = time() . '.' . $img->getClientOriginalExtension();
         $img->move(public_path('images'), $filename);
-
         $id = Auth::user()->created_by ?? Auth::id();
         $sellerData = Seller::where('user_id', $id)->first();
         $commission = $sellerData->commission ?? 0;

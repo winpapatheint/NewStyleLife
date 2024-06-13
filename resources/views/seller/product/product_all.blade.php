@@ -55,7 +55,7 @@
                                                 {{ \Carbon\Carbon::parse($item->created_at)->format('H:i') }}</td>
                                             <td>
                                                 <div class="table-image">
-                                                    <img width="50" height="50" src="{{ asset('images'.$item-> product_thambnail) }}">
+                                                    <img width="50" height="50" src="{{ asset('images/'.$item-> product_thambnail) }}">
                                                 </div>
                                             </td>
 
