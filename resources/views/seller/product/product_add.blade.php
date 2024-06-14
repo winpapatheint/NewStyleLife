@@ -215,7 +215,7 @@
                                     </div>
 
                                     <div class="mb-4 row align-items-center">
-                                        <label class="col-sm-3 form-label-title">Shipping Country</label>
+                                        <label class="col-sm-3 form-label-title">Shipping From</label>
                                         <div class="col-sm-9">
                                             <div class="d-flex align-items-center">
                                                 <div class="form-check me-3">
@@ -512,7 +512,7 @@
     }
 
     return false;
-});
+    });
 </script>
 
 <script>
@@ -544,7 +544,11 @@
             closeButton.classList.add('close-button');
             closeButton.addEventListener('click', () => {
                 fileInputsContainer.removeChild(imageContainer);
-                fileInputsContainer.removeChild(fileInput);
+                if (fileInput !== initialFileInput) {
+                    fileInputsContainer.removeChild(fileInput);
+                } else {
+                    fileInput.value = '';
+                }
                 imageCount--;
             });
 
@@ -666,7 +670,7 @@
     document.getElementById('subname').addEventListener('change', function() {
         var subcategoryId = this.value;
     });
-});
+    });
 </script>
 
 <script>
