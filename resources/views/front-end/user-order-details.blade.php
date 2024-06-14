@@ -171,7 +171,9 @@
                                                                     <th>Product Name</th>
                                                                     <th>Shop</th>
                                                                     <th>Quantity</th>
-                                                                    <th>Price(tax inc)</th>
+                                                                    <th>Price (tax inc)</th>
+                                                                    <th>Size</th>
+                                                                    <th>Color</th>
                                                                     <th></th>
                                                                 </tr>
                                                             </thead>
@@ -195,6 +197,12 @@
                                                                     </td>
                                                                     <td>
                                                                         <h5>{{ $order->qty }}</h5>
+                                                                    </td>
+                                                                    <td>
+                                                                        <h5>{{ $order->size }}</h5>
+                                                                    </td>
+                                                                    <td>
+                                                                        <h5>{{ $order->color }}</h5>
                                                                     </td>
                                                                     <td>
                                                                         <h5>¥ {{ number_format($order->selling_price * $order->qty , 0, '.', ',') }}</h5>

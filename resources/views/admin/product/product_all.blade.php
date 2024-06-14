@@ -119,11 +119,7 @@
                                                             data-offstyle="outline-secondary" data-toggle="toggle"
                                                             data-on="Active" data-off="InActive"
                                                             {{ $list->status ? 'checked' : '' }}
-                                                            @if ($list->Seller)
                                                             {{ $list->Seller->status == 0 ? 'disabled' : '' }}>
-                                                            @else
-                                                            {{ $list->user->subSeller->status == 0 ? 'disabled' : '' }}>
-                                                            @endif
                                                         </label>
                                                     </td>
                                                     <td>
