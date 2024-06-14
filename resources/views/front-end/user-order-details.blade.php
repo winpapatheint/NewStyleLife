@@ -162,7 +162,7 @@
                                         @endif
                                         <div class="bg-inner cart-section order-details-table">
                                             <div class="row g-4">
-                                                <div class="col-xl-8">
+                                                <div class="col-xl-9">
                                                     <div class="table-responsive table-details">
                                                         <table class="table cart-table table-borderless">
                                                             <thead>
@@ -282,7 +282,7 @@
                                                     </div>
                                                 </div>
     
-                                                <div class="col-xl-4">
+                                                <div class="col-xl-3">
                                                     <div class="order-success">
                                                         <div class="row g-4">
                                                             <h3>Summery</h3>

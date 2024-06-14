@@ -246,7 +246,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>From</td>
+                                                        <td>Made In</td>
                                                         <td>
                                                             @php
                                                                 $country = DB::table('countries')->where('id',$product->country_id)->first();
@@ -293,13 +293,16 @@
                                                         <td>Estimated Date</td>
                                                         <td>{{ $product->estimate_date }}</td>
                                                     </tr>
-                                                    @if ($product->shipping_country == 1)
                                                     <tr>
-                                                        <td colspan="2" style="text-align: center;">
-                                                            This product is from abroad.
+                                                        <td>Shipping From</td>
+                                                        <td>
+                                                            @if ($product->shipping_country == 1)
+                                                            Abroad
+                                                            @else
+                                                            Japan
+                                                            @endif
                                                         </td>
                                                     </tr>
-                                                    @endif
                                                 </tbody>
                                             </table>
                                         </div>
