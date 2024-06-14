@@ -3292,6 +3292,7 @@ class AdminController extends Controller
 
         public function storeproduct(Request $request)
         {
+
             $time = new DateTime();
 
             //commision calculate
@@ -3299,27 +3300,24 @@ class AdminController extends Controller
             $discountPercentage = $request->discount_percent;
             $discountAmount = ($originalPrice * $discountPercentage) / 100;
             $discountedPrice = $originalPrice - $discountAmount;
-
-            // $commisonPrice = $request->commision;
-            // $commisonAmount = ($discountedPrice * $commisonPrice) / 100;
-            // $sellerAmount = $discountedPrice - $commisonAmount;
-            // $adminAmount = $discountedPrice -  $sellerAmount;
-
             $product = Product::find($request->id);
             $old_img = $request->old_img;
             $request->validate([
+                'country_id'  => 'required|exists:countries,id',
                 'category_id' => 'required|exists:categories,id',
                 'sub_category_title_id' => 'present|exists:sub_category_titles,id',
                 'sub_category_id' => 'present|exists:sub_categories,id',
-                'product_name' => 'required|string|max:255',
+                'product_name' => 'required|string',
                 'product_qty' => 'required|numeric',
                 'product_tags' => 'required|string|max:255',
                 'product_size' => 'required|string|max:255',
                 'product_color' => 'required|string|max:255',
                 'original_price' => 'required|numeric',
-                'short_desc' => 'required|string|max:255',
-                'long_desc' => 'required|string|max:255',
-                'estimate_date' => 'required|string|max:255',
+                'short_desc' => 'required|string',
+                'long_desc' => 'required|string',
+                'care_instructions' => 'required|string',
+                'estimate_date' => 'required|string',
+                'shipping_country'=> 'required',
             ]);
 
             if($request->hasFile('product_thambnail')) {
@@ -3328,7 +3326,7 @@ class AdminController extends Controller
                 }
                 $img = $request->file('product_thambnail');
                 $filename = time() . '.' . $img->getClientOriginalExtension();
-                $img->move(public_path('upload/product_thambnail'), $filename);
+                $img->move(public_path('images'), $filename);
             } else {
                 $filename = $old_img;
             }
@@ -3351,14 +3349,15 @@ class AdminController extends Controller
             $product->care_instructions= $request->care_instructions;
             $product->product_thambnail= $filename;
             $product->estimate_date= $request->estimate_date;
-            $product->status= 1;
+            // $product->status= 1;
             $product->delivery_price= $request->delivery_price;
-            // $product->commission = $request->commision;
-            // $product->commission_status = 1;
+            $product->shipping_country = $request->shipping_country;
             $product->updated_by = Auth::user()->id;
             $product->updated_at= Carbon::now();
             $product->update();
-            return redirect('/admin/product')->with('success','「'.$request->title.'」'.__('auth.doneedit'));
+            $msg = ('Product updated Successfully');
+        return redirect('/admin/product')->with('success','「'.$request->title.'」'.__('auth.doneedit'));
+
     }
 
 
