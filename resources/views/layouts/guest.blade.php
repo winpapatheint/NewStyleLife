@@ -531,7 +531,7 @@
                             <img src="../assets/images/logo/4.png" class="img-fluid blur-up lazyload" alt="">
                         </a>
                         <p class="information-text information-text-2">
-                            Infusing style into everyday living, our curated collection elevates your space. 
+                            Infusing style into everyday living, our curated collection elevates your space.
                             Discover quality products that enhance your lifestyle, delivered with care and precision.
                         </p>
                         <ul class="social-icon">
@@ -688,7 +688,7 @@
                         <img src="{{ asset('frontend/assets/images/icon/paymant/visa.png') }}" class="blur-up lazyload" alt="">
                     </li>
                     <li>
-                        <img src="{{ asset('frontend/assets/images/icon/paymant/discover.png') }}" alt="" class="blur-up lazyload">
+                        <img src="{{ asset('frontend/assets/images/icon/paymant/jcbcard.png') }}" class="blur-up lazyload" alt="">
                     </li>
                     <li>
                         <img src="{{ asset('frontend/assets/images/icon/paymant/american.png') }}" alt="" class="blur-up lazyload">
@@ -696,9 +696,7 @@
                     <li>
                         <img src="{{ asset('frontend/assets/images/icon/paymant/master-card.png') }}" alt="" class="blur-up lazyload">
                     </li>
-                    <li>
-                        <img src="{{ asset('frontend/assets/images/icon/paymant/giro-pay.png') }}" alt="" class="blur-up lazyload">
-                    </li>
+
                 </ul>
             </div>
         </div>
@@ -941,16 +939,16 @@
             function isDesktopView() {
                 return window.matchMedia("(min-width: 769px)").matches;
             }
-    
+
             function handleHover() {
                 if (isDesktopView()) {
                     $('.onhover-category-list').hover(function() {
                         var $hoverBox = $(this).find('.onhover-category-box');
                         var offset = $(this).position(); // Get the position relative to the parent
-    
+
                         // Calculate the top position of the hover box to match the list item
                         var topPosition = offset.top;
-    
+
                         $hoverBox.css({
                             'top': topPosition,
                             'left': '100%',
@@ -961,10 +959,10 @@
                     $('.onhover-category-list').off('mouseenter mouseleave');
                 }
             }
-    
+
             // Initial check
             handleHover();
-    
+
             // Re-check on window resize
             $(window).resize(function() {
                 handleHover();
