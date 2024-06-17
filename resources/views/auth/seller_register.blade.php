@@ -60,7 +60,7 @@
 
                                 <div class="col-md-6">
                                     <div class="form-floating theme-form-floating">
-                                        <input type="number" id="phone" name="phone" class="form-control" placeholder="Phone" value="{{ old('phone') }}">
+                                        <input type="number" id="phone" name="phone" class="form-control" placeholder="Phone" value="{{ old('phone') }}" pattern="\d*">
                                         <label>Phone</label>
                                         <span class="error" style="color:red" id="error-phone"></span>
                                     </div>
@@ -80,7 +80,7 @@
 
                                 <div class="col-md-6">
                                     <div class="form-floating theme-form-floating">
-                                        <input type="number" id="zip_code" name="zip_code" class="form-control" placeholder="Zip Code" value="{{ old('zip_code') }}">
+                                        <input type="number" id="zip_code" name="zip_code" class="form-control" placeholder="Zip Code" value="{{ old('zip_code') }}" pattern="\d*">
                                         <label>Zip Code</label>
                                         <span class="error" style="color:red" id="error-zip_code"></span>
                                     </div>
@@ -158,7 +158,7 @@
 
                                 <div class="col-md-6">
                                     <div class="form-floating theme-form-floating">
-                                        <input type="text" id="bank_acc_no" name="bank_acc_no" class="form-control" placeholder="Bank Account Number" value="{{ old('bank_acc_no') }}">
+                                        <input type="text" id="bank_acc_no" name="bank_acc_no" class="form-control" placeholder="Bank Account Number" value="{{ old('bank_acc_no') }}" pattern="\d*">
                                         <label>Bank Account Number</label>
                                         <span class="error" style="color:red" id="error-bank_acc_no"></span>
                                     </div>
