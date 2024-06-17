@@ -154,39 +154,39 @@
                                     <div class="mb-4 row align-items-center">
                                         <label class="col-sm-3 form-label-title">Original Price(tax inc)</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control" name="original_price" id="original_price" type="number" min="1" value="{{  $products->original_price }}">
+                                            <input class="form-control" name="original_price" id="original_price" type="number" min="1" value="{{  $products->original_price }}" pattern="\d*">
                                         </div>
                                     </div>
 
                                     <div class="mb-4 row align-items-center">
                                         <label class="col-sm-3 form-label-title">Discount Percentage</label>
                                         <div class="col-sm-6">
-                                            <input class="form-control" name="discount_percent" id="discount_percent" type="number" min="0" max="100" value="{{ $products->discount_percent }}">
+                                            <input class="form-control" name="discount_percent" id="discount_percent" type="number" min="0" max="100" value="{{ $products->discount_percent }}" pattern="\d*">
                                         </div>
                                         <div class="col-sm-3">
                                             <input class="form-control" name="selling_price" id="selling_price" type="number" value="" disabled>
-                                            <input type="hidden" name="calculated_selling_price" id="calculated_selling_price" value="{{ $products->calculated_selling_price }}">
+                                            <input type="hidden" name="calculated_selling_price" id="calculated_selling_price" value="{{ $products->calculated_selling_price }}" pattern="\d*">
                                         </div>
                                     </div>
 
                                     <div class="mb-4 row align-items-center">
                                         <label class="col-sm-3 form-label-title">Product Quantity</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control" name="product_qty" type="number" min="1" value="{{ $products->product_qty }}">
+                                            <input class="form-control" name="product_qty" type="number" min="1" value="{{ $products->product_qty }}" pattern="\d*">
                                         </div>
                                     </div>
 
                                     <div class="mb-4 row align-items-center">
                                         <label class="col-sm-3 form-label-title">Estimated Date</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control" name="estimate_date" type="number" min="1" value="{{ $products->estimate_date }}">
+                                            <input class="form-control" name="estimate_date" type="number" min="1" value="{{ $products->estimate_date }}" pattern="\d*">
                                         </div>
                                     </div>
 
                                     <div class="mb-4 row align-items-center">
                                         <label class="col-sm-3 form-label-title">Delivery Price(tax inc)</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control" name="delivery_price" type="number" min="1" value="{{ $products->delivery_price }}">
+                                            <input class="form-control" name="delivery_price" type="number" min="1" value="{{ $products->delivery_price }}" pattern="\d*">
                                         </div>
                                     </div>
 

@@ -174,7 +174,7 @@
                                     <div class="mb-4 row align-items-center">
                                         <label class="col-sm-3 form-label-title">Original Price(tax inc)</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control" name="original_price" id="original_price" type="number" placeholder="0" min="1" value="{{ old('original_price') }}">
+                                            <input class="form-control" name="original_price" id="original_price" type="number" placeholder="0" min="1" value="{{ old('original_price') }}" pattern="\d*">
                                             <p class="error" style="color:red" id="error-original_price"></p>
                                         </div>
                                     </div>
@@ -182,7 +182,7 @@
                                     <div class="mb-4 row align-items-center">
                                         <label class="col-sm-3 form-label-title">Discount Percentage</label>
                                         <div class="col-sm-6">
-                                            <input class="form-control" name="discount_percent" id="discount_percent" type="number" placeholder="0-100%" min="0" max="100" value="{{ old('discount_percent') }}">
+                                            <input class="form-control" name="discount_percent" id="discount_percent" type="number" placeholder="0-100%" min="0" max="100" value="{{ old('discount_percent') }}" pattern="\d*">
                                         </div>
                                         <div class="col-sm-3">
                                             <input class="form-control" name="selling_price" id="selling_price" type="number" disabled>
@@ -193,7 +193,7 @@
                                     <div class="mb-4 row align-items-center">
                                         <label class="col-sm-3 form-label-title">Product Quantity</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control" name="product_qty" type="number" placeholder="0" min="1" value="{{ old('product_qty') }}" id="product_qty">
+                                            <input class="form-control" name="product_qty" type="number" placeholder="0" min="1" value="{{ old('product_qty') }}" id="product_qty" pattern="\d*">
                                             <p class="error" style="color:red" id="error-product_qty"></p>
                                         </div>
                                     </div>
@@ -201,7 +201,7 @@
                                     <div class="mb-4 row align-items-center">
                                         <label class="col-sm-3 form-label-title">Estimated Date</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control" name="estimate_date" type="number" placeholder="0" min="1" value="{{ old('estimate_date') }}" id="estimate_date">
+                                            <input class="form-control" name="estimate_date" type="number" placeholder="0" min="1" value="{{ old('estimate_date') }}" id="estimate_date" pattern="\d*">
                                             <p class="error" style="color:red" id="error-estimate_date"></p>
                                         </div>
                                     </div>
@@ -209,7 +209,7 @@
                                     <div class="mb-4 row align-items-center">
                                         <label class="col-sm-3 form-label-title">Delivery Price(tax inc)</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control" name="delivery_price" type="number" placeholder="400" min="1" value="{{ old('delivery_price') }}" id="delivery_price">
+                                            <input class="form-control" name="delivery_price" type="number" placeholder="400" min="1" value="{{ old('delivery_price') }}" id="delivery_price" pattern="\d*">
                                             <p class="error" style="color:red" id="error-delivery_price"></p>
                                         </div>
                                     </div>

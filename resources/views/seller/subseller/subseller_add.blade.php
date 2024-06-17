@@ -75,7 +75,7 @@
                                         <label class="form-label-title col-sm-2 mb-0">Phone
                                             Number</label>
                                         <div class="col-sm-10">
-                                            <input class="form-control" type="text" name="phone" value="{{ old('phone') }}">
+                                            <input class="form-control" type="text" name="phone" value="{{ old('phone') }}" pattern="\d*">
                                         </div>
                                     </div>
 
