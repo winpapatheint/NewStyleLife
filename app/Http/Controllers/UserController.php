@@ -1321,12 +1321,30 @@ class UserController extends Controller
             $bankInfo = BankAccount::find($bankAccountId);
 
             DB::commit();
-            \Mail::to($orderedBuyer->email)->send(new \App\Mail\OrderConfirmation($orderDetails, $bankInfo, $totalAmount, $transferPersonName, $transferDate, $name));
+            \Mail::to($orderedBuyer->email)->send(new \App\Mail\BuyerCashOrderConfirmation($orderDetails, $bankInfo, $totalAmount, $transferPersonName, $transferDate, $name));
 
             $admins = User::where('role', 'admin')->get();
             foreach ($admins as $admin) {
-                \Mail::to($admin->email)->send(new \App\Mail\AdminOrderConfirmation($orderDetails, $bankInfo, $totalAmount, $transferPersonName, $transferDate, $name));
+                \Mail::to($admin->email)->send(new \App\Mail\AdminCashOrderConfirmation($orderDetails, $bankInfo, $totalAmount, $transferPersonName, $transferDate, $name, $admin));
             }
+
+            Notification::create([
+                'related_id' => $order->id,
+                'message' => 'A new order added:',
+                'time' => Carbon::now(),
+                'seen' => 0,
+            ]);
+
+            foreach ($sellerId as $seller_id) {
+                SellerNotification::create([
+                    'seller_id' => $seller_id,
+                    'related_id' => $order->id,
+                    'message' => 'A new order added:',
+                    'time' => Carbon::now(),
+                    'seen' => 0,
+                ]);
+            }
+
             return response()->json(['message' => 'Your order has been successfully placed.'
                                     ,'orderId' => $order->id]);
 
