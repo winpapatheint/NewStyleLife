@@ -87,52 +87,14 @@ class UserController extends Controller
             DB::commit();
 
             event(new Registered($user));
-            event(new Registered($buyer));
+            // event(new Registered($buyer));
 
-            $email = $request->email;
-            $name = $request->name;
-            $inquiry_email = 'info-test@asia-hd.com';
-            // $user = User::where('id', $user->id)->select('email', 'name')->first();
-            $data = array('name'=>$name);
-            if (!empty($request->email)) {
-                $mail = Mail::send([], $data, function($message) use ($request, $inquiry_email,$name,$email) {
-                    $message->to($inquiry_email, 'New Style Life ')->subject($name);
-                    $message->from($email,$name);
-                    $message->setBody("The following notification was received from the New Style Life official website.
-                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                    \r\n"."Name".$name."
-                    \r\n"."Email：　".$email."
-                    \r\n
-                    \r\n"."Notice：　
-                    \r\n
-                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-                });
-            }
-
-            $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();
-            $inquiry_email = 'info-test@asia-hd.com';
-            if (!empty(  $adminMails)) {
-                foreach ($adminMails as $email) {
-                    Mail::send([], $data, function ($message) use ($request, $adminMails,$name,$email) {
-                        $message->to($email, 'New Style Life')->subject($name);
-                        $message->from($email,$name);
-                        $message->setBody("The following notification was received from the New Style Life official website.
-                        \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                        \r\n"."Name".$name."
-                        \r\n"."Email：　".$email."
-                        \r\n
-                        \r\n"."Notice：　
-                        \r\n
-                        \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-                    });
-                }
-            }
-
-            $notification = Notification::find(1);
-            $newval = array('time' => Carbon::now(),
-                            'created_at' => Carbon::now(),
-                            );
-            $notification->update( $newval);
+            Notification::create([
+                'related_id' => $user->id,
+                'message' => 'A new user added:',
+                'time' => Carbon::now(),
+                'seen' => 0,
+            ]);
 
             return view('auth.buyer-verify-email', compact('user'));
 
@@ -1124,11 +1086,10 @@ class UserController extends Controller
             }
             $cartItem = DB::table('carts')->where('buyer_id',$buyerId)
                     ->delete();
-            $orderedBuyer = Buyer::find($buyerId);
-            $orderDetails = OrderDetail::with('order')->with('buyer')->with('seller')
-                            ->where('buyer_id', $buyerId)->where('order_id', $order->id)->get();
 
             DB::commit();
+            $orderDetails = OrderDetail::with('order')->with('buyer')->with('seller')
+                            ->where('buyer_id', $buyerId)->where('order_id', $order->id)->get();
             $admins = User::where('role', 'admin')->get();
             foreach ($admins as $admin) {
                 \Mail::to($admin->email)->send(new \App\Mail\AdminOrderReceived($orderDetails, $admin));
@@ -1149,6 +1110,24 @@ class UserController extends Controller
                 }
                 \Mail::to($seller->email)->send(new \App\Mail\SellerOrderReceived($orderDetails, $seller));
             }
+
+            Notification::create([
+                'related_id' => $order->id,
+                'message' => 'A new order added:',
+                'time' => Carbon::now(),
+                'seen' => 0,
+            ]);
+
+            foreach ($sellerId as $seller_id) {
+                SellerNotification::create([
+                    'seller_id' => $seller_id,
+                    'related_id' => $order->id,
+                    'message' => 'A new order added:',
+                    'time' => Carbon::now(),
+                    'seen' => 0,
+                ]);
+            }
+
             return response()->json(['message' => 'Your order has been successfully placed.'
                                     ,'orderId' => $order->id]);
 
