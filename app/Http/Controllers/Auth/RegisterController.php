@@ -66,54 +66,13 @@ class RegisterController extends Controller
 
         event(new Registered($seller));
 
-        $email = $request->email;
-        $inquiry_email = 'info-test@asia-hd.com';
-        $user = User::where('id', $user->id)->select('email', 'name')->first();
+        Notification::create([
+            'related_id' => $seller->id,
+            'message' => 'A new store added:',
+            'time' => Carbon::now(),
+            'seen' => 0,
+        ]);
 
-        $email = $user->email;
-        $name = $user->name;
-        $data = array('name'=>$name);
-        if (!empty($request->email)) {
-            $mail = Mail::send([], $data, function($message) use ($request, $inquiry_email,$name,$email) {
-                $message->to($inquiry_email, 'Ecommerce ')->subject($name.'Question form');
-                $message->from($email,$name);
-                $message->setBody("The following notification was received from the E-commerce official website.
-                \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                \r\Name".$name."
-                \r\n"."Email：　".$email."
-                \r\n
-                \r\n"."Notice：　
-                \r\n
-                \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-            });
-        }
-
-        $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();
-        $inquiry_email = 'info-test@asia-hd.com';
-        $name = $user->name;
-        $data = array('name'=>$name);
-        if (!empty(  $adminMails)) {
-            foreach ($adminMails as $email) {
-                Mail::send([], $data, function ($message) use ($request, $adminMails,$name,$email) {
-                    $message->to($email, 'Ecommerce ')->subject($request->name.'Question form');
-                    $message->from($email,$name);
-                    $message->setBody("The following notification was received from the E-commerce official website.
-                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                    \r\Name".$name."
-                    \r\n"."Email：　".$email."
-                    \r\n
-                    \r\n"."Notice：　
-                    \r\n
-                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-                });
-            }
-        }
-
-        $notification = Notification::find(1);
-        $newval = array('time' => Carbon::now(),
-                        'created_at' => Carbon::now(),
-                        );
-        $notification->update( $newval);
         return view('auth.seller-verify-email',compact('user'));
     }
 }

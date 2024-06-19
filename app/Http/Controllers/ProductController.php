@@ -96,7 +96,9 @@ class ProductController extends Controller
         $filename = time() . '.' . $img->getClientOriginalExtension();
         $img->move(public_path('images'), $filename);
         $id = Auth::user()->created_by ?? Auth::id();
+
         $sellerData = Seller::where('user_id', $id)->first();
+
         $commission = $sellerData->commission ?? 0;
         $status = $sellerData->status ?? 0;
         $product_id = Product::insertGetId([
@@ -139,50 +141,29 @@ class ProductController extends Controller
             ]);
         }
 
-        $inquiry_email = 'info@asian-food.site';
-        $user = User::where('id', Auth::user()->id)->select('email', 'name')->first();
-
-        $email = $request->email;
-        $name = $request->name;
-        $data = array('name'=>$name);
-        if (!empty($request->email)) {
-            $mail = Mail::send([], $data, function($message) use ($request, $inquiry_email,$name,$email) {
-                $message->to($inquiry_email, 'New Style Life ')->subject($name);
-                $message->from($email,$name);
-                $message->setBody("The following notification was received from the New Style Life official website.
-                \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                \r\n"."Name".$name."
-                \r\n"."Email：　".$email."
-                \r\n
-                \r\n"."Notice：
-                \r\n
-                \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-            });
+        $product = Product::find($product_id);
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            \Mail::to($admin->email)->send(new \App\Mail\AdminNewProductRegistration($sellerData, $product, $admin));
         }
+        $allSeller = User::where('id', $sellerData->user_id)->orWhere('created_by', $sellerData->user_id)->get();
 
-        $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();
-        if (!empty(  $adminMails)) {
-            foreach ($adminMails as $email) {
-                Mail::send([], $data, function ($message) use ($request, $adminMails,$name,$email) {
-                    $message->to($email, 'New Style Life')->subject($name);
-                    $message->from($email,$name);
-                    $message->setBody("The following notification was received from the New Style Life official website.
-                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                    \r\n"."Name".$name."
-                    \r\n"."Email：　".$email."
-                    \r\n
-                    \r\n"."Notice：
-                    \r\n
-                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-                });
-            }
+        foreach ($allSeller as $seller) {
+            \Mail::to($seller->email)->send(new \App\Mail\SellerNewProductRegistration($sellerData, $product, $seller));
         }
-
-        $notification = Notification::find(3);
-        $newval = array('time' => Carbon::now(),
-                        'created_at' => Carbon::now(),
-                        );
-        $notification->update( $newval);
+        SellerNotification::create([
+            'seller_id' => $id,
+            'related_id' => $product_id,
+            'message' => 'A new product added:',
+            'time' => Carbon::now(),
+            'seen' => 0,
+        ]);
+        Notification::create([
+            'related_id' => $product_id,
+            'message' => 'A new product added:',
+            'time' => Carbon::now(),
+            'seen' => 0,
+        ]);
 
         $msg = ('Product added Successfully');
         return redirect('/productlist')->with('success', $msg);

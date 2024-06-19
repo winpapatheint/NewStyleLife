@@ -16,7 +16,7 @@
                                                 <div class="card-header-1">
                                                     <h5>Contact Detail</h5>
                                                 </div>
-    
+
                                                 <div class="mb-4 row">
                                                     <div class="mb-4 row align-items-center">
                                                         <label
@@ -25,7 +25,7 @@
                                                             <p>{{ $start->subject }}</p>
                                                         </div>
                                                     </div>
-    
+
                                                     <div class="row align-items-center">
                                                         <label
                                                             class="col-lg-2 col-md-3 col-form-label form-label-title">
@@ -48,7 +48,7 @@
                                                     @endif
                                                     </div>
                                                 </div>
-    
+
                                                 {{-- @if(isset($reply))
                                                     @foreach ($reply as $item)
                                                     <div class="mb-4 row">
@@ -60,7 +60,7 @@
                                                                 </div>
                                                             </div>
                                                         @endif
-    
+
                                                         <div class="row align-items-center">
                                                             <label
                                                                 class="col-lg-2 col-md-3 col-form-label form-label-title">Me
@@ -73,7 +73,7 @@
                                                     @endforeach
                                                 @endif
     {{-- --}}
-    
+
                                                 {{-- <div class="d-grid gap-2 d-md-block"  style="margin-top: 20px;">
                                                     <a href="#" data-bs-toggle="modal" data-bs-target="#replyModal">
                                                         <button class="btn btn-animation" type="submit">Reply</button>
@@ -92,7 +92,7 @@
         <!-- New User End -->
     </div>
     <!-- Page Sidebar End -->
-    
+
     <!-- Reply Modal -->
     @if(isset($reply))
         @foreach ($reply as $item)
@@ -117,7 +117,7 @@
                                     <img src="" id="mainThmb">
                                 </div>
                             </div>
-    
+
                             <div class="row align-items-center">
                                 <label
                                     class="col-lg-2 col-md-3 col-form-label form-label-title">Body
@@ -148,14 +148,13 @@
     @endif
 
     <style>
-       .image-container img {
-    transition: transform 0.3s ease;
-}
+        .image-container img {
+            transition: transform 0.3s ease;
+        }
 
-.image-container:hover img {
-    transform: scale(1.8) translateZ(0);
-}
+        .image-container:hover img {
+            transform: scale(1.5); /* Increase the size to 110% */
+        }
     </style>
     <!-- Reply Modal End-->
     </x-auth-layout>
-    

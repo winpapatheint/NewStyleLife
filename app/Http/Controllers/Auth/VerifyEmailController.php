@@ -36,7 +36,6 @@ class VerifyEmailController extends Controller
                           sha1($user->getEmailForVerification()))) {
             return false;
         }
-
         $user->markEmailAsVerified();
         Auth::login($user);
 
@@ -44,16 +43,29 @@ class VerifyEmailController extends Controller
 
             if (Auth::user()->role == 'admin') {
                 return redirect()->intended(RouteServiceProvider::ADMIN);
+
             } else if (Auth::user()->role == 'seller') {
-            return redirect('/seller');
+                $admins = User::where('role', 'admin')->get();
+                foreach ($admins as $admin) {
+                    \Mail::to($admin->email)->send(new \App\Mail\AdminNewMemberRegistration($user, $admin));
+                }
+                \Mail::to(Auth::user()->email)->send(new \App\Mail\SellerRegistration($user));
+                return redirect('/seller');
+
             } else if (Auth::user()->role == 'buyer') {
+                $admins = User::where('role', 'admin')->get();
+                foreach ($admins as $admin) {
+                    \Mail::to($admin->email)->send(new \App\Mail\AdminNewMemberRegistration($user, $admin));
+                }
+                \Mail::to(Auth::user()->email)->send(new \App\Mail\BuyerRegistration($user));
                 return redirect('/user');
+
             } else {
                 return redirect()->intended(RouteServiceProvider::HOME);
             }
            // return redirect()->intended(RouteServiceProvider::SELLER.'?verified=1');
         }
-        
+
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
@@ -61,6 +73,7 @@ class VerifyEmailController extends Controller
         // Notification case 6
         $admin = User::where('role','admin')->where('noalert', null)->get();
         Notification::send($admin, new NewUserRegister($admin));
-        return redirect('/seller?verified=1');
+
+        return redirect()->intended(RouteServiceProvider::SELLER.'?verified=1');
     }
 }

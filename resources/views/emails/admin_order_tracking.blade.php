@@ -6,28 +6,40 @@
     <title>Order {{ $orderItems->first()->status }}</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
+            font-family: 'Times New Roman', Times, serif;
             margin: 0;
             padding: 0;
+            color: #333;
         }
-
         .container {
-            max-width: 600px;
-            margin: 20px auto;
+            width: 80%;
+            margin: 0 auto;
             padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
         }
-
-        h2 {
-            color: #555;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 10px;
+        .header {
+            text-align: center;
+            padding: 10px 0;
         }
-
+        .header img {
+            max-width: 100%;
+            height: auto;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .content p {
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        .content h2 {
+            font-size: 24px;
+            margin-top: 0;
+        }
+        strong {
+            font-size: 16px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -43,28 +55,34 @@
         th {
             background-color: #f2f2f2;
         }
-
         .subtotal {
             font-weight: bold;
         }
-
-        p {
-            margin-bottom: 10px;
-        }
-
         .footer {
-            margin-top: 20px;
-            border-top: 2px solid #ddd;
-            padding-top: 10px;
+            text-align: right;
+            margin-top: 40px;
+        }
+        .footer p {
+            font-size: 14px;
+            color: #777;
+            margin: 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>Order {{ $orderItems->first()->status }}</h2>
-        <p>Dear Admin,</p>
-        <p>Order code {{ $orderItems->first()->order->order_code }} has been {{ $orderItems->first()->status }} by {{ $orderItems->first()->seller->shop_name }}. 
-            Here are the details:</p>
+        <div class="header">
+            <img src="{{ $message->embed(public_path('images/logos/MailHeader_NSL.jpg')) }}" alt="Asian Food Museum Logo">
+        </div>
+        <div class="content">
+            <p style="text-align: center;">
+                Order code <strong>{{ $orderItems->first()->order->order_code }}</strong> has been
+                <strong>{{ $orderItems->first()->status }} </strong>
+                by <strong>{{ $orderItems->first()->seller->shop_name }}</strong>!
+            </p>
+            <p style="text-align: right;">{{ \Carbon\Carbon::now()->format('F j, Y') }}</p>
+            <p>Dear {{ $admin->name }},</h2>
+            <p>Here are the key details regarding order:</p>
             <table>
                 <thead>
                     <tr>
@@ -83,7 +101,7 @@
                     <tr>
                         <td>{{ $detail->product->product_name }}</td>
                         <td>{{ $detail->qty }}</td>
-                        <td>{{ $detail->price }}</td>
+                        <td>¥{{ number_format($detail->price, 0, '', ',') }}</td>
                     </tr>
                     @php
                         $amount += $detail->amount;
@@ -117,10 +135,11 @@
                     </tr>
                 </tbody>
             </table>
-        
-        <p>New Style Life</p>
+        </div>
         <div class="footer">
-            <p>This mail was sent to all admins - Admin Team</p>
+            <p>Admin Team,</p>
+            <p>Asian Food Museum</p>
+            <p><a href="https://asian-food.site/">https://asian-food.site/</a></p>
         </div>
     </div>
 </body>

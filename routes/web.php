@@ -223,7 +223,7 @@ Route::get('/editblog/{blogid}', [AdminController::class, 'editblog']);
 //starthelp
 
 Route::get('/admin/indexhelp', [AdminController::class,'indexhelp'])->name('admin.indexhelp');
-Route::get('helpdetail/{helpid}', [AdminController::class, 'helpDetail']);
+Route::get('helpdetails/{helpid}', [AdminController::class, 'helpDetail']);
 Route::get('/admin/addhelp', [AdminController::class,'addhelp'])->name('admin.addhelp');
 Route::get('/admin/addnotice', [AdminController::class,'addnotice'])->name('admin.addnotice');
 Route::post('/admin/sendhelp', [AdminController::class, 'notice'])->name('notice');
