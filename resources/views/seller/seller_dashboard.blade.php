@@ -234,10 +234,12 @@
 
                 @php
                     use App\Models\SellerNotification;
-
-                    $notifications = SellerNotification::select('message', 'time')->get();
+                    use Carbon\Carbon;
+                    $today = Carbon::today();
+                    $notifications = SellerNotification::where('seller_id', Auth::user()->id)
+                    ->whereDate('created_at', $today)->orderBy('seen', 'ASC')->get();
                     $notiCount = $notifications->filter(function($notify) {
-                        return !empty($notify->time);
+                        return $notify->seen == 0;
                     })->count();
                 @endphp
                 <div class="nav-right col-6 pull-right right-header p-0">
@@ -258,17 +260,45 @@
 
                                 @foreach($notifications as $key => $notify)
                                 @if(!empty($notify->time))
-                                <li >
-                                    <p>
-
-                                        <i class="fa fa-circle me-2 font-primary notification-circle" style="font-size:11px;color: {{ $iro[$key] }} !important"></i>{{ $notify->message }}<span
-                                            class="pull-right">&nbsp;&nbsp;&nbsp;{{ \Carbon\Carbon::parse($notify->time)->format('y-m-d H:i') }}</span>
-                                    </p>
+                                <li>
+                                    @if ($notify->message == 'A new order added:')
+                                    <a href="{{ route('detail.order',['id' => $notify->related_id]) }}" class="notification-link" data-id="{{ $notify->id }}">
+                                    @elseif ($notify->message == 'A new contact added:')
+                                    <a href="{{ route('help.detail', ['id' => $notify->related_id]) }}" class="notification-link" data-id="{{ $notify->id }}">
+                                    @elseif ($notify->message == 'A new product added:')
+                                    <a href="{{ route('detail.product',['id' => $notify->related_id]) }}" class="notification-link" data-id="{{ $notify->id }}">
+                                    @endif
+                                        <p>
+                                            @if ($notify->seen == 0)
+                                            @php
+                                                $color = '';
+                                                if ($notify->message == 'A new order added:') {
+                                                    $color = $iro[0];
+                                                } elseif ($notify->message == 'A new contact added:') {
+                                                    $color = $iro[1];
+                                                } elseif ($notify->message == 'A new product added:') {
+                                                    $color = $iro[2];
+                                                }
+                                            @endphp
+                                            <i class="fa fa-circle me-2 font-primary notification-circle" 
+                                                style="font-size:11px;color: {{ $color }} !important">
+                                            </i>
+                                            @else
+                                            <i class="fa fa-circle me-2 font-primary notification-circle" 
+                                                style="font-size:11px;color: white !important">
+                                            </i>
+                                            @endif
+                                            {{ $notify->message }}
+                                            <span class="pull-right">
+                                                &nbsp;&nbsp;&nbsp;{{ \Carbon\Carbon::parse($notify->time)->format('y-m-d H:i') }}
+                                            </span>
+                                        </p>
+                                    </a>
                                 </li>
                                 @endif
                                 @endforeach
                                 <li style="display:block">
-                                    <a class="btn btn-primary mx-auto" href="javascript:void(0)" onclick="checkAllNotifications()">Check all notification</a>
+                                    <a class="btn btn-primary mx-auto" href="/seller-notifications/allseen">Check all notification</a>
                                 </li>
                             </ul>
                         </li>
@@ -503,6 +533,34 @@
                 badge.style.display = 'none';
             }
         }
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('a.notification-link').on('click', function(e) {
+                e.preventDefault();
+                var link = $(this);
+                var notificationId = link.data('id');
+    
+                $.ajax({
+                    url: '/seller-notifications/' + notificationId + '/seen',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            link.find('.notification-circle').css('color', 'white'); // Optionally change color to indicate it was seen
+                            window.location.href = link.attr('href'); // Redirect to the link's target
+                        } else {
+                            alert('Error marking notification as seen.');
+                        }
+                    },
+                    error: function() {
+                        alert('Error marking notification as seen.');
+                    }
+                });
+            });
+        });
     </script>
 </body>
 
