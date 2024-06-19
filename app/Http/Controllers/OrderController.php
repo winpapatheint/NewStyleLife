@@ -175,15 +175,9 @@ class OrderController extends Controller
             \Mail::to($orderItems->first()->buyer->email)->send(new \App\Mail\BuyerOrderTracking($orderItems));
             $admins = User::where('role', 'admin')->get();
             foreach ($admins as $admin) {
-                \Mail::to($admin->email)->send(new \App\Mail\AdminOrderTracking($orderItems));
+                \Mail::to($admin->email)->send(new \App\Mail\AdminOrderTracking($orderItems, $admin));
             }
         }
-
-        $notification = Notification::find(4);
-        $newval = array('time' => Carbon::now(),
-                        'created_at' => Carbon::now(),
-                        );
-        $notification->update( $newval);
 
         $msg = ('Order status updated Successfully');
         return back()->with('success', $msg);

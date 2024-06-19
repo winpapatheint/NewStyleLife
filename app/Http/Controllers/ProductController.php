@@ -247,6 +247,14 @@ class ProductController extends Controller
     {
         $id = $request->id;
         $product = Product::findOrFail($id);
+
+        $user_id = Auth::user()->created_by ?? Auth::id();
+        $sellerData = Seller::where('user_id', $user_id)->first();
+        $admins = User::where('role', 'admin')->get();
+
+        foreach ($admins as $admin) {
+            \Mail::to($admin->email)->send(new \App\Mail\AdminProductCancel($sellerData, $product, $admin));
+        }
         File::delete($product->product_thambnail);
         Product::findOrFail($id)->delete();
         $images = MultiImg::where('product_id', $id)->get();
@@ -254,55 +262,12 @@ class ProductController extends Controller
             File::delete($img->photo_name);
             MultiImg::where('product_id', $id)->delete();
         }
-        $inquiry_email = 'info-test@asia-hd.com';
-        $user = User::where('id', Auth::user()->id)->select('email', 'name')->first();
-        $email = $user->email;
-        $name = $user->name;
-        $data = array('name'=>$name);
-        if (!empty($request->email)) {
-            $mail = Mail::send([], $data, function($message) use ($request, $inquiry_email,$name,$email) {
-                $message->to($inquiry_email, 'Asian Food Museum ')->subject($name);
-                $message->from($email,$name);
-                $message->setBody("The following notification was received from the Asian Food Museum official website.
-                \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                \r\n"."Name".$name."
-                \r\n"."Email".$email."
-                \r\n
-                \r\n"."Notice：　Product deleted successfully.
-                \r\n
-                \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-            });
-        }
-
-        $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();
-        if (!empty(  $adminMails)) {
-            foreach ($adminMails as $email) {
-                Mail::send([], $data, function ($message) use ($request, $adminMails,$name,$email) {
-                    $message->to($email, 'Asian Food Museum')->subject($name);
-                    $message->from($email,$name);
-                    $message->setBody("The following notification was received from the Asian Food Museum official website.
-                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-                    \r\n"."Name".$name."
-                    \r\n"."Email：　".$email."
-                    \r\n
-                    \r\n"."Notice：　Product deleted successfully
-                    \r\n
-                    \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-                });
-            }
-        }
-
-        $notification = Notification::find(6);
-        $newval = array('time' => Carbon::now(),
-                        'created_at' => Carbon::now(),
-                        );
-        $notification->update( $newval);
-
-        $sellernotification = SellerNotification::find(3);
-        $newval = array('time' => Carbon::now(),
-                        'created_at' => Carbon::now(),
-                        );
-        $sellernotification->update( $newval);
+        Notification::create([
+            'related_id' => $user_id,
+            'message' => 'Product deleted:',
+            'time' => Carbon::now(),
+            'seen' => 0,
+        ]);
         $msg = ('Product deleted Successfully');
         return back()->with('success', $msg);
     }

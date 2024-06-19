@@ -17,6 +17,7 @@ use App\Models\Subseller;
 use App\Models\OrderDetail;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use App\Models\SellerNotification;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -431,6 +432,21 @@ class SellerController extends Controller
         $msg = ('Subseller deleted successfully');
         return back()->with('success', $msg);
     }
+    
+    public function markAsSeen($id)
+    {
+        $notification = SellerNotification::find($id);
+        if ($notification) {
+            $notification->seen = 1;
+            $notification->save();
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 404);
+    }
 
-
+    public function allSeen()
+    {
+        SellerNotification::where('seen', 0)->update(['seen' => 1]);
+        return redirect()->back();
+    }
 }
