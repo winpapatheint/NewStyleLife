@@ -251,7 +251,16 @@
                                 <li>
                                 <img src="{{ asset('images/'.$cartlist-> product_thambnail) }}"
                                                             class="img-fluid blur-up lazyload" alt="" style="width: 50px; height: 50px;">
-                                    <h4>{{ $cartlist->product_name }} <span>X {{ $cartlist->quantity }}</span></h4>
+                                    <h4>
+                                        @if(mb_strlen($cartlist->product_name) > 15)
+                                            {!! mb_substr($cartlist->product_name, 0, 15) . '<br>' . mb_substr($cartlist->product_name, 15, 15) . '...' !!}
+                                        @else
+                                            {!! nl2br(e($cartlist->product_name)) !!}
+                                        @endif
+                                        <span>
+                                            X {{ $cartlist->quantity }}
+                                        </span>
+                                    </h4>
                                             @php
                                                 $sellingPrice = $cartlist->selling_price;
                                                 $quantity = $cartlist->quantity;
