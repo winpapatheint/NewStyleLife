@@ -1,6 +1,12 @@
 @extends('seller.seller_dashboard')
 @section('seller')
-
+<style>
+    .break-line {
+    width: 200px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+</style>
 <!-- tracking section start -->
 <div class="page-body">
     <!-- tracking table start -->
