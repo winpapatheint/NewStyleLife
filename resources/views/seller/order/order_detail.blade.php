@@ -55,9 +55,11 @@
                                                         </td>
 
                                                         <td style="width: 100%;">
-                                                            <h6>
-                                                                {!! preg_replace('/(.{1,30})\s+?/', '$1<br>', $order->product_name) !!}
-                                                            </h6>
+                                                            <div class="break-line">
+                                                                <h6>
+                                                                    {!! $order->product_name !!}
+                                                                </h6>
+                                                            </div>
                                                         </td>
 
                                                         <td>
