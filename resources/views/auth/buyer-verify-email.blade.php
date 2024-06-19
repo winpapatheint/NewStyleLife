@@ -124,7 +124,7 @@
                             style="background-color: #f7f7f7;display: flex;align-items: center;justify-content: space-between;width: 100%;">
                             <td class="header-logo" style="padding: 10px 32px;">
                                 <a href="{{ url('/') }}" style="display: block; text-align: left;">
-                                    <img src="{{ asset('images/logos/logo_foodsh.png') }}" class="main-logo" alt="logo">
+                                    <img src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" class="main-logo" alt="logo">
                                 </a>
                             </td>
                             <td class="header-menu" style="display: block; padding: 10px 32px;text-align: right;">
@@ -161,7 +161,7 @@
                                 <td style="display: block;">
                                     <h3
                                         style="font-weight: 700; font-size: 20px; margin: 0; text-transform: uppercase;">
-                                        Hi {{ $user->name }} ! Welcome To Aisan Food Museum.</h3>
+                                        Hi {{ $user->name }} ! Welcome To New Style Life.</h3>
                                 </td>
 
                                 <td>
@@ -201,7 +201,7 @@
                                     <p
                                         style="font-size: 14px; font-weight: 600; width: 82%; margin: 0 auto; line-height: 1.5; color: #939393; font-family: 'Nunito Sans', sans-serif;">
                                         If you have any question, please email us at <span
-                                            class="theme-color">info@asian-food.site</span>, call <span
+                                            class="theme-color">info@new-style.life</span>, call <span
                                             class="theme-color">(+81) 03-3981-5090</span> or vixit our <span
                                             class="theme-color"><a class="nav-link" href="{{ url('/faq') }}">FAQ</a></span> 
                                             You can also chat with a real live human

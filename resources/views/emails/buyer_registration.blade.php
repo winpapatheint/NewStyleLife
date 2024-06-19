@@ -54,7 +54,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{ $message->embed(public_path('images/logos/MailHeader_NSL.jpg')) }}" alt="Asian Food Museum Logo">
+            <img src="{{ $message->embed(public_path('images/logos/MailHeader_NSL.jpg')) }}" alt="New Style Life Logo">
         </div>
         <div class="content">
             <p style="text-align: center;">
@@ -62,7 +62,7 @@
             </p>
             <p style="text-align: right;">{{ \Carbon\Carbon::now()->format('F j, Y') }}</p>
             <p>Dear {{ $user->name }},</h2>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome to our Asian Food Museum.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Welcome to our New Style Life.</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Your registration is now confirmed, and you are officially a part of our valued customer. We are look forward to start together.</p>
             <p>Here are the key details regarding your registration:</p>
             <ul>
@@ -70,20 +70,20 @@
                 <li><p>Email: {{ $user->email }}</p></li>
             </ul>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Please take a moment to review the information provided above. If there are any discrepancies or if you have
-                any questions, don't hesitate to reach out to us at <strong>info@asian-food.site</strong>.</p>
+                any questions, don't hesitate to reach out to us at <strong>info@new-style.life</strong>.</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;As a registered member, you now have access to our services/benefits. We encourage you to take full
                 advantage of these offerings to enhance your experience with us.</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;We will be in touch with further details regarding the commencement of the Asian Food Museum and any
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;We will be in touch with further details regarding the commencement of the New Style Life and any
                 additional requirements. In the meantime, if you require any assistance or support, feel free to contact
                 our team.</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Once again, congratulations on completing your registration!</p>
         </div>
         <div class="footer">
             <p>Thank You,</p>
-            <p>Asian Food Museum</p>
-            <p>Email: info@asian-food.site</p>
+            <p>New Style Life</p>
+            <p>Email: info@new-style.life</p>
             <p>Phone: (+81) 03-3981-5090</p>
-            <p><a href="https://asian-food.site/">https://asian-food.site/</a></p>
+            <p><a href="https://new-style.life/">https://new-style.life/</a></p>
             <p>〒171-0014<br>
                 Room 502, Wada Building<br>
                4-27-5 Ikebukuro, Toshima-ku<br>

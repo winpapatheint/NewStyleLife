@@ -83,7 +83,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{ $message->embed(public_path('images/logos/MailHeader_NSL.jpg')) }}" alt="Asian Food Museum Logo">
+            <img src="{{ $message->embed(public_path('images/logos/MailHeader_NSL.jpg')) }}" alt="New Style Life Logo">
         </div>
         <div class="content">
             <p class="date">{{ \Carbon\Carbon::now()->format('F j, Y') }}</p>

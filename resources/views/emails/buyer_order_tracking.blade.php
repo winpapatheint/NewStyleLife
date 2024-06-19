@@ -72,7 +72,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{ $message->embed(public_path('images/logos/MailHeader_NSL.jpg')) }}" alt="Asian Food Museum Logo">
+            <img src="{{ $message->embed(public_path('images/logos/MailHeader_NSL.jpg')) }}" alt="New Style Life Logo">
         </div>
         <div class="content">
             <p style="text-align: center;">
@@ -139,10 +139,10 @@
         </div>
         <div class="footer">
             <p>Thank You,</p>
-            <p>Asian Food Museum</p>
-            <p>Email: info@asian-food.site</p>
+            <p>New Style Life</p>
+            <p>Email: info@new-style.life</p>
             <p>Phone: (+81) 03-3981-5090</p>
-            <p><a href="https://asian-food.site/">https://asian-food.site/</a></p>
+            <p><a href="https://new-style.life/">https://new-style.life/</a></p>
             <p>〒171-0014<br>
                 Room 502, Wada Building<br>
                4-27-5 Ikebukuro, Toshima-ku<br>

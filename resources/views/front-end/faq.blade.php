@@ -145,9 +145,9 @@
                             <div class="row">
                                 <div class="col-xxl-12 col-lg-12 col-sm-6">
                                     <div class="mb-md-4 mb-3 custom-form">
-                                        <label for="exampleFormControlInput" class="form-label">First Name</label>
+                                        <label for="exampleFormControlInput" class="form-label">Name</label>
                                         <div class="custom-input">
-                                            <input type="text" class="form-control" id="name" placeholder="Enter First Name" name="name" value="{{ old('name') }}">
+                                            <input type="text" class="form-control" id="name" placeholder="Enter Name" name="name" value="{{ old('name') }}">
                                             <i class="fa-solid fa-user"></i>
                                             @if (!empty($error['name']))
                                                 @foreach ($error['name'] as $key => $value)
@@ -175,10 +175,10 @@
                                 </div>
 
                                 <div class="col-xxl-6 col-lg-12 col-sm-6">
-                                    <div class="mb-md-4 mb-3                                    custom-form">
+                                    <div class="mb-md-4 mb-3 custom-form">
                                         <label for="exampleFormControlInput3" class="form-label">Phone Number</label>
                                         <div class="custom-input">
-                                            <input type="tel" class="form-control" id="phone" placeholder="Enter Your Phone Number" maxlength="10"
+                                            <input type="tel" class="form-control" id="phone" placeholder="Enter Phone Number" maxlength="10"
                                                 oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="phone" value="{{ old('phone') }}">
                                             <i class="fa-solid fa-mobile-screen-button"></i>
 

@@ -71,7 +71,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{ $message->embed(public_path('images/logos/MailHeader_NSL.jpg')) }}" alt="Asian Food Museum Logo">
+            <img src="{{ $message->embed(public_path('images/logos/MailHeader_NSL.jpg')) }}" alt="New Style Life Logo">
         </div>
         <div class="content">
             <p style="text-align: center;">
@@ -113,8 +113,8 @@
         </div>
         <div class="footer">
             <p>Admin Team,</p>
-            <p>Asian Food Museum</p>
-            <p><a href="https://asian-food.site/">https://asian-food.site/</a></p>
+            <p>New Style Life</p>
+            <p><a href="https://new-style.life/">https://new-style.life/</a></p>
         </div>
     </div>
 </body>
