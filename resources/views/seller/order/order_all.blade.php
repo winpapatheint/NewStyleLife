@@ -138,7 +138,7 @@
                                                         <td>
                                                             <div class="break-line">
                                                                 <h6>
-                                                                    {!! $order->product_name !!}
+                                                                    {!! $item->product_name !!}
                                                                 </h6>
                                                             </div>
                                                         </td>
