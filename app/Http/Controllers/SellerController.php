@@ -208,7 +208,7 @@ class SellerController extends Controller
         $getId = Help::find($id);
         $helpId = $getId->help_id;
         if ($helpId) {
-            $start = Help::find($helpId);
+            $start = Help::find($id);
             $reply = Help::where('help_id', $helpId)->get();
         } else {
             $start = $getId;

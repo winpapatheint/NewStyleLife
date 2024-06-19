@@ -28,21 +28,19 @@
             background-color: #fff;
         }
 
-th.no,
-td.no {
-    left: 0;
-    z-index: 3;
-}
+        th.no,
+        td.no {
+            left: 0;
+            z-index: 3;
+        }
 
-th.name,
-td.name,
-th.image,
-td.image {
-    left: 50px; /* Adjust based on your layout needs */
-    z-index: 2;
-}
-
-
+        th.name,
+        td.name,
+        th.image,
+        td.image {
+            left: 50px; /* Adjust based on your layout needs */
+            z-index: 2;
+        }
 
         th:first-child,
         td:first-child {
