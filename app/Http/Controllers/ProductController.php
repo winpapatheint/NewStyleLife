@@ -217,7 +217,6 @@ class ProductController extends Controller
         }
         $product->brand_id = $request->brand_id;
         $product->country_id = $request->country_id;
-        $product->seller_id = Auth::user()->id;
         $product->category_id= $request->category_id;
         $product->sub_category_id= $request->sub_category_id;
         $product->sub_category_title_id= $request->sub_category_title_id;
@@ -235,7 +234,6 @@ class ProductController extends Controller
         $product->care_instructions= $request->care_instructions;
         $product->product_thambnail= $filename;
         $product->estimate_date= $request->estimate_date;
-        // $product->status= 1;
         $product->delivery_price= $request->delivery_price;
         $product->shipping_country = $request->shipping_country;
         $product->updated_by = Auth::user()->id;
