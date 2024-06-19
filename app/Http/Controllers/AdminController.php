@@ -1507,17 +1507,9 @@ class AdminController extends Controller
 
     public function productdetail($id)
     {
-        $products = DB::table('products')
-                    ->select( 'products.*','brands.*')
-                    ->join('brands', function ($join) {
-                        $join->on('brands.id', '=', 'products.brand_id');
-                    })
-                    ->where('products.id',$id)->get();
-
-        // print_r($blog[0]->created_at);die;
-        $product = $products[0];
-
-        return view('admin.product.product_detail',compact('product'));
+        $data = Product::find($id);
+        $multiImgs = MultiImg::where('product_id',$id)->get();
+        return view('admin.product.product_detail',compact('data','multiImgs'));
     }
 
     public function shopdetail($id)

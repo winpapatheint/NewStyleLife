@@ -1,80 +1,65 @@
 <x-auth-layout>
 
     <style>
-        .table>:not(caption)>*>*
-        {
-            border-bottom-width:0px !important;
+        .table thead th,
+        .table tbody td {
+            white-space: nowrap;
         }
 
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        /* Sticky columns */
-
-
-        th.no,
-        td.no,
-        th.name,
-        td.name,
-        th.image,
-        td.image {
+        .table thead th.sticky,
+        .table tbody td.sticky {
             position: sticky;
-            background-color: #fff;
+            background: white;
+            z-index: 1;
         }
 
-        th.no,
-        td.no {
+        .table thead th.sticky-1,
+        .table tbody td.sticky-1 {
             left: 0;
-            z-index: 3;
-        }
-
-        th.name,
-        td.name,
-        th.image,
-        td.image {
-            left: 50px; /* Adjust based on your layout needs */
             z-index: 2;
         }
 
-        th:first-child,
-        td:first-child {
-            position: sticky;
-            left: 0;
-            background-color: #fff;
-            z-index: 3; /* Ensure it's above other sticky cells */
+        .table thead th.sticky-2,
+        .table tbody td.sticky-2 {
+            left: 50px;
+            z-index: 2;
         }
 
-        /* Additional styles for specific columns */
-        td.name {
-            min-width: 200px; /* Minimum width for the Name column */
-            white-space: nowrap; /* Prevent text wrapping */
-            overflow: hidden; /* Hide overflowing text */
-            text-overflow: ellipsis; /* Show ellipsis (...) for overflow */
-            padding: 8px; /* Adjust padding for better appearance */
+        .table thead th.sticky-3,
+        .table tbody td.sticky-3 {
+            left: 250px;
+            z-index: 2;
         }
 
-        td.image {
-            max-width: 100px;
-            padding: 8px; /* Adjust padding for better appearance */
+        .table-product {
+            overflow-x: auto;
         }
 
-        td.image img {
-            max-width: 100%; /* Ensure image width fits within its container */
-            display: block; /* Ensure image is block level */
-            margin: 0 auto; /* Center the image horizontally */
+        /* Add alternating row colors */
+        .table tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
         }
 
-        /* Optional: Adjust padding for table cells */
-        th,
-        td {
-            padding: 10px;
+        .table tbody tr:nth-child(even) {
+            background-color: #ffffff;
         }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .table tbody tr:nth-child(odd) .sticky {
+            background-color: #f9f9f9;
+        }
+
+        .table tbody tr:nth-child(even) .sticky {
+            background-color: #ffffff;
+        }
+
+        .table tbody tr:hover .sticky {
+            background-color: #f1f1f1;
+        }
+
     </style>
 
     <div class="page-body">
@@ -91,10 +76,10 @@
                                     <table class="table all-package theme-table table-product" id="table_id">
                                         <thead>
                                             <tr>
-                                                <th class="no" style="min-width: 50px">No</th>
+                                                <th class="sticky sticky-1" style="min-width: 50px">No</th>
                                                 <th >Date</th>
-                                                <th class="image" style="min-width: 200px">Product Image</th>
-                                                <th class="name" style="min-width: 300px">Product Name</th>
+                                                <th class="sticky sticky-2" style="min-width: 200px">Product Image</th>
+                                                <th class="sticky sticky-3" style="min-width: 300px">Product Name</th>
                                                 <th style="min-width: 120px">Current Qty</th>
                                                 <th style="min-width: 120px">Price<br>(Tax inc)</th>
                                                 <th style="min-width: 150px">Commision(%)</th>
@@ -110,10 +95,10 @@
                                         <tbody>
                                             @foreach( $lists as $key => $list )
                                                 <tr>
-                                                    <td  class="no">{{ ($ttl+1) - ($lists->firstItem() + $key) }}</td>
+                                                    <td class="sticky sticky-1">{{ ($ttl+1) - ($lists->firstItem() + $key) }}</td>
                                                     <td data-label="登録日">{{ date('Y/m/d', strtotime($list->created_at)) }}<br>{{ date('H:i', strtotime($list->created_at)) }}</td>
-                                                    <td class="image" data-label="{{ __('auth.image') }}"><img src="{{ asset('images/'.($list->product_thambnail)   ) }}" alt="thumb" style="width: 50px;"></td>
-                                                    <td  class="name" style="text-align:left; max-width: 200px;" data-label="{{ $list->product_name }}">
+                                                    <td class="sticky sticky-2" data-label="{{ __('auth.image') }}"><img src="{{ asset('images/'.($list->product_thambnail)   ) }}" alt="thumb" style="width: 50px;"></td>
+                                                    <td class="sticky sticky-3" style="text-align:left; max-width: 200px;" data-label="{{ $list->product_name }}">
                                                         @if(mb_strlen($list->product_name) > 30)
                                                             {!! mb_substr($list->product_name, 0, 30) . '<br>' . mb_substr($list->product_name, 30, 30) . '...' !!}
                                                         @else

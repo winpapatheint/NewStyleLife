@@ -256,7 +256,7 @@
                                     <h6 class="f-18 mb-0">Notitications</h6>
                                 </li>
                                 @php
-                                    $iro = ["#0da487","#9e65c2","#a927f9","#6670bd","#9944ff","#dc3545","#6670bd","#6670bd","#6670bd"];
+                                    $iro = ["#0da487","#9e65c2","#a927f9","#6670bd","#9944ff","#dc3545","#0da487","#6670bd","#6670bd"];
                                 @endphp
 
                                 @foreach($notifications as $key => $notify)
@@ -272,7 +272,9 @@
                                     <a href="{{ url("/admin/orderdetail/".$notify->related_id ) }}" class="notification-link" data-id="{{ $notify->id }}">
                                     @elseif ($notify->message == 'A new contact added:')
                                     <a href="{{ url("helpdetails/".$notify->related_id ) }}" class="notification-link" data-id="{{ $notify->id }}">
-                                    @elseif ($notify->message == 'Product deleted:')
+                                    @elseif (Str::contains($notify->message, 'Product deleted by'))
+                                    <a href="" class="notification-link" data-id="{{ $notify->id }}">
+                                    @elseif (Str::contains($notify->message, 'A new sub seller added by'))
                                     <a href="" class="notification-link" data-id="{{ $notify->id }}">
                                     @endif
                                         <p>
@@ -289,8 +291,10 @@
                                                     $color = $iro[3];
                                                 } elseif ($notify->message == 'A new contact added:') {
                                                     $color = $iro[4];
-                                                } elseif ($notify->message == 'Product deleted:') {
-                                                    $color = $iro[4];
+                                                } elseif (Str::contains($notify->message, 'Product deleted by')) {
+                                                    $color = $iro[5];
+                                                } elseif (Str::contains($notify->message, 'A new sub seller added by')) {
+                                                    $color = $iro[6];
                                                 }
                                             @endphp
                                             <i class="fa fa-circle me-2 font-primary notification-circle"

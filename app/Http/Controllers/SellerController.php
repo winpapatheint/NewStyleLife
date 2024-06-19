@@ -419,6 +419,19 @@ class SellerController extends Controller
             'phone' => $request->input('phone'),
         ]);
 
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            \Mail::to($admin->email)->send(new \App\Mail\AdminNewMemberRegistration($user, $admin));
+        }
+
+        $createdBy = Seller::where('user_id', $user->created_by)->first();
+        Notification::create([
+            'related_id' => $user->id,
+            'message' => 'A new sub seller added by ' . $createdBy->shop_name . ':',
+            'time' => Carbon::now(),
+            'seen' => 0,
+        ]);
+
         $msg = ('Data added successfully');
         return redirect('/subsellerlist')->with('success', $msg);
     }
