@@ -78,16 +78,26 @@ class OrderController extends Controller
     public function sellerDetailOrder($id)
     {
         $sellerId = Auth::user()->created_by ?? Auth::id();
-
-        $orderDetails = OrderDetail::with(['order', 'prefecture','product'])
-            ->where('order_details.seller_id', $sellerId)
-            ->where('order_details.order_id', $id)
-            ->where('order_details.status', '!=', 'Cancel')->get();
+        $orderDetails = OrderDetail::join('orders', 'order_details.order_id', 'orders.id')
+                ->join('products', 'products.id', 'order_details.product_id')
+                ->with('prefecture')
+                ->select(
+                    'orders.id as order_id',
+                    'order_details.id as order_detail_id',
+                    'products.id as product_id',
+                    'orders.*',
+                    'products.*',
+                    'products.selling_price as price',
+                    'order_details.*',
+                    'orders.created_at as order_created_at',
+                )
+                ->where('order_details.seller_id', $sellerId)
+                ->where('order_details.order_id', $id)
+                ->where('order_details.status', '!=', 'Cancel')
+                ->get();
 
         return view('seller.order.order_detail', compact('orderDetails'));
     }
-
-
 
     public function updateOrderStatus(Request $request)
     {
@@ -165,9 +175,15 @@ class OrderController extends Controller
             \Mail::to($orderItems->first()->buyer->email)->send(new \App\Mail\BuyerOrderTracking($orderItems));
             $admins = User::where('role', 'admin')->get();
             foreach ($admins as $admin) {
-                \Mail::to($admin->email)->send(new \App\Mail\AdminOrderTracking($orderItems, $admin));
+                \Mail::to($admin->email)->send(new \App\Mail\AdminOrderTracking($orderItems));
             }
         }
+
+        $notification = Notification::find(4);
+        $newval = array('time' => Carbon::now(),
+                        'created_at' => Carbon::now(),
+                        );
+        $notification->update( $newval);
 
         $msg = ('Order status updated Successfully');
         return back()->with('success', $msg);

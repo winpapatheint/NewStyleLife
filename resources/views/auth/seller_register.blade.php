@@ -299,7 +299,7 @@
             if (!zip_code) {
                 isValid = false;
                 document.getElementById('error-zip_code').textContent = 'Please provide your zip code.';
-            } else if (!/^\d{7}$/.test(zip_code)) {
+            } else if (!/^\d+$/.test(zip_code)) {
                 isValid = false;
                 document.getElementById('error-zip_code').textContent = 'Please provide a valid digit.';
             }
