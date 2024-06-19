@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SellerContact extends Mailable
 {
+
     use Queueable, SerializesModels;
 
     public $data;

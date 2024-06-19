@@ -16,7 +16,6 @@ class AdminContact extends Mailable
     {
         $this->data = $data;
     }
-
     public function build()
     {
         $data = $this->data;
