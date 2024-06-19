@@ -1131,7 +1131,7 @@ class UserController extends Controller
             DB::commit();
             $admins = User::where('role', 'admin')->get();
             foreach ($admins as $admin) {
-                \Mail::to($admin->email)->send(new \App\Mail\AdminOrderSuccess($orderDetails));
+                \Mail::to($admin->email)->send(new \App\Mail\AdminOrderReceived($orderDetails, $admin));
             }
 
             $sellerIds = $orderDetails->pluck('seller_id')->unique();
@@ -1147,7 +1147,7 @@ class UserController extends Controller
                                     ->where('buyer_id', $buyerId)->where('order_id', $order->id)
                                     ->where('seller_id', $seller->id)->get();
                 }
-                \Mail::to($seller->email)->send(new \App\Mail\SellerOrderSuccess($orderDetails, $seller));
+                \Mail::to($seller->email)->send(new \App\Mail\SellerOrderReceived($orderDetails, $seller));
             }
             return response()->json(['message' => 'Your order has been successfully placed.'
                                     ,'orderId' => $order->id]);

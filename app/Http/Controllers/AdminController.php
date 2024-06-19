@@ -2803,19 +2803,11 @@ class AdminController extends Controller
     public function contact(Request $request)
     {
         if ($request->from == 'faq') {
-            $inquiry_email = 'info-test@asia-hd.com';
 
             $data = array('name'=>$request->name);
 
             $adminemail =  'admin@asia-hd.com';
             $faqDate = Carbon::now()->format('M d, Y');
-
-            $data = ['name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'content' => $request->message,
-                    'faqDate' => $faqDate,
-                    'adminemail' => $adminemail];
 
             $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();;
             if (!empty(  $adminMails)) {
@@ -2826,7 +2818,7 @@ class AdminController extends Controller
                     'content' => $request->message,
                     'faqDate' => $faqDate,
                     'adminemail' => $adminemail];
-                \Mail::to($email)->send(new \App\Mail\FAQContact($data));
+                    \Mail::to($email)->send(new \App\Mail\FAQContact($data));
                 }
             }
 
@@ -2838,14 +2830,6 @@ class AdminController extends Controller
         {
             $adminemail =  'admin@asia-hd.com';
             $contactDate = Carbon::now()->format('M d, Y');
-
-            $data = ['name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'content' => $request->message,
-                    'contactDate' => $contactDate,
-                    'adminemail' => $adminemail];
-           
 
             $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();;
             if (!empty(  $adminMails)) {
@@ -2898,7 +2882,11 @@ class AdminController extends Controller
                 'helpDate' => $helpDate,
                 'adminemail' => $adminemail,
             'sellername' => $seller_name->name];
-        \Mail::to($seller_email)->send(new \App\Mail\AdminContact($data));
+        
+        $sellers = User::where('id', $request->selleremail)->orWhere('created_by', $request->selleremail)->get();
+        foreach($sellers as $seller){
+            \Mail::to($seller->email)->send(new \App\Mail\AdminContact($data));
+        }
 
         SellerNotification::create([
             'seller_id' => $request->selleremail,
@@ -2910,76 +2898,6 @@ class AdminController extends Controller
 
         return redirect('/admin/indexhelp')->with('success','Sending Email successfully');
     }
-
-    // if (!empty($sellerEmails)) {
-    //     $user = Auth::user();
-
-    //     // Validate the incoming request data
-    //     $validator = Validator::make($request->all(), [
-    //         'subject' => 'required|string|max:255',
-    //         'body' => 'required|string',
-    //         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json(['errors' => $validator->errors()], 422);
-    //     }
-
-    //     foreach ($sellerEmails as $email) {
-    //         $help = new Help();
-    //         $help->name = $user->name;
-    //         $help->to = $email;
-    //         $help->from = 'info-test@asia-hd.com';
-    //         $help->subject = $request->title;
-    //         $help->body =  $request->message;
-    //         $help->created_at = Carbon::now();
-
-
-    //         $help->save();
-    //     }
-
-        // $inquiry_email = 'info-test@asia-hd.com';
-        // $email = Auth::user()->email;
-        // $name = Auth::user()->name;
-        // $mail = Mail::send('seller.help.helpEmail', ['name' => $name, 'email' => $email, 'title' => $request->title, 'reason' => $request->reason], function($message) use ($name, $inquiry_email) {
-        //     $message->to($inquiry_email, 'Ecommerce')->subject($name.'からの質問');
-        //     $message->from(Auth::user()->email, Auth::user()->name);
-        // });
-
-        // $msg = ('Data sent successfully');
-        // return redirect('/help')->with('success', $msg);
-        // if ($request->from == 'notice') {
-
-        //     $sellerEmails = DB::table('users')->where('role', 'seller')->pluck('email')->Array();
-
-        //     $inquiry_email = 'info-test@asia-hd.com';
-        //     $data = array('title' => $request->title);
-
-        //     if (!empty(  $sellerEmails)) {
-        //         foreach ($sellerEmails as $email) {
-        //             Mail::send([], $data, function ($message) use ($request, $email, $inquiry_email) {
-        //                 $message->to($email)->subject($request->title . 'からの質問');
-        //                 $message->from($inquiry_email, $request->title);
-        //                 $message->setBody("We received the following notice message from the official e-commerce website.
-        //                     \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
-        //                     \r\nName：　" . $request->title . "
-        //                     \r\nEmail：　" .  $inquiry_email . "
-        //                     \r\n
-        //                     \r\nMessage：　
-        //                     \r\n" . $request->message . "
-        //                     \r\n
-        //                     \r\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝");
-        //             });
-        //         }
-        //     }
-
-        //     return redirect('/admin/addhelp#notice')->with('success', 'お問い合わせ内容が正常に送信されました。');
-
-        // }
-    //       $msg = ('Data sent successfully');
-    //     return redirect('/admin/indexhelp')->with('success', $msg);
-    // }
-
 
     public function noticeall(Request $request)
     {
@@ -3021,13 +2939,15 @@ class AdminController extends Controller
         $help->created_at = Carbon::now();
         $help->save();
 
-        SellerNotification::create([
-            'seller_id' => $seller->id,
-            'related_id' => $help->id,
-            'message' => 'A new contact added:',
-            'time' => Carbon::now(),
-            'seen' => 0,
-        ]);
+        foreach ($sellers as $seller) {
+            SellerNotification::create([
+                'seller_id' => $seller->id,
+                'related_id' => $help->id,
+                'message' => 'A new contact added:',
+                'time' => Carbon::now(),
+                'seen' => 0,
+            ]);
+        }
 
         return redirect('/admin/indexhelp')->with('success', 'Sending Email successfully');
 
@@ -3910,13 +3830,13 @@ class AdminController extends Controller
                                     ->where('buyer_id', $order->buyer_id)->where('order_id', $order->id)
                                     ->where('seller_id', $seller->id)->get();
                 }
-                \Mail::to($seller->email)->send(new \App\Mail\SellerOrderSuccess($orderDetails, $seller));
+                \Mail::to($seller->email)->send(new \App\Mail\SellerOrderReceived($orderDetails, $seller));
             }
 
             // mail sent to admin
             $admins = User::where('role', 'admin')->get();
             foreach ($admins as $admin) {
-                \Mail::to($admin->email)->send(new \App\Mail\AdminOrderSuccess($orderDetails));
+                \Mail::to($admin->email)->send(new \App\Mail\AdminOrderReceived($orderDetails, $admin));
             }
 
             return redirect()->back()->with('success', 'Payment approved successfully for the order code '. $order->order_code);

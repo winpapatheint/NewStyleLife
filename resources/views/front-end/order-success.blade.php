@@ -140,7 +140,7 @@
                             style="background-color: #f7f7f7;display: flex;align-items: center;justify-content: center;width: 100%;">
                             <td class="header-logo" style="padding: 10px 32px;">
                                 <a href="/" style="display: block; text-align: left;">
-                                    <img src="{{ asset('images/logos/logo_foodsh.png') }}" class="main-logo" alt="logo">
+                                    <img src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" class="main-logo" alt="logo">
                                 </a>
                             </td>
                         </tr>
@@ -294,7 +294,13 @@
                                                 <td
                                                     style="padding: 28px 0;border-bottom: 1px solid rgba(217, 217, 217, 0.5);">
                                                     <ul class="product-detail">
-                                                        <li>{{ $orderDetail->product->product_name }}</li>
+                                                        <li>
+                                                            @if(mb_strlen($orderDetail->product->product_name) > 30)
+                                                                {!! mb_substr($orderDetail->product->product_name, 0, 30) . '<br>' . mb_substr($orderDetail->product->product_name, 30, 30) . '...' !!}
+                                                            @else
+                                                                {!! nl2br(e($orderDetail->product->product_name)) !!}
+                                                            @endif
+                                                        </li>
                                                         <li>Quantity: <span>{{ $orderDetail->qty }}</span></li>
                                                         <li>Price: <span>¥{{ number_format($orderDetail->price, 0, '', ',') }}</span></li>
                                                     </ul>

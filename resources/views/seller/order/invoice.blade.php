@@ -62,7 +62,7 @@
         <tr>
             <td valign="top">
                 <h2 style="color: green; font-size: 26px;"><strong>New Style Life</strong></h2>
-                <img src="{{ asset('images/logos/logo_foodsh.png') }}" class="web-logo nav-logo img-fluid blur-up lazyload" alt="">
+                <img src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" class="web-logo nav-logo img-fluid blur-up lazyload" alt="">
             </td>
             <td align="right">
                 <p class="font jp-text">

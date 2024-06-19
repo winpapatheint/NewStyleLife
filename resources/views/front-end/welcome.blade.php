@@ -736,9 +736,21 @@
                                             <div class="offer-detail">
                                                 <div>
                                                     <a href="{{ route('show-product-left-thumbnail', ['id' => $trending->id]) }}" class="text-title">
-                                                        <h6 class="name">{{ $trending->product_name }}</h6>
+                                                        <h6 class="name">
+                                                            @if(mb_strlen($trending->product_name) > 15)
+                                                                {!! mb_substr($trending->product_name, 0, 15) . '<br>' . mb_substr($trending->product_name, 15, 15) . '...' !!}
+                                                            @else
+                                                                {!! nl2br(e($trending->product_name)) !!}
+                                                            @endif
+                                                        </h6>
                                                     </a>
-                                                    <span>{{ $trending->product_color}}</span>
+                                                    <span>
+                                                        @if(mb_strlen($trending->product_color) > 15)
+                                                            {!! mb_substr($trending->product_color, 0, 15) . '<br>' . mb_substr($trending->product_color, 15, 15) . '...' !!}
+                                                        @else
+                                                            {!! nl2br(e($trending->product_color)) !!}
+                                                        @endif
+                                                    </span>
                                                     <span class="price theme-color">¥{{ number_format($latestProduct->selling_price, 0, '.', ',') }}</span>
                                                     @if ($latestProduct->discount_percent != 0)
                                                         <del>¥{{ number_format($latestProduct->original_price, 0, '.', ',') }}</del>
