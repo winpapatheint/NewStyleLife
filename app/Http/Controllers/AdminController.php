@@ -764,12 +764,9 @@ class AdminController extends Controller
                             ->whereIn('coupon_id', $expiredCoupons)
                             ->update(['coupon_id' => null]);
 
-        $lists = Seller::with('user')
+        $lists = $query->with('user')
                     ->with('user.products')
                     ->with('user.products.reviews')
-                    ->leftJoin('coupons', 'sellers.coupon_id', '=', 'coupons.id')
-                    ->leftJoin('users', 'sellers.user_id', '=', 'users.id') // Join users table with condition
-                    ->select('sellers.*', 'coupons.*','sellers.status', 'sellers.id', 'sellers.coupon_id', 'sellers.created_at', 'sellers.shop_establish','users.role','sellers.user_id','sellers.commission') // Select all columns from the sellers table
                     ->latest('sellers.created_at') // Specify the table for ordering
                     ->paginate($limit);
 
