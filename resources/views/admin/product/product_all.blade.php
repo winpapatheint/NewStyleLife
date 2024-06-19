@@ -7,51 +7,76 @@
         }
 
         .table-responsive {
-    overflow-x: auto;
-}
+            overflow-x: auto;
+        }
 
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-/* Common styling for table cells */
-th,
-td {
-    padding: 8px;
-}
+        /* Sticky columns */
 
-/* Make the first column sticky */
-th:first-child,
-td:first-child {
-    position: sticky;
-    left: 0;
-    background-color: #fff; /* Adjust the background color as needed */
-    z-index: 2; /* Ensure it's above other cells */
-}
 
-td.name,
-td:first-child,
-td.image,
-th.name,
-th:first-child ,
-th.image {
-    position: sticky;
-    left: 0;
-    background-color: #fff; /* Adjust the background color as needed */
-    z-index: 2; /* Ensure it's above other cells */
-}
+        th.no,
+        td.no,
+        th.name,
+        td.name,
+        th.image,
+        td.image {
+            position: sticky;
+            background-color: #fff;
+        }
 
-/* Ensure the first row header cells stay above other cells */
-th:first-child {
-    z-index: 3; /* Ensure it's above other cells including the first row */
-}
-th.name,
 th.no,
-th.image {
-    z-index: 3; /* Ensure it's above other cells including the first row */
+td.no {
+    left: 0;
+    z-index: 3;
 }
 
+th.name,
+td.name,
+th.image,
+td.image {
+    left: 50px; /* Adjust based on your layout needs */
+    z-index: 2;
+}
+
+
+
+        th:first-child,
+        td:first-child {
+            position: sticky;
+            left: 0;
+            background-color: #fff;
+            z-index: 3; /* Ensure it's above other sticky cells */
+        }
+
+        /* Additional styles for specific columns */
+        td.name {
+            min-width: 200px; /* Minimum width for the Name column */
+            white-space: nowrap; /* Prevent text wrapping */
+            overflow: hidden; /* Hide overflowing text */
+            text-overflow: ellipsis; /* Show ellipsis (...) for overflow */
+            padding: 8px; /* Adjust padding for better appearance */
+        }
+
+        td.image {
+            max-width: 100px;
+            padding: 8px; /* Adjust padding for better appearance */
+        }
+
+        td.image img {
+            max-width: 100%; /* Ensure image width fits within its container */
+            display: block; /* Ensure image is block level */
+            margin: 0 auto; /* Center the image horizontally */
+        }
+
+        /* Optional: Adjust padding for table cells */
+        th,
+        td {
+            padding: 10px;
+        }
     </style>
 
     <div class="page-body">
