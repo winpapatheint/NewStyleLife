@@ -280,11 +280,11 @@
                                                     $color = $iro[2];
                                                 }
                                             @endphp
-                                            <i class="fa fa-circle me-2 font-primary notification-circle" 
+                                            <i class="fa fa-circle me-2 font-primary notification-circle"
                                                 style="font-size:11px;color: {{ $color }} !important">
                                             </i>
                                             @else
-                                            <i class="fa fa-circle me-2 font-primary notification-circle" 
+                                            <i class="fa fa-circle me-2 font-primary notification-circle"
                                                 style="font-size:11px;color: white !important">
                                             </i>
                                             @endif
@@ -420,8 +420,8 @@
 
                                 <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav" href="{{ route('seller.help') }}">
-                                        <i class="ri-phone-line"></i>
-                                        <span>Help</span>
+                                        <i class="ri-mail-line"></i>
+                                        <span>Contact</span>
                                     </a>
                                 </li>
 
@@ -540,7 +540,7 @@
                 e.preventDefault();
                 var link = $(this);
                 var notificationId = link.data('id');
-    
+
                 $.ajax({
                     url: '/seller-notifications/' + notificationId + '/seen',
                     type: 'POST',
