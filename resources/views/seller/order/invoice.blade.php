@@ -70,7 +70,7 @@
                   <strong>Email:</strong> {{ Auth::user()->email }} <br>
                   <strong>Phone:</strong> {{ $data->first()->seller->phone }} <br>
                   〒{{ formatZipCode($data->first()->seller->zip_code) }} <br>
-                   {{ $data->first()->seller->prefecture->name }} {{ $data->first()->seller->city }} {{ $data->first()->seller->chome }} <br>
+                   {{ $data->first()->seller->prefecture }} {{ $data->first()->seller->city }} {{ $data->first()->seller->chome }} <br>
                    {{ $data->first()->seller->building }} {{ $data->first()->seller->room }} <br>
                 </p>
             </td>
@@ -87,8 +87,8 @@
                    <strong>Email:</strong> {{ $data->first()->buyer->email}} <br>
                    <strong>Phone:</strong> {{ $data->first()->buyer->phone}} <br>
                    〒{{ formatZipCode($data->first()->post_code) }} <br>
-                   {{ $data->first()->prefecture->name }} {{ $data->first()->seller->city }} {{ $data->first()->seller->chome }} <br>
-                   {{ $data->first()->seller->building }} {{ $data->first()->seller->room }} <br>
+                   {{ $data->first()->prefecture->name }} {{ $data->first()->city }} {{ $data->first()->chome }} <br>
+                   {{ $data->first()->building }} {{ $data->first()->room_no }} <br>
                 </p>
             </td>
             <td align="right">
