@@ -39,7 +39,9 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Models\BankAccount;
 use App\Models\Blog;
 use App\Models\Buyer;
+use App\Models\CashBankAccount;
 use App\Models\Faq;
+use App\Models\UserNotification;
 use Illuminate\Support\Facades\File;
     /**
      * Store a newly created resource in storage.
@@ -76,6 +78,46 @@ class AdminController extends Controller
             }
         }
         // end coupon to be inactive for the end date
+
+        // not payment order in time deleted
+        $notPaymentOrders = Order::where('payment_approved', 0)->get();
+
+        if (!$notPaymentOrders->isEmpty()) {
+            foreach ($notPaymentOrders as $order) {
+                $checkCashBankAccount = CashBankAccount::where('order_id', $order->id)->first();
+
+                if ($checkCashBankAccount && $checkCashBankAccount->transfer_date < Carbon::now()) {
+                    $notPaymentOrderDetails = OrderDetail::where('order_id', $order->id)->get();
+
+                    foreach ($notPaymentOrderDetails as $orderDetail) {
+                        $checkProduct = Product::where('id', $orderDetail->product_id)->first();
+
+                        if ($checkProduct) {
+                            $checkProduct->in_stock += $orderDetail->qty;
+                            $checkProduct->save();
+                        }
+
+                        UserNotification::create([
+                            'order_detail_id' => $orderDetail->id,
+                            'buyer_id' => $orderDetail->buyer_id,
+                            'title' => 'Cash Cancel',
+                            'seen' => 0
+                        ]);
+
+                        Notification::create([
+                            'related_id' => $orderDetail->buyer_id,
+                            'message' => $orderDetail->buyer->name . ' did not pay in time for cash order:',
+                            'time' => Carbon::now(),
+                            'seen' => 0,
+                        ]);
+
+                        $orderDetail->delete();
+                    }
+                }
+                $order->delete();
+            }
+        }
+        // end not payment order in time deleted
 
         $categories = Category::where('category_name', '!=', 'Special Corner')->get();
 

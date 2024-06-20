@@ -845,9 +845,21 @@
                                     <div class="offer-detail">
                                         <div>
                                             <a href="{{ route('show-product-left-thumbnail', ['id' => $product->id]) }}" class="text-title">
-                                                <h6 class="name">{{ $product->product_name }}</h6>
+                                                <h6 class="name">
+                                                    @if(mb_strlen($product->product_name) > 15)
+                                                        {!! mb_substr($product->product_name, 0, 15) . '<br>' . mb_substr($product->product_name, 15, 15) . '...' !!}
+                                                    @else
+                                                        {!! nl2br(e($product->product_name)) !!}
+                                                    @endif
+                                                </h6>
                                             </a>
-                                            <span>{{ $product->product_size }}</span>
+                                            <span>
+                                                @if(mb_strlen($product->product_size) > 15)
+                                                    {!! mb_substr($product->product_size, 0, 15) . '<br>' . mb_substr($product->product_size, 15, 15) . '...' !!}
+                                                @else
+                                                    {!! nl2br(e($product->product_size)) !!}
+                                                @endif
+                                            </span>
                                             <h6 class="price theme-color">¥{{ number_format($product->selling_price, 0, '.', ',') }}</h6>
                                         </div>
                                     </div>
