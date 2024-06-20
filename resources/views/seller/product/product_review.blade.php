@@ -1,7 +1,13 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 @extends('seller.seller_dashboard')
 @section('seller')
-
+<style>
+    .break-line {
+    width: 200px;
+    word-wrap: break-word;
+    white-space: normal;
+    }
+</style>
 <!-- Section start -->
 <div class="page-body">
     <div class="container-fluid">
@@ -44,17 +50,12 @@
                                                 {{ \Carbon\Carbon::parse($item->created_at)->format('H:i') }}  </td>
                                             <td>{{ $item->user->name }}</td>
 
-                                            @php
-                                                $comment = $item->comment;
-                                                $product_name = $item->product->product_name;
-                                                $comment_lines = array_chunk(str_word_count($comment, 1), 4);
-                                                $product_name_lines = array_chunk(str_word_count($product_name, 1), 4);
-                                            @endphp
-
                                             <td>
-                                                @foreach ($product_name_lines as $line)
-                                                    {{ implode(' ', $line) }}<br>
-                                                @endforeach
+                                                <div class="break-line">
+                                                    <h6>
+                                                        {!! $item->product->product_name !!}
+                                                    </h6>
+                                                </div>
                                             </td>
 
                                             @if ($item->stars_rated == NULL)
@@ -128,9 +129,11 @@
                                             @endif
 
                                             <td>
-                                                @foreach ($comment_lines as $line)
-                                                    {{ implode(' ', $line) }}<br>
-                                                @endforeach
+                                                <div class="break-line">
+                                                    <h6>
+                                                        {!! $item->comment !!}
+                                                    </h6>
+                                                </div>
                                             </td>
                                             <td>
                                                 <label class="switch">

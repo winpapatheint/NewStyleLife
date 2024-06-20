@@ -341,6 +341,7 @@ class ProductController extends Controller
         $search = $validated['search'] ?? null;
         $limit = 10;
         $id = Auth::user()->created_by ?? Auth::id();
+
         $query = Review::with('product')->where('seller_id', $id);
 
         if ($search) {
@@ -355,7 +356,6 @@ class ProductController extends Controller
         }
 
         $review = $query->latest()->paginate($limit);
-
         $ttl = $review->total();
         $ttlpage = ceil($ttl / $limit);
 
