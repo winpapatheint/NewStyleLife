@@ -307,7 +307,7 @@
                                                                     $sizes = explode(',', $couponProduct->product_size);
                                                                 @endphp
                                                                 <li>
-                                                                    <div class="product-contain" style="display: flex;">
+                                                                    <div class="product-contain" style="display: flex; flex-wrap: wrap;">
                                                                         @foreach($sizes as $key => $size)
                                                                             <div class="form-check" style="margin-left: 10px; margin-top: 15px;">
                                                                                 <input class="form-check-input" type="radio" name="selected_size_{{ $couponProduct->id }}" 
@@ -324,7 +324,7 @@
                                                                     $colors = explode(',', $couponProduct->product_color);
                                                                 @endphp
                                                                 <li>
-                                                                    <div class="product-contain" style="display: flex;">
+                                                                    <div class="product-contain" style="display: flex; flex-wrap: wrap;">
                                                                         @foreach($colors as $key => $color)
                                                                             <div class="form-check" style="margin-left: 10px; margin-top: 15px;">
                                                                                 <input class="form-check-input" type="radio" name="selected_color_{{ $couponProduct->id }}" 
@@ -628,7 +628,7 @@
                                                             $sizes = explode(',', $latestProduct->product_size);
                                                         @endphp
                                                         <li>
-                                                            <div class="product-contain" style="display: flex;">
+                                                            <div class="product-contain" style="display: flex; flex-wrap: wrap;">
                                                                 @foreach($sizes as $key => $size)
                                                                     <div class="form-check" style="margin-left: 10px; margin-top: 15px;">
                                                                         <input class="form-check-input" type="radio" name="selected_size_{{ $latestProduct->id }}" 
@@ -645,7 +645,7 @@
                                                             $colors = explode(',', $latestProduct->product_color);
                                                         @endphp
                                                         <li>
-                                                            <div class="product-contain" style="display: flex;">
+                                                            <div class="product-contain" style="display: flex; flex-wrap: wrap;">
                                                                 @foreach($colors as $key => $color)
                                                                     <div class="form-check" style="margin-left: 10px; margin-top: 15px;">
                                                                         <input class="form-check-input" type="radio" name="selected_color_{{ $latestProduct->id }}" 
