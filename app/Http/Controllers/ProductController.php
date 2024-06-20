@@ -341,7 +341,7 @@ class ProductController extends Controller
         $search = $validated['search'] ?? null;
         $limit = 10;
         $id = Auth::user()->created_by ?? Auth::id();
-        $query = Review::where('seller_id', $id);
+        $query = Review::with('product')->where('seller_id', $id);
 
         if ($search) {
             $query->where(function($q) use ($search) {
@@ -377,7 +377,8 @@ class ProductController extends Controller
         $review->comment = $request->comment;
         $review->updated_at= Carbon::now();
         $review->save();
-        return redirect()->back();
+        $msg = ('Review updated Successfully');
+        return back()->with('success', $msg);
     }
 
     public function deleteReview(Request $request)

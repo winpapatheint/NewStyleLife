@@ -23,11 +23,6 @@
                         <div>
                             <div class="table-responsive">
                                 <table class="user-table ticket-table review-table theme-table table" id="table_id">
-                                    @if (session('flash_message'))
-                                        <div class="flash_message bg-gradient-success text-center py-3 my-0">
-                                            {{ session('flash_message') }}
-                                        </div>
-                                    @endif
                                     <thead>
                                         <tr>
                                             <th>No</th>
