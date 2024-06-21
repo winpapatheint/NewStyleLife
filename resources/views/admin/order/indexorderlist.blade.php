@@ -135,6 +135,8 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <!--pagination -->
+                                @include('components.pagination')
                             </div>
 
                             <div class="tab-pane fade" id="pills-profile" role="tabpanel">
@@ -188,14 +190,17 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                @php
+                                 $ttlpage = $cancelttlPage;
+                                @endphp
+                                <!--pagination -->
+                                @include('components.pagination')
                             </div>
                         </div>
                     </div>
                     <!-- Table End -->
                 </div>
             </div>
-        <!--pagination -->
-        @include('components.pagination')
         </div>
     </div>
     <!-- Container-fluid Ends-->
