@@ -277,7 +277,7 @@
                                     @elseif (Str::contains($notify->message, 'A new sub seller added by'))
                                     <a href="" class="notification-link" data-id="{{ $notify->id }}">
                                     @elseif (Str::contains($notify->message, 'did not pay in time for cash order'))
-                                    <a href="" class="notification-link" data-id="{{ $notify->id }}">
+                                    <a href="{{ url("admin/orderlist" ) }}" class="notification-link" data-id="{{ $notify->id }}">
                                     @endif
                                         <p>
                                             @if ($notify->seen == 0)

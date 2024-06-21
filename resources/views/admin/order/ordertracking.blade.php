@@ -75,7 +75,7 @@
                            <div class="order-details-name">
                                <h5 class="text-content">From</h5>
                                <h4>〒{{ formatZipCode($orderDetail->seller->zip_code) }} </h4>
-                               <h4>{{ $orderDetail->seller->prefecture->name }} </h4>
+                               <h4>{{ $orderDetail->seller->prefecture }} </h4>
                                <h4>{{ $orderDetail->seller->city }} {{ $orderDetail->seller->chome }} </h4>
                                <h4>{{ $orderDetail->seller->building }} {{ $orderDetail->seller->room }}</h4>
                            </div>

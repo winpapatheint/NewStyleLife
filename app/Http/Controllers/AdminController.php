@@ -415,7 +415,6 @@ class AdminController extends Controller
             $newval['user_photo'] = $imageName;
         }
 
-        // print_r($upd);die;
         if ($userprofile->role == 'admin' OR $userprofile->role == 'seller' OR $userprofile->role == 'buyer') {
         $upd = $userprofile->update($newval);
         }
@@ -423,7 +422,7 @@ class AdminController extends Controller
 
         $sellerupd = $sellerprofile->update($newval);
         }
-        // print_r($userprofile->role);die;
+
         $msg = __('Profile Updated Successfully');
 
         return back()->with('success',$msg);
@@ -468,11 +467,9 @@ class AdminController extends Controller
 
 
             $validator = $this->validatesubadmin($request,$checkpassword,true,$emailuniquecheck);
-        //return response()->json(['error'=>'123']);
         }
 
         if ($userprofile->role == 'buyer' OR $userprofile->role == 'seller') {
-        //return response()->json(['error'=>'456']);
 
             $checkpassword = true;
             if ( empty($request->password) AND empty($request->password_confirmation)) {
@@ -484,7 +481,7 @@ class AdminController extends Controller
             }else {
                 $emailuniquecheck = true;
             }
-            // return response()->json(['success'=>$checkpassword]);
+
             $validator = (new RegisteredUserController)->validateuser($request,$checkpassword,true,$emailuniquecheck);
 
         }
@@ -527,7 +524,6 @@ class AdminController extends Controller
             $newval['address'] = $request->address;
         }
 
-
         // Bank
 
         if (!empty($request->bankname)) {
@@ -569,7 +565,6 @@ class AdminController extends Controller
             $newval['user_photo'] = $imageName;
         }
 
-        // print_r($upd);die;
         if ($userprofile->role == 'admin' OR $userprofile->role == 'seller' OR $userprofile->role == 'buyer') {
         $upd = $userprofile->update($newval);
         }
@@ -577,7 +572,7 @@ class AdminController extends Controller
 
         $sellerupd = $sellerprofile->update($newval);
         }
-        // print_r($userprofile->role);die;
+
         $msg = __('auth.donechange');
 
         return back()->with('success',$msg);
@@ -630,9 +625,6 @@ class AdminController extends Controller
 
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
-
-        // $hcompanies = array();
-        // print_r($lists);die;
 
         return view('admin.blog.blog',compact('lists','ttlpage','ttl', 'mainSearch'));
     }
@@ -737,7 +729,7 @@ class AdminController extends Controller
         $lists = $query->leftjoin('users', 'users.id', '=', 'reviews.user_id')
                         ->leftjoin('products','products.id', '=', 'reviews.product_id')
                         ->select('reviews.*','reviews.created_at as reviewdate','products.*','users.*','reviews.id','reviews.status')
-                        ->orderBy('reviews.created_at', 'desc') // Assuming created_at belongs to reviews table
+                        ->orderBy('reviews.created_at', 'desc')
                         ->paginate($limit);
 
         $ttl = $lists->total();
@@ -764,7 +756,7 @@ class AdminController extends Controller
             });
         }
         $query->leftjoin('coupons', 'products.coupon_id', '=', 'coupons.id')
-                ->select('products.*', 'coupons.enddate', 'coupon_code as coupon_code') // Adjust the select statement as necessary
+                ->select('products.*', 'coupons.enddate', 'coupon_code as coupon_code')
                 ->orderBy('products.created_at', 'desc');
 
         $lists = $query->with('Seller')->orderBy('products.created_at', 'desc')->paginate($limit);
@@ -777,9 +769,6 @@ class AdminController extends Controller
         })->get();
 
         $coupons = DB::table('coupons')->where('status',1)->orderBY('created_at', 'desc')->get();
-
-        // $hcompanies = array();
-        // print_r($lists);die;
 
         return view('admin.product.product_all',compact('lists','ttlpage','ttl', 'subCatTitle','coupons','mainSearch'));
     }
@@ -813,7 +802,7 @@ class AdminController extends Controller
         $lists = $query->with('user')
                     ->with('user.products')
                     ->with('user.products.reviews')
-                    ->latest('sellers.created_at') // Specify the table for ordering
+                    ->latest('sellers.created_at')
                     ->paginate($limit);
 
         $ttl = $lists->total();
@@ -1589,8 +1578,6 @@ class AdminController extends Controller
         $edituser = Auth::user();
 
         if (strlen($id) > 5) {
-
-            // print_r(substr($id, 5));die;
             $id = substr($id, 5);
 
         if ($role == 'admin')  {
@@ -1640,7 +1627,6 @@ class AdminController extends Controller
                     ->select( 'users.*')
                     ->where('users.id',$id)->get();
 
-        // print_r($blog[0]->created_at);die;
         $user = $userlist[0];
 
         return view('admin.usersdetail',compact('user'));
@@ -1652,7 +1638,6 @@ class AdminController extends Controller
                     ->select( 'users.*')
                     ->where('users.id',$id)->get();
 
-        // print_r($blog[0]->created_at);die;
         $subadmin = $subadminlist[0];
 
         return view('admin.subadmindetail',compact('subadmin'));
@@ -1665,21 +1650,16 @@ class AdminController extends Controller
 
         $adminrole = Auth::user()->role;
         if (strlen($id) > 5) {
-
-            // print_r(substr($id, 5));die;
             $id = substr($id, 5);
             $edituser = User::find($id);
             $editother = true;
 
         }
        Auth::loginUsingId($id);
-        // $user = User::find($id);
-        // die(url()->previous());
 
         session(['isadmincontrol' => $adminid , 'rolecontrol' => $adminrole , 'returnurl' => url()->previous()]);
         print_r(session()->all());
-        // print_r(Auth::user()->role);die;
-        // print_r(Auth::user()->role);die();
+
         if (Auth::user()->role == 'admin' OR Auth::user()->role == 'subadmin') {
             return redirect()->intended(RouteServiceProvider::ADMIN);
         } else if (Auth::user()->role == 'buyer') {
@@ -1689,9 +1669,6 @@ class AdminController extends Controller
         } else {
             return redirect()->intended(RouteServiceProvider::HOME);
         }
-
-        // die($id);
-
     }
 
     public function shoptakeremote(Request $request, $id)
@@ -1702,8 +1679,6 @@ class AdminController extends Controller
         $adminrole = Auth::user()->role;
 
         if (strlen($id) > 5) {
-
-            // print_r(substr($id, 5));die;
             $id = substr($id, 5);
 
             $edituser = User::find($id);
@@ -1716,8 +1691,7 @@ class AdminController extends Controller
 
        session(['isadmincontrol' => $adminid , 'rolecontrol' => $adminrole , 'returnurl' => url()->previous()]);
        print_r(session()->all());
-       // print_r(Auth::user()->role);die;
-       // print_r(Auth::user()->role);die();
+
        if (Auth::user()->role == 'admin' OR Auth::user()->role == 'subadmin') {
            return redirect()->intended(RouteServiceProvider::ADMIN);
        } else if (Auth::user()->role == 'buyer') {
@@ -1754,7 +1728,6 @@ class AdminController extends Controller
         $transfer->save();
         return redirect()->back();
     }
-
 
     // Active and InActive Coupon Status
     public function indexcouponstatus(Request $request)
@@ -1839,11 +1812,6 @@ class AdminController extends Controller
     {
         $user = User::find($request->userid);
         $user->status = $request->status;
-        // if(empty($user->status))
-        // {
-        //     User::where('id', $request->userid)->update(['role' => 'idleuser']);
-
-        // }
         $user->save();
 
         return redirect('/admin/profile')->back();
@@ -1908,11 +1876,6 @@ class AdminController extends Controller
 
     public function storeReply(Request $request)
     {
-
-        // $validatedData = $request->validate([
-        //     'body' => 'present|string|max:255',
-        // ]);
-
          $help = new Help();
 
         if (!empty($request->image)) {
@@ -1927,7 +1890,6 @@ class AdminController extends Controller
         $seller_email = DB::table('users')->select('email')->where('id',$request->help_id)->first();
         $check = Help::find($request->id);
 
-        // $help->help_id = $check ? $check->help_id ?? $request->id : $request->id;
         $help->name = 'admin';
         $help->shop_name =   $shopName;
         $help->to =  $check->from;
@@ -2114,7 +2076,6 @@ class AdminController extends Controller
         $ttlpage = (ceil($ttl / $limit));
         $lists = $query->orderBy('created_at', 'desc')->paginate(999);
 
-        // print_r(Auth::user()->role);die;
         if (Auth::check()){
             if (Auth::user()->role == 'admin') {
                 return view('admin.indexfaq',compact('faqlists','ttlpage','ttl'));
@@ -2177,7 +2138,6 @@ class AdminController extends Controller
                 ->orWhere('created_at', 'like', '%' . $mainSearch . '%');
             });
         }
-        // print_r($type);die;
 
         $users = $query->whereIn('role',['seller','buyer'])
                     ->where('email_verified_at','<>','')
@@ -2255,8 +2215,6 @@ class AdminController extends Controller
             $imageName = '';
         }
 
- // print_r($request->all());die;
-
         $user = User::create([
             'role' => $role,
             'name' => $request->name,
@@ -2292,9 +2250,6 @@ class AdminController extends Controller
 
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
-
-        // $hcompanies = array();
-        // print_r($lists);die;
 
         return view('admin.allsubtitle',compact('lists','ttlpage','ttl'));
     }
@@ -2421,11 +2376,6 @@ class AdminController extends Controller
 
     public function  updatecommission(Request $request)
     {
-        // $request->validate([
-        //     'commission' => 'required|numeric',
-        //     'commissionid' => 'required|integer',
-        // ]);
-
         // Retrieve the input values
         $commission = $request->input('commission');
 
@@ -2451,15 +2401,8 @@ class AdminController extends Controller
             $item->commission_status =   0 ;
             $item->save();
         }
-        // $time = new DateTime();
-        // $updval = array( 'commission' => $request->commission,
-        //                 'updated_at' => $time->format('Y-m-d H:i:s')
-        //                 );
-
-        // DB::table('sellers')->where('id',$request->id)->update($updval);
 
         return redirect('/admin/shoplist')->with('success','commission added');
-
     }
 
     public function  updateadjust(Request $request)
@@ -2629,9 +2572,8 @@ class AdminController extends Controller
     {
         $faq = DB::table('faqs')
                     ->find($id);
-        // print_r($faq);die;
         $editmode = true;
-        // $hcompanies = array();
+
         return view('admin.registerfaq',compact('faq','editmode'));
     }
 
@@ -3274,6 +3216,7 @@ class AdminController extends Controller
 
         $orderQuery = OrderDetail::with('order')
             ->where('status', '!=', 'Cancel')
+            ->where('status', '!=', 'Cash Cancel')
             ->groupBy('order_id')
             ->selectRaw('order_id, MAX(created_at) as created_at, MAX(id) as id, MAX(amount) as amount, MAX(status) as status')
             ->orderBy('created_at', 'desc');
@@ -3292,7 +3235,7 @@ class AdminController extends Controller
         $order = $orderQuery->paginate($limit);
         $cancelledOrderQuery = OrderDetail::with('order')
             ->join('products', 'order_details.product_id', '=', 'products.id')
-            ->select('order_details.*', 'products.*')
+            ->select('order_details.*', 'products.*', 'order_details.status as order_detail_status')
             ->where('order_details.status', 'Cancel')
             ->orWhere('order_details.status', 'Cash Cancel')
             ->orderBy('order_details.created_at', 'desc');
@@ -3340,27 +3283,7 @@ class AdminController extends Controller
 
     public function ordertracking($id)
     {
-        // $process = Process::where('order_id',$id)->latest()->get();
-        // $orderDetails = OrderDetail::join('orders', 'order_details.order_id', 'orders.id')
-        //             ->join('products', 'products.id', 'order_details.product_id')
-        //             ->join('buyers', 'orders.buyer_id', 'buyers.id')
-        //             ->with('prefecture')
-        //             ->select(
-        //                 'orders.id as order_id',
-        //                 'order_details.id as order_detail_id',
-        //                 'products.id as product_id',
-        //                 'orders.*',
-        //                 'products.*',
-        //                 'products.selling_price as price',
-        //                 'order_details.*',
-        //                 'orders.created_at as order_created_at',
-        //                 'buyers.name as buyer_name'
-        //             )
-        //             ->where('order_details.order_id', $id)
-        //             ->get();
-
-        // return view('admin.order.ordertracking',compact('orderDetails','process'));
-        $orderDetail = OrderDetail::with('prefecture')->with('seller')->with('seller.prefecture')
+        $orderDetail = OrderDetail::with('prefecture')->with('seller')
                                     ->select('order_details.*', 'products.*','order_details.post_code as cus_post_code', 'order_details.city as cus_city',
                                             'order_details.chome as cus_chome','order_details.building as cus_building',
                                             'order_details.room_no as cus_room', 'order_details.created_at as order_detail_created_at')
@@ -3399,45 +3322,6 @@ class AdminController extends Controller
             $data[$monthIndex] = $order->count;
         }
 
-
-       // $currentMonthEnd =  Carbon::now()->endOfMonth()->format('y/m/d');
-
-                            // $transfers = Seller::leftJoin('order_details', 'order_details.seller_id', '=', 'sellers.user_id')
-                            //                     ->leftJoin('products', 'order_details.product_id', '=', 'products.id')
-                            //                     ->select(
-                            //                         'sellers.user_id as seller_id',
-                            //                         'sellers.shop_name',
-                            //                         'products.commission as product_commision',
-                            //                         'sellers.commission as seller_commission',
-                            //                         'products.id as product_id',
-                            //                     //     DB::raw('(SUM(order_details.amount) + SUM(CASE WHEN order_details.used_delivery_price = 1 THEN order_details.delivery_price ELSE 0 END)) as total_amount'),
-                            //                     //     DB::raw('(SUM(order_details.amount)  * (1 - products.commission/100) as seller_amount')+ SUM(CASE WHEN order_details.used_delivery_price = 1 THEN order_details.delivery_price ELSE 0 END))
-                            //                     // )
-
-
-                            //                    DB::raw('(SUM(order_details.amount) * (1 - products.commission/100) +
-                            //                    SUM(CASE WHEN order_details.used_delivery_price = 1 THEN order_details.delivery_price ELSE 0 END)) as seller_amount'))
-
-                            //                     ->where('products.commission', '!=', 0)
-                            //                     ->orderBy('sellers.created_at', 'desc')
-                            //                     ->groupBy('sellers.id', 'sellers.shop_name', 'products.commission', 'products.id','sellers.commission')
-                            //                     ->paginate($limit);
-
-                            // $transfers = (Seller::leftJoin('order_details', 'order_details.seller_id', '=', 'sellers.user_id')
-                            //                     ->leftJoin('products', 'order_details.product_id', '=', 'products.id')
-                            //                     ->select(
-                            //                         'sellers.user_id as seller_id',
-                            //                         'sellers.shop_name',
-                            //                         'products.commission as product_commission',
-                            //                         'sellers.commission as seller_commission',
-                            //                         'products.id as product_id',
-                            //                         DB::raw('(SUM(order_details.amount) * (1 - products.commission/100) +
-                            //                             SUM(CASE WHEN order_details.used_delivery_price = 1 THEN order_details.delivery_price ELSE 0 END)) as seller_amount')
-                            //                     )
-                            //                     ->where('products.commission', '!=', 0)
-
-                            //                     ->groupBy('sellers.user_id', 'sellers.shop_name', 'products.commission', 'products.id', 'sellers.commission')
-                            //                     ->paginate($limit);)  as P lefjoin Seller::
         $currentMonthStart = Carbon::now()->startOfMonth()->format('Y-m-d');
         $currentMonthEnd = Carbon::now()->startOfMonth()->addDays(15)->subDay()->format('Y-m-d');
         $nextMonthstartdate = Carbon::now()->endOfMonth()->addDays(1)->format('Y-m-d');
@@ -3583,10 +3467,6 @@ class AdminController extends Controller
             $query->where('category_name', 'Special Corner');
         })->get();
 
-        // $hcompanies = array();
-        // print_r($lists);die;
-
-        // return view('admin.product.product_all',compact('lists','ttlpage','ttl', 'subCatTitle'));
         return redirect()->route('admin.all.product',compact('lists','ttlpage','ttl', 'subCatTitle'));
     }
 
@@ -3609,10 +3489,6 @@ class AdminController extends Controller
             $query->where('category_name', 'Special Corner');
         })->get();
 
-        // $hcompanies = array();
-        // print_r($lists);die;
-
-        // return view('admin.product.product_all',compact('lists','ttlpage','ttl', 'subCatTitle'));
         return redirect()->route('admin.all.product',compact('lists','ttlpage','ttl', 'subCatTitle'));
     }
 
