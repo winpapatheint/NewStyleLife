@@ -1345,8 +1345,8 @@
 .btn-outline-primary-2x:active,
 .btn-outline-primary-2x.active {
     color: white;
-    background-color: #097560 !important;
-    border-color: #097560 !important;
+    background-color: #417394 !important;
+    border-color: #417394 !important;
     -webkit-box-shadow: none;
     box-shadow: none
 }
@@ -1492,8 +1492,8 @@
 .btn-outline-primary:active,
 .btn-outline-primary.active {
     color: white;
-    background-color: #097560 !important;
-    border-color: #097560 !important
+    background-color: #417394 !important;
+    border-color: #417394 !important
 }
 
 .btn-outline-secondary {

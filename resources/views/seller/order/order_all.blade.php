@@ -2,10 +2,6 @@
 @extends('seller.seller_dashboard')
 @section('seller')
 <style>
-    .disabled-blue {
-    color: #0b6d59 !important;
-    }
-
     .break-line {
     width: 200px;
     word-wrap: break-word;
