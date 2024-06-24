@@ -71,9 +71,9 @@
     
                             <ul class="nav nav-pills user-nav-pills" id="pills-tab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="pills-dashboard-tab" data-bs-toggle="pill"
-                                        data-bs-target="#pills-dashboard" type="button" style="font-size: 14px; text-align: center;"><i data-feather="home"></i>
-                                        DashBoard</a>
+                                    <a class="nav-link" id="pills-dashboard-tab"
+                                            type="button" style="font-size: 14px; text-align: center;" href="{{route ('user_dashboard')}}"><i data-feather="home"></i>
+                                            DashBoard</a>
                                 </li>
                                 <li class="nav-item active" role="presentation">
                                     <a class="nav-link" id="pills-order-tab"

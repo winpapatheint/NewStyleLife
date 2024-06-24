@@ -5,8 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="images/favicon.png" type="image/x-icon">
-    <title>Fastkart | Email template </title>
+    <link rel="icon" href="{{ asset('frontend/assets/logos/newstyle_slogo.png') }}" type="image/x-icon">
+    <title>New Style Life</title>
 
     <!-- Google Font css -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -389,8 +389,8 @@
                                     <tr>
                                         <td>
                                             <h5 style="font-size: 13px; text-transform: uppercase; margin: 0; color:#ddd;
-                                letter-spacing:1px; font-weight: 500;">Specializing in Asian cuisine, we're dedicated to providing fresh,
-                                 top-quality food to Japan daily.
+                                letter-spacing:1px; font-weight: 500;">Specializing in New Style, we're dedicated to providing new,
+                                 top-quality product to Japan daily.
                                             </h5>
                                             <h5 style="font-size: 13px; text-transform: uppercase; margin: 10px 0 0; color:#ddd;
                                 letter-spacing:1px; font-weight: 500;">©2024 Asia Human Development, Inc. All rights reserved</h5>
