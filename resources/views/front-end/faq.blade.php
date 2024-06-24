@@ -29,7 +29,7 @@
             <div class="row g-lg-5 g-3">
                 <div class="col-lg-6" id="EnglishVersion">
                     <div class="title-header option-title" id="japaneseBtnDiv">
-                        <button class="align-items-center btn btn-theme d-flex" id="japaneseBtn" style="background-color: #0da487; color: #fff;">
+                        <button class="align-items-center btn btn-theme d-flex" id="japaneseBtn" style="background-color: var(--theme-color); color: #fff;">
                             日本語で確認する
                         </button>
                     </div>
@@ -79,7 +79,7 @@
 
                 <div class="col-lg-6" id="JapaneseVersion" style="display:none">
                     <div class="title-header option-title" id="englishBtnDiv">
-                        <button class="align-items-center btn btn-theme d-flex" id="englishBtn" style="background-color: #0da487; color: #fff;">
+                        <button class="align-items-center btn btn-theme d-flex" id="englishBtn" style="background-color: var(--theme-color); color: #fff;">
                             Check in English
                         </button>
                     </div>
