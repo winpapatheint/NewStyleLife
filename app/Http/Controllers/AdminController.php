@@ -113,7 +113,7 @@ class AdminController extends Controller
 
                         $orderDetail->update([
                             'payment_approved' => 2,
-                            'status' => 'Cash Cancel', 
+                            'status' => 'Cash Cancel',
                             'cancelled_reason' => 'You did not transfer payment for this order in time.']);
                         $order->update([
                             'payment_approved' => 2
@@ -2792,11 +2792,19 @@ class AdminController extends Controller
     public function contact(Request $request)
     {
         if ($request->from == 'faq') {
+            $inquiry_email = 'info-test@asia-hd.com';
 
             $data = array('name'=>$request->name);
 
             $adminemail =  'admin@asia-hd.com';
             $faqDate = Carbon::now()->format('M d, Y');
+
+            $data = ['name' => $request->name,
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                    'content' => $request->message,
+                    'faqDate' => $faqDate,
+                    'adminemail' => $adminemail];
 
             $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();;
             if (!empty(  $adminMails)) {
@@ -2807,7 +2815,7 @@ class AdminController extends Controller
                     'content' => $request->message,
                     'faqDate' => $faqDate,
                     'adminemail' => $adminemail];
-                    \Mail::to($email)->send(new \App\Mail\FAQContact($data));
+                \Mail::to($email)->send(new \App\Mail\FAQContact($data));
                 }
             }
 
@@ -2820,16 +2828,23 @@ class AdminController extends Controller
             $adminemail =  'admin@asia-hd.com';
             $contactDate = Carbon::now()->format('M d, Y');
 
+            $data = ['name' => $request->name,
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                    'content' => $request->message,
+                    'contactDate' => $contactDate,
+                    'adminemail' => $adminemail];
+
             $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();;
             if (!empty(  $adminMails)) {
                 foreach ($adminMails as $email) {
-                    $data = ['name' => $request->name,
-                        'email' => $request->email,
-                        'phone' => $request->phone,
-                        'content' => $request->message,
-                        'contactDate' => $contactDate,
-                        'adminemail' => $adminemail];
-                    \Mail::to($email)->send(new \App\Mail\GuestContact($data));
+                   $data = ['name' => $request->name,
+                    'email' => $request->email,
+                    'phone' => $request->phone,
+                    'content' => $request->message,
+                    'contactDate' => $contactDate,
+                    'adminemail' => $adminemail];
+                \Mail::to($email)->send(new \App\Mail\GuestContact($data));
                 }
             }
             return redirect('/contact#contact-form')->with('success','Your message has been successfully sent.');
@@ -2871,7 +2886,7 @@ class AdminController extends Controller
                 'helpDate' => $helpDate,
                 'adminemail' => $adminemail,
             'sellername' => $seller_name->name];
-        
+
         $sellers = User::where('id', $request->selleremail)->orWhere('created_by', $request->selleremail)->get();
         foreach($sellers as $seller){
             \Mail::to($seller->email)->send(new \App\Mail\AdminContact($data));

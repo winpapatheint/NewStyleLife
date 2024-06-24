@@ -128,8 +128,8 @@
                                                                                 <div class="row" style="background-color: rgb(215, 215, 215); height: 50px; display: flex; align-items: center;">
                                                                                     <div class="col-md-1 d-flex align-items-center justify-content-center">
                                                                                         <div class="form-check">
-                                                                                            <input class="form-check-input" type="radio" name="selected_bank_account" 
-                                                                                                   value="{{ $bankAccount->id }}" id="bank_account_{{ $bankAccount->id }}" 
+                                                                                            <input class="form-check-input" type="radio" name="selected_bank_account"
+                                                                                                   value="{{ $bankAccount->id }}" id="bank_account_{{ $bankAccount->id }}"
                                                                                                    {{ $key === 0 ? 'checked' : '' }}>
                                                                                         </div>
                                                                                     </div>
@@ -141,7 +141,7 @@
                                                                                         </label>
                                                                                     </div>
                                                                                     <span class="error" style="color:red" id="error-selected_bank_account"></span>
-                                                                                </div>                                                                                
+                                                                                </div>
                                                                                 <div class="table-responsive address-table">
                                                                                     <table class="table">
                                                                                         <tbody style="background-color: rgb(245, 245, 245);">
@@ -184,7 +184,7 @@
                                                                     </div>
 
                                                                 <h4 class="fw-bold" style="margin-bottom: 10px;">Enter Your Bank Account Name</h4>
-                                                                <p style="color:red; font-size:12px;">* Please be careful to enter the correct transfer person name. 
+                                                                <p style="color:red; font-size:12px;">* Please be careful to enter the correct transfer person name.
                                                                     This name will be used to verify payment transfers to confirm whether the payment has been made.</p>
                                                                 <div class="form-floating theme-form-floating">
                                                                     <input type="text" class="form-control" name="transfer-person-name" id="transfer-person-name" placeholder="Transfer Person Name">
@@ -299,8 +299,8 @@
                                     <h4 class="price">¥ {{ number_format($total1 , 0, '.', ',') }}</h4>
                                 </li>
                             </ul>
-                        
-                            
+
+
                         </div>
 
 
@@ -313,10 +313,10 @@
     </section>
     <!-- Checkout section End -->
 
-    <script src="https://www.paypal.com/sdk/js?client-id=AWssbr_5JCWSdK6IogXTxXSw8cVBeb_7gdVCtEue95EqSGYXuATz1fYcAduzXdf8e0k3713fP3tmuW7o&currency=JPY"> // Replace YOUR_CLIENT_ID with your sandbox client ID
+    <script src="https://www.paypal.com/sdk/js?client-id=AXzxfD7i98h1_15ZYrAVPqNK8mcoulxmeOXDPFwj7jJKvS4-kV4v51hU4NcDue3poQCVINQMplpXRJjO&currency=JPY"> // Replace YOUR_CLIENT_ID with your sandbox client ID
     </script>
     <script>
-        var Newbuyeraddressid = <?php echo json_encode($buyerAddressIdFirst ); ?>; 
+        var Newbuyeraddressid = <?php echo json_encode($buyerAddressIdFirst ); ?>;
         document.querySelectorAll('input[name="jack"]').forEach(function(radio) {
             radio.addEventListener('change', function() {
                 if (this.checked) {
@@ -339,7 +339,7 @@
                     purchase_units: [{
                         amount: {
                             value: '{{ $total1 }}'
-                            
+
                         }
                     }]
                 });
@@ -349,7 +349,7 @@
                     if (details.status == 'COMPLETED') {
 
                         purchasepaymentdone('{{ $total1 }}', function(result) {
-                            if(result==1){ 
+                            if(result==1){
                             $('#paymentsuccessModal').modal('show');
                             }
                             else{
@@ -365,11 +365,11 @@
         }).render('#paypal-button-container');
 
         function purchasepaymentdone(total1, callback) {
-            var Newproductid = <?php echo json_encode($productIds ); ?>; 
-            var Newbuyerid = <?php echo json_encode($buyerId ); ?>; 
-            var Newsellerid = <?php echo json_encode($sellerIds ); ?>; 
-            var Newcolor = <?php echo json_encode($productColors ); ?>; 
-            var Newsize = <?php echo json_encode($productSizes ); ?>; 
+            var Newproductid = <?php echo json_encode($productIds ); ?>;
+            var Newbuyerid = <?php echo json_encode($buyerId ); ?>;
+            var Newsellerid = <?php echo json_encode($sellerIds ); ?>;
+            var Newcolor = <?php echo json_encode($productColors ); ?>;
+            var Newsize = <?php echo json_encode($productSizes ); ?>;
             var Newquantity = <?php echo json_encode($productQuantities ); ?>;
             var Newproductamount = <?php echo json_encode($productAmounts ); ?>;
             var Newtotalqty = <?php echo json_encode($totalqty ); ?>;
@@ -425,7 +425,7 @@
             });
         }
     </script>
-    
+
     <script>
         document.getElementById('btnPayWithCash').addEventListener('click', function() {
             let isValid = true;
@@ -466,11 +466,11 @@
             }
 
             if (isValid) {
-                var Newproductid = <?php echo json_encode($productIds); ?>; 
-                var Newbuyerid = <?php echo json_encode($buyerId); ?>; 
-                var Newsellerid = <?php echo json_encode($sellerIds); ?>; 
-                var Newcolor = <?php echo json_encode($productColors); ?>; 
-                var Newsize = <?php echo json_encode($productSizes); ?>; 
+                var Newproductid = <?php echo json_encode($productIds); ?>;
+                var Newbuyerid = <?php echo json_encode($buyerId); ?>;
+                var Newsellerid = <?php echo json_encode($sellerIds); ?>;
+                var Newcolor = <?php echo json_encode($productColors); ?>;
+                var Newsize = <?php echo json_encode($productSizes); ?>;
                 var Newquantity = <?php echo json_encode($productQuantities); ?>;
                 var Newproductamount = <?php echo json_encode($productAmounts); ?>;
                 var Newtotalqty = <?php echo json_encode($totalqty); ?>;
