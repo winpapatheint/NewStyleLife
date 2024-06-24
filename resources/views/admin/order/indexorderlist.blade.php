@@ -168,7 +168,7 @@
                                                     <td>{{ \Carbon\Carbon::parse($item->created_at)->format('Y/m/d') }}<br>
                                                         {{ \Carbon\Carbon::parse($item->created_at)->format('H:i') }}</td>
                                                     <td>{{ $item->order->order_code }}</td>
-                                                    <td><a href="{{ route('detailproduct',$item->product->id) }}">{{ $item->product->product_code }}</a> </td>
+                                                    <td><a href="{{ route('admin.detailproduct',$item->product->id) }}">{{ $item->product->product_code }}</a> </td>
                                                     <td>
                                                         <div class="break-line">
                                                             <h6>

@@ -3236,8 +3236,7 @@ class AdminController extends Controller
         $cancelledOrderQuery = OrderDetail::with('order')
             ->join('products', 'order_details.product_id', '=', 'products.id')
             ->select('order_details.*', 'products.*', 'order_details.status as order_detail_status')
-            ->where('order_details.status', 'Cancel')
-            ->orWhere('order_details.status', 'Cash Cancel')
+            ->where('order_details.status', 'like', '%Cancel%')
             ->orderBy('order_details.created_at', 'desc');
 
         if ($mainSearch) {
@@ -3246,7 +3245,8 @@ class AdminController extends Controller
                     ->orWhereHas('order', function($cancelledOrderQuery) use ($mainSearch) {
                         $cancelledOrderQuery->where('order_code', 'LIKE', "%{$mainSearch}%");
                     })
-                    ->orWhere('products.product_name', 'LIKE', "%{$mainSearch}%");
+                    ->orWhere('products.product_name', 'LIKE', "%{$mainSearch}%")
+                    ->orWhere('products.product_code', 'LIKE', "%{$mainSearch}%");
             });
         }
 

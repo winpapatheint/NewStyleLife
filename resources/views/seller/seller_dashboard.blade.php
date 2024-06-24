@@ -99,7 +99,6 @@
             height: 40px;
             border-radius: 0 5px 5px 0;
             border: none;
-            background-color: #007bff;
             color: #fff;
             display: flex;
             align-items: center;
@@ -184,6 +183,11 @@
                 font-size: 18px;
                 padding: 0 20px;
             }
+        }
+        .active-link {
+            /* background-color: #7faec9; */
+            background: linear-gradient(-45deg, #3f525e, #2b6b95, #021d2c);
+            /* Add any other styles you need */
         }
     </style>
 </head>
@@ -308,6 +312,7 @@
                                 <i class="ri-moon-line"></i>
                             </div>
                         </li>
+
                         <li class="profile-nav onhover-dropdown pe-0 me-0">
                             <div class="media profile-media">
                                 <img src="{{ (!empty(Auth::user()->user_photo)) ? url('images/'.Auth::user()->user_photo) : url('images/profile.jpg') }}" class="user-profile rounded-circle">
@@ -374,28 +379,45 @@
                                 <li class="back-btn"></li>
 
                                 <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title link-nav" href="{{ route('seller.dashboard') }}">
+                                    <a class="sidebar-link sidebar-title link-nav
+                                     {{ request()->routeIs('seller.dashboard')
+                                    || request()->is('admin/transfer-order-details/*')
+                                     ? 'active-link' : '' }}" 
+                                      href="{{ route('seller.dashboard') }}">
                                         <i class="ri-home-line"></i>
                                         <span>Dashboard</span>
                                     </a>
                                 </li>
 
                                 <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title link-nav" href="{{ route('all.product') }}">
+                                    <a class="sidebar-link sidebar-title link-nav
+                                     {{ request()->routeIs('all.product')
+                                    || request()->is('productadd')
+                                    || request()->is('productdetail/*')
+                                    || request()->is('productedit/*')
+                                     ? 'active-link' : '' }}" 
+                                      href="{{ route('all.product') }}">
                                         <i class="ri-store-3-line"></i>
                                         <span>Product</span>
                                     </a>
                                 </li>
 
                                 <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title link-nav" href="{{ route('all.order') }}">
+                                    <a class="sidebar-link sidebar-title link-nav
+                                     {{ request()->routeIs('all.order')
+                                    || request()->is('orderdetail/*')
+                                    || request()->is('ordertracking/*')
+                                     ? 'active-link' : '' }}" 
+                                      href="{{ route('all.order') }}">
                                         <i class="ri-archive-line"></i>
                                         <span>Order</span>
                                     </a>
                                 </li>
 
                                 <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title link-nav" href="{{ route('seller.review') }}">
+                                    <a class="sidebar-link sidebar-title link-nav
+                                     {{ request()->routeIs('seller.review') ? 'active-link' : '' }}" 
+                                      href="{{ route('seller.review') }}">
                                         <i class="ri-star-line"></i>
                                         <span>Review</span>
                                     </a>
@@ -403,7 +425,11 @@
 
                                 @if(Auth::user()->created_by == NULL)
                                 <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title link-nav" href="{{ route('all.subseller') }}">
+                                    <a class="sidebar-link sidebar-title link-nav
+                                     {{ request()->routeIs('all.subseller')
+                                    || request()->is('subselleradd')
+                                     ? 'active-link' : '' }}" 
+                                      href="{{ route('all.subseller') }}">
                                         <i class="ri-user-3-line"></i>
                                         <span>Subseller</span>
                                     </a>
@@ -412,28 +438,32 @@
 
 
                                 <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title link-nav" href="{{ route('seller.profile') }}">
+                                    <a class="sidebar-link sidebar-title link-nav
+                                     {{ request()->routeIs('seller.profile') ? 'active-link' : '' }}" 
+                                      href="{{ route('seller.profile') }}">
                                         <i class="ri-user-3-line"></i>
                                         <span>Profile</span>
                                     </a>
                                 </li>
 
                                 <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title link-nav" href="{{ route('seller.help') }}">
+                                    <a class="sidebar-link sidebar-title link-nav
+                                     {{ request()->routeIs('seller.help')
+                                    || request()->is('helpdetail/*')
+                                     ? 'active-link' : '' }}" 
+                                      href="{{ route('seller.help') }}">
                                         <i class="ri-mail-line"></i>
                                         <span>Contact</span>
                                     </a>
                                 </li>
 
-                             <li class="sidebar-list" >
+                                <li class="sidebar-list" >
                                     <a class="sidebar-link sidebar-title link-nav" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
                                     href="javascript:void(0)">
                                         <i class="ri-logout-box-r-line"></i>
                                         <span>Log Out</span>
                                     </a>
                                 </li>
-
-
                             </ul>
                         </div>
 
@@ -444,10 +474,7 @@
                 </div>
             </div>
             <!-- Page Sidebar Ends-->
-
             @yield('seller')
-
-
         </div>
         <!-- Page Body End-->
     </div>
