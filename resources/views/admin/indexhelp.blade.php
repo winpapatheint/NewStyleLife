@@ -107,7 +107,9 @@
                                                     </tbody>
                                                 </table>
                                             </div>
+                                            @if (!$received->isEmpty())
                                              @include('components.pagination')
+                                             @endif
                                         </div>
 
 
@@ -164,8 +166,9 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-
-                                            @include('components.noticepagination')
+                                            @if (!$notice->isEmpty())
+                                                @include('components.noticepagination')
+                                            @endif
 
                                         </div>
 

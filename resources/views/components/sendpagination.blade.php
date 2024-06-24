@@ -1,11 +1,11 @@
 
 @if ($sent_ttlpage > 0)
+
 <!-- Pagination -->
 {{-- <div style="bottom:28px"> --}}
 <div style="bottom:28px">
     <nav class="custom-pagination">
         <ul class="pagination justify-content-center">
-
             @php if(empty($_GET['page']))$_GET['page']=1; $set=ceil($_GET['page']/5);@endphp
             @php $page=($_GET['page']); $ppage=($_GET['page']-1); $npage=($_GET['page']+1);@endphp
 

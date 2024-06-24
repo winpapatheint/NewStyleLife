@@ -3261,6 +3261,7 @@ class AdminController extends Controller
 
     public function orderdetail($id)
     {
+
         $orderDetails = OrderDetail::join('orders', 'order_details.order_id', 'orders.id')
                 ->join('products', 'products.id', 'order_details.product_id')
                 ->with('prefecture')
@@ -3430,7 +3431,8 @@ class AdminController extends Controller
 
         $sent = Help::where('from', $email)->where('noshow', null)->latest()->paginate(10);
 
-        $notice = Help::where('from', $email)->where('to', 'all')->latest()->paginate(10);
+        $notice = Help::where('to', 'all')->latest()->paginate(10);
+
         $ttl = $received->total();
         $ttlpage = (ceil($ttl / $limit));
 

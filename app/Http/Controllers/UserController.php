@@ -96,6 +96,13 @@ class UserController extends Controller
                 'seen' => 0,
             ]);
 
+            Notification::create([
+                'related_id' => $user->id,
+                'message' => 'A new user added:',
+                'time' => Carbon::now(),
+                'seen' => 0,
+            ]);
+
             return view('auth.buyer-verify-email', compact('user'));
 
         } catch (\Exception $e) {
