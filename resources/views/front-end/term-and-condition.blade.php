@@ -98,14 +98,14 @@
                                                     &emsp;&emsp;Refers to an individual or legal entity who has registered as a seller based on the
                                                      seller agreement.<br>
                                                     4.This Service:<br>
-                                                    &emsp;&emsp;Refers to various services provided by our company to users through the Asian 
-                                                    Food Museum Platform.<br>
+                                                    &emsp;&emsp;Refers to various services provided by our company to users through the 
+                                                    New Style Life Platform.<br>
                                                     5. Transaction:<br>
                                                     &emsp;&emsp;Refers to various activities conducted by users, such as purchasing and 
                                                     participating in listings, using the New Style Life Platform.<br>
                                                     6. User:<br>
-                                                    &emsp;&emsp;Refers to an individual or legal entity that accesses and uses the Asian Food 
-                                                    Museum Platform, conducts transactions on the New Style Life
+                                                    &emsp;&emsp;Refers to an individual or legal entity that accesses and uses the New Style Life
+                                                     Platform, conducts transactions on the New Style Life
                                                     Platform, including members.<br>
                                                     7. User Information:<br>
                                                     &emsp;&emsp;Refers to information about users provided to our company and 
@@ -565,8 +565,8 @@
                                                 <p>
                                                     1. Assignment of Contractual Status:<br>
                                                     Our company may transfer its contractual status under these Terms and Conditions at 
-                                                    its discretion, in which case, we will notify users by posting a notice on the Asian 
-                                                    Food Museum Platform.<br>
+                                                    its discretion, in which case, we will notify users by posting a notice on the 
+                                                    New Style Life Platform.<br>
                                                     2. Titles:<br>
                                                     Titles are included for reference purposes only and do not delimit the scope of the 
                                                     respective provisions.<br>
@@ -580,8 +580,8 @@
                                                     respective business entity. These Terms and Conditions do not create any agency, 
                                                     partnership, joint venture, employment, or franchise relationship.<br>
                                                     5. Entire Agreement:<br>
-                                                    These Terms and Conditions, along with all terms and policies posted on the Asian
-                                                    Food Museum Platform, constitute the entire understanding and agreement between
+                                                    These Terms and Conditions, along with all terms and policies posted on the 
+                                                    New Style Life Platform, constitute the entire understanding and agreement between
                                                     users and our company, superseding all prior understandings and agreements
                                                     between the parties.<br>
                                                     6. Survival Clauses:<br>
