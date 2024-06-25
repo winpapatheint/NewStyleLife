@@ -75,8 +75,8 @@
                                         data-bs-target="#pills-dashboard" type="button" style="font-size: 14px; text-align: center;"><i data-feather="home"></i>
                                         DashBoard</a>
                                 </li>
-                                <li class="nav-item active" role="presentation">
-                                    <a class="nav-link" id="pills-order-tab" 
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="pills-order-tab" 
                                         style="font-size: 14px; text-align: center;" href="{{route ('user_order')}}"><i
                                             data-feather="shopping-bag"></i>Orders</a>
                                 </li>
