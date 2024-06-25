@@ -1,6 +1,6 @@
 <x-auth-layout>
-<div class="page-body">
-    <!-- Product Detail Start -->
+    <div class="page-body">
+        <!-- Product Detail Start -->
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
@@ -26,29 +26,25 @@
                                             </div>
                                         </div>
                                         <div class="mb-2 row align-items-center">
-                                            <label
-                                                class="form-label-title col-sm-5 mb-0">Brand</label>
+                                            <label class="form-label-title col-sm-5 mb-0">Brand</label>
                                             <div class="col-sm-7">
                                                 <p>{{ $product->brand_name }}</p>
                                             </div>
                                         </div>
                                         <div class="mb-2 row align-items-center">
-                                            <label
-                                                class="form-label-title col-sm-5 mb-0">Category</label>
+                                            <label class="form-label-title col-sm-5 mb-0">Category</label>
                                             <div class="col-sm-7">
                                                 <p>{{ $product->Category->category_name }}</p>
                                             </div>
                                         </div>
                                         <div class="mb-2 row align-items-center">
-                                            <label
-                                                class="form-label-title col-sm-5 mb-0">Subcategory Title</label>
+                                            <label class="form-label-title col-sm-5 mb-0">Subcategory Title</label>
                                             <div class="col-sm-7">
                                                 <p>{{ $product->SubCategoryTitle->sub_category_titlename }}</p>
                                             </div>
                                         </div>
                                         <div class="mb-2 row align-items-center">
-                                            <label
-                                                class="form-label-title col-sm-5 mb-0">Subcategory</label>
+                                            <label class="form-label-title col-sm-5 mb-0">Subcategory</label>
                                             <div class="col-sm-7">
                                                 <p>{{ $product->SubCategory->sub_category_name }}</p>
                                             </div>
@@ -84,17 +80,17 @@
                                             </div>
                                         </div>
                                         <div class="mb-2 row align-items-center">
-                                            <label
-                                                class="form-label-title col-sm-5 mb-0">Thumbnail
+                                            <label class="form-label-title col-sm-5 mb-0">Thumbnail
                                                 Image</label>
                                             <div class="col-sm-7">
-                                                <img width="100" src="{{ asset('images/'.$product-> product_thambnail) }}">
+                                                <img width="100"
+                                                    src="{{ asset('images/' . $product->product_thambnail) }}">
                                             </div>
                                         </div>
                                         <div class="mb-2 row align-items-center">
                                             <label class="col-sm-5 form-label-title">Price</label>
                                             <div class="col-sm-7">
-                                                <p>{{ $product->selling_price }}</p>
+                                                <p>¥{{ number_format($product->selling_price) }}</p>
                                             </div>
                                         </div>
                                         <div class="mb-2 row align-items-center">
@@ -123,6 +119,6 @@
                 </div>
             </div>
         </div>
-    <!-- Product Detail End -->
-</div>
+        <!-- Product Detail End -->
+    </div>
 </x-auth-layout>
