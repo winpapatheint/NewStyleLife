@@ -43,12 +43,13 @@ use App\Models\CashBankAccount;
 use App\Models\Faq;
 use App\Models\UserNotification;
 use Illuminate\Support\Facades\File;
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
+/**
+ * Store a newly created resource in storage.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @return \Illuminate\Http\Response
+ */
 
 class AdminController extends Controller
 {
@@ -56,22 +57,19 @@ class AdminController extends Controller
     {
         // coupon to be inactive for the end date
         $couponAll = Coupon::where('enddate', '<=', Carbon::now()->endOfDay())->get();
-        foreach ($couponAll as $couponInactive)
-        {
+        foreach ($couponAll as $couponInactive) {
             $couponInactive->status = 0;
             $couponInactive->save();
 
             $sellers = Seller::where('coupon_id', $couponInactive->id)->get();
-            foreach($sellers as $seller)
-            {
+            foreach ($sellers as $seller) {
                 $seller->coupon_id = NULL;
                 $seller->coupon_status = 0;
                 $seller->save();
             }
 
             $products = Product::where('coupon_id', $couponInactive->id)->get();
-            foreach($products as $product)
-            {
+            foreach ($products as $product) {
                 $product->coupon_id = NULL;
                 $product->coupon_status = 0;
                 $product->save();
@@ -114,7 +112,8 @@ class AdminController extends Controller
                         $orderDetail->update([
                             'payment_approved' => 2,
                             'status' => 'Cash Cancel',
-                            'cancelled_reason' => 'You did not transfer payment for this order in time.']);
+                            'cancelled_reason' => 'You did not transfer payment for this order in time.'
+                        ]);
                         $order->update([
                             'payment_approved' => 2
                         ]);
@@ -127,18 +126,18 @@ class AdminController extends Controller
         $categories = Category::where('category_name', '!=', 'Special Corner')->get();
 
         $blogs = DB::table('blogs')
-                    ->select( 'U.name as authorby', 'blogs.*')
-                    ->join('users as U', function ($join) {
-                    $join->on('blogs.created_by', '=', 'U.id');
-                })
-                ->orderBy('created_at', 'desc')->paginate(2);
+            ->select('U.name as authorby', 'blogs.*')
+            ->join('users as U', function ($join) {
+                $join->on('blogs.created_by', '=', 'U.id');
+            })
+            ->orderBy('created_at', 'desc')->paginate(2);
 
         $maxStarsRatedRow = DB::table('reviews')
-                ->select('users.id', 'users.name', 'users.user_photo', 'reviews.comment', DB::raw('MAX(stars_rated) as max_stars_rated'))
-                ->join('users', 'users.id', '=', 'reviews.user_id')
-                ->groupBy('users.id', 'users.name','reviews.comment')
-                ->orderByDesc('max_stars_rated')
-                ->first();
+            ->select('users.id', 'users.name', 'users.user_photo', 'reviews.comment', DB::raw('MAX(stars_rated) as max_stars_rated'))
+            ->join('users', 'users.id', '=', 'reviews.user_id')
+            ->groupBy('users.id', 'users.name', 'reviews.comment')
+            ->orderByDesc('max_stars_rated')
+            ->first();
 
         $customers =  Customer::all();
 
@@ -148,15 +147,15 @@ class AdminController extends Controller
 
         foreach ($mostDiscountPercentages as $discountPercent) {
             $productsGroupedByDiscount[$discountPercent] = Product::where('discount_percent', $discountPercent)
-            ->where('status', 1)
-            ->pluck('id')
-            ->toArray();
+                ->where('status', 1)
+                ->pluck('id')
+                ->toArray();
         }
 
-        $couponProducts = Product::where(function($query) {
+        $couponProducts = Product::where(function ($query) {
             $query->whereHas('Seller', function ($query) {
-                    $query->where('coupon_status', 1);
-                })
+                $query->where('coupon_status', 1);
+            })
                 ->orWhere('products.coupon_status', '=', '1');
         })->where('status', 1)->get();
 
@@ -216,9 +215,25 @@ class AdminController extends Controller
 
         $tops = Top::all();
 
-        return view('front-end.welcome',compact('blogs','categories','maxStarsRatedRow', 'productsGroupedByDiscount', 'couponProducts',
-         'reviews','bestSellerProducts', 'trendingProducts', 'coupons', 'seafood', 'vegetable', 'meatHalfDiscount',
-         'vegetableHalfDiscount','customers', 'latestProducts', 'shops', 'tops'));
+        return view('front-end.welcome', compact(
+            'blogs',
+            'categories',
+            'maxStarsRatedRow',
+            'productsGroupedByDiscount',
+            'couponProducts',
+            'reviews',
+            'bestSellerProducts',
+            'trendingProducts',
+            'coupons',
+            'seafood',
+            'vegetable',
+            'meatHalfDiscount',
+            'vegetableHalfDiscount',
+            'customers',
+            'latestProducts',
+            'shops',
+            'tops'
+        ));
     }
 
     public function news()
@@ -232,35 +247,33 @@ class AdminController extends Controller
 
         if ($search) {
             $blogs = DB::table('blogs')
-                        ->select( 'U.name as authorby', 'blogs.*')
-                        ->join('users as U', function ($join) {
-                            $join->on('blogs.created_by', '=', 'U.id');
-                        })
-                        ->where('blogs.title', 'like', '%' . $search . '%')
-                        ->orderBy('created_at', 'desc')->paginate($limit);
-        }
-        else {
+                ->select('U.name as authorby', 'blogs.*')
+                ->join('users as U', function ($join) {
+                    $join->on('blogs.created_by', '=', 'U.id');
+                })
+                ->where('blogs.title', 'like', '%' . $search . '%')
+                ->orderBy('created_at', 'desc')->paginate($limit);
+        } else {
             $blogs = DB::table('blogs')
-                        ->select( 'U.name as authorby', 'blogs.*')
-                        ->join('users as U', function ($join) {
-                            $join->on('blogs.created_by', '=', 'U.id');
-                        })
-                        ->orderBy('created_at', 'desc')->paginate($limit);
+                ->select('U.name as authorby', 'blogs.*')
+                ->join('users as U', function ($join) {
+                    $join->on('blogs.created_by', '=', 'U.id');
+                })
+                ->orderBy('created_at', 'desc')->paginate($limit);
         }
 
         $limit = 4;
         $latestblog = DB::table('blogs')
-                        ->orderBy('created_at', 'desc')
-                        ->paginate($limit);
+            ->orderBy('created_at', 'desc')
+            ->paginate($limit);
 
         $ttl = $blogs->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('front-end.blog-list',compact('blogs','ttlpage','ttl','latestblog', 'search'));
-
+        return view('front-end.blog-list', compact('blogs', 'ttlpage', 'ttl', 'latestblog', 'search'));
     }
 
-    public function validatesubadmin($request, $editpassword = true , $editmode = false, $emailuniquecheck = true, $needimg = true)
+    public function validatesubadmin($request, $editpassword = true, $editmode = false, $emailuniquecheck = true, $needimg = true)
     {
 
         $check = [
@@ -293,7 +306,7 @@ class AdminController extends Controller
         }
 
         if ($emailuniquecheck) {
-            $check['email'] .= '|unique:users' ;
+            $check['email'] .= '|unique:users';
         }
 
         if (!$needimg) {
@@ -304,49 +317,46 @@ class AdminController extends Controller
 
 
         return $validator;
-
     }
     public function updateuser(Request $request)
     {
         if (!empty($request->id)) {
 
             $userprofile = User::find($request->id);
-        }
-
-         else {
-           $userprofile = Auth::user();
+        } else {
+            $userprofile = Auth::user();
         }
 
         if ($userprofile->role == 'admin') {
 
             $checkpassword = true;
-            if ( empty($request->password) AND empty($request->password_confirmation)) {
+            if (empty($request->password) and empty($request->password_confirmation)) {
                 $checkpassword = false;
             }
 
             if ($userprofile->email == $request->email) {
                 $emailuniquecheck = false;
-            }else {
+            } else {
                 $emailuniquecheck = true;
             }
 
 
-            $validator = $this->validatesubadmin($request,$checkpassword,true,$emailuniquecheck);
-        //return response()->json(['error'=>'123']);
+            $validator = $this->validatesubadmin($request, $checkpassword, true, $emailuniquecheck);
+            //return response()->json(['error'=>'123']);
         }
 
-        if($request->ajax()){
+        if ($request->ajax()) {
 
             if ($validator->passes()) {
-                return response()->json(['success'=>'allpasses']);
+                return response()->json(['success' => 'allpasses']);
             }
-            return response()->json(['error'=>$validator->errors()]);
-
+            return response()->json(['error' => $validator->errors()]);
         }
 
-        $newval = array('name' => $request->name,
-                        'email' => $request->email,
-                    );
+        $newval = array(
+            'name' => $request->name,
+            'email' => $request->email,
+        );
 
 
         if (!empty($request->shopname)) {
@@ -403,30 +413,29 @@ class AdminController extends Controller
 
         if (!empty($request->shoplogo)) {
             $time = new DateTime();
-            $imageNames = time().'.'.$request->shoplogo->extension();
+            $imageNames = time() . '.' . $request->shoplogo->extension();
 
             $request->shoplogo->move(public_path('upload/shop'), $imageNames);
             $newval['shop_logo'] = $imageNames;
         }
         if (!empty($request->image)) {
-            $imageName = time().'.'.$request->image->extension();
+            $imageName = time() . '.' . $request->image->extension();
 
             $request->image->move(public_path('images'), $imageName);
             $newval['user_photo'] = $imageName;
         }
 
-        if ($userprofile->role == 'admin' OR $userprofile->role == 'seller' OR $userprofile->role == 'buyer') {
-        $upd = $userprofile->update($newval);
+        if ($userprofile->role == 'admin' or $userprofile->role == 'seller' or $userprofile->role == 'buyer') {
+            $upd = $userprofile->update($newval);
         }
         if ($userprofile->role == 'seller') {
 
-        $sellerupd = $sellerprofile->update($newval);
+            $sellerupd = $sellerprofile->update($newval);
         }
 
         $msg = __('Profile Updated Successfully');
 
-        return back()->with('success',$msg);
-
+        return back()->with('success', $msg);
     }
 
 
@@ -438,66 +447,63 @@ class AdminController extends Controller
             $userprofile = User::find($request->id);
 
             $userid = DB::table('users')
-                    ->select('users.id','users.email')
+                ->select('users.id', 'users.email')
                 ->where('id', $request->id)->get()->pluck('email');
 
             $sellerid = DB::table('sellers')
-                    ->select('sellers.id')
-                    ->where('email', $userid[0])->pluck('id');
+                ->select('sellers.id')
+                ->where('email', $userid[0])->pluck('id');
 
             $sellerprofile = Seller::find($sellerid[0]);
-
-        }
-        else {
-           $userprofile = Auth::user();
+        } else {
+            $userprofile = Auth::user();
         }
 
         if ($userprofile->role == 'admin') {
 
             $checkpassword = true;
-            if ( empty($request->password) AND empty($request->password_confirmation)) {
+            if (empty($request->password) and empty($request->password_confirmation)) {
                 $checkpassword = false;
             }
 
             if ($userprofile->email == $request->email) {
                 $emailuniquecheck = false;
-            }else {
+            } else {
                 $emailuniquecheck = true;
             }
 
 
-            $validator = $this->validatesubadmin($request,$checkpassword,true,$emailuniquecheck);
+            $validator = $this->validatesubadmin($request, $checkpassword, true, $emailuniquecheck);
         }
 
-        if ($userprofile->role == 'buyer' OR $userprofile->role == 'seller') {
+        if ($userprofile->role == 'buyer' or $userprofile->role == 'seller') {
 
             $checkpassword = true;
-            if ( empty($request->password) AND empty($request->password_confirmation)) {
+            if (empty($request->password) and empty($request->password_confirmation)) {
                 $checkpassword = false;
             }
 
             if ($userprofile->email == $request->email) {
                 $emailuniquecheck = false;
-            }else {
+            } else {
                 $emailuniquecheck = true;
             }
 
-            $validator = (new RegisteredUserController)->validateuser($request,$checkpassword,true,$emailuniquecheck);
-
+            $validator = (new RegisteredUserController)->validateuser($request, $checkpassword, true, $emailuniquecheck);
         }
 
-        if($request->ajax()){
+        if ($request->ajax()) {
 
             if ($validator->passes()) {
-                return response()->json(['success'=>'allpasses']);
+                return response()->json(['success' => 'allpasses']);
             }
-            return response()->json(['error'=>$validator->errors()]);
-
+            return response()->json(['error' => $validator->errors()]);
         }
 
-        $newval = array('name' => $request->name,
-                        'email' => $request->email,
-                    );
+        $newval = array(
+            'name' => $request->name,
+            'email' => $request->email,
+        );
 
 
         if (!empty($request->shopname)) {
@@ -553,30 +559,29 @@ class AdminController extends Controller
 
         if (!empty($request->shoplogo)) {
             $time = new DateTime();
-            $imageNames = time().'.'.$request->shoplogo->extension();
+            $imageNames = time() . '.' . $request->shoplogo->extension();
 
             $request->shoplogo->move(public_path('upload/shop'), $imageNames);
             $newval['shop_logo'] = $imageNames;
         }
         if (!empty($request->image)) {
-            $imageName = time().'.'.$request->image->extension();
+            $imageName = time() . '.' . $request->image->extension();
 
             $request->image->move(public_path('images'), $imageName);
             $newval['user_photo'] = $imageName;
         }
 
-        if ($userprofile->role == 'admin' OR $userprofile->role == 'seller' OR $userprofile->role == 'buyer') {
-        $upd = $userprofile->update($newval);
+        if ($userprofile->role == 'admin' or $userprofile->role == 'seller' or $userprofile->role == 'buyer') {
+            $upd = $userprofile->update($newval);
         }
         if ($userprofile->role == 'seller') {
 
-        $sellerupd = $sellerprofile->update($newval);
+            $sellerupd = $sellerprofile->update($newval);
         }
 
         $msg = __('auth.donechange');
 
-        return back()->with('success',$msg);
-
+        return back()->with('success', $msg);
     }
 
     public function indexcategory()
@@ -591,12 +596,12 @@ class AdminController extends Controller
             $query->where(function ($query) use ($mainSearch) {
                 $query->where('category_name', 'like', '%' . $mainSearch . '%');
             })
-            ->orWhereHas('subCategoryTitle', function ($query) use ($mainSearch) {
-                $query->where('sub_category_titlename', 'like', '%' . $mainSearch . '%');
-            })
-            ->orWhereHas('subCategoryTitle.subCategory', function ($query) use ($mainSearch) {
-                $query->where('sub_category_name', 'like', '%' . $mainSearch . '%');
-            });
+                ->orWhereHas('subCategoryTitle', function ($query) use ($mainSearch) {
+                    $query->where('sub_category_titlename', 'like', '%' . $mainSearch . '%');
+                })
+                ->orWhereHas('subCategoryTitle.subCategory', function ($query) use ($mainSearch) {
+                    $query->where('sub_category_name', 'like', '%' . $mainSearch . '%');
+                });
         }
 
         $lists = $query->orderBy('created_at', 'desc')->paginate($limit);
@@ -604,7 +609,7 @@ class AdminController extends Controller
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('admin.category',compact('lists','ttlpage','ttl'));
+        return view('admin.category', compact('lists', 'ttlpage', 'ttl'));
     }
 
     public function indexblog()
@@ -626,7 +631,7 @@ class AdminController extends Controller
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('admin.blog.blog',compact('lists','ttlpage','ttl', 'mainSearch'));
+        return view('admin.blog.blog', compact('lists', 'ttlpage', 'ttl', 'mainSearch'));
     }
 
 
@@ -641,9 +646,9 @@ class AdminController extends Controller
         if ($mainSearch != null) {
             $query->where(function ($query) use ($mainSearch) {
                 $query->where('discount', 'like', '%' . $mainSearch . '%')
-                        ->orWhere('phaseone', 'like', '%' . $mainSearch . '%')
-                      ->orWhere('phasetwo', 'like', '%' . $mainSearch . '%')
-                      ->orWhere('phasethree', 'like', '%' . $mainSearch . '%');
+                    ->orWhere('phaseone', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('phasetwo', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('phasethree', 'like', '%' . $mainSearch . '%');
             });
         }
 
@@ -652,7 +657,7 @@ class AdminController extends Controller
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('admin.top',compact('lists','ttlpage','ttl'));
+        return view('admin.top', compact('lists', 'ttlpage', 'ttl'));
     }
 
     public function indexnewsletter()
@@ -666,7 +671,6 @@ class AdminController extends Controller
         if ($mainSearch != null) {
             $query->where(function ($query) use ($mainSearch) {
                 $query->where('email', 'like', '%' . $mainSearch . '%');
-
             });
         }
 
@@ -675,7 +679,7 @@ class AdminController extends Controller
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('admin.newsletter',compact('lists','ttlpage','ttl'));
+        return view('admin.newsletter', compact('lists', 'ttlpage', 'ttl'));
     }
 
     public function indexcustomer()
@@ -689,10 +693,10 @@ class AdminController extends Controller
         if ($mainSearch != null) {
             $query->where(function ($query) use ($mainSearch) {
                 $query->where('title', 'like', '%' . $mainSearch . '%')
-                      ->orWhere('subtitle', 'like', '%' . $mainSearch . '%')
-                      ->orWhere('content', 'like', '%' . $mainSearch . '%')
-                      ->orWhere('name', 'like', '%' . $mainSearch . '%')
-                      ->orWhere('position', 'like', '%' . $mainSearch . '%');
+                    ->orWhere('subtitle', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('content', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('name', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('position', 'like', '%' . $mainSearch . '%');
             });
         }
 
@@ -701,7 +705,7 @@ class AdminController extends Controller
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('admin.indexcustomer',compact('lists','ttlpage','ttl'));
+        return view('admin.indexcustomer', compact('lists', 'ttlpage', 'ttl'));
     }
 
 
@@ -714,28 +718,28 @@ class AdminController extends Controller
         ]);
         $mainSearch = $validated['mainSearch'] ?? null;
         $query = Review::query();
-            if ($mainSearch != null) {
-                $query->where(function ($query) use ($mainSearch) {
-                    $query->where('comment', 'like', '%' . $mainSearch . '%');
-                })
+        if ($mainSearch != null) {
+            $query->where(function ($query) use ($mainSearch) {
+                $query->where('comment', 'like', '%' . $mainSearch . '%');
+            })
                 ->orWhereHas('user', function ($query) use ($mainSearch) {
                     $query->where('name', 'like', '%' . $mainSearch . '%');
                 })
                 ->orWhereHas('product', function ($query) use ($mainSearch) {
                     $query->where('product_name', 'like', '%' . $mainSearch . '%');
                 });
-            }
+        }
 
         $lists = $query->leftjoin('users', 'users.id', '=', 'reviews.user_id')
-                        ->leftjoin('products','products.id', '=', 'reviews.product_id')
-                        ->select('reviews.*','reviews.created_at as reviewdate','products.*','users.*','reviews.id','reviews.status')
-                        ->orderBy('reviews.created_at', 'desc')
-                        ->paginate($limit);
+            ->leftjoin('products', 'products.id', '=', 'reviews.product_id')
+            ->select('reviews.*', 'reviews.created_at as reviewdate', 'products.*', 'users.*', 'reviews.id', 'reviews.status')
+            ->orderBy('reviews.created_at', 'desc')
+            ->paginate($limit);
 
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('admin.product.product_review',compact('lists','ttlpage','ttl'));
+        return view('admin.product.product_review', compact('lists', 'ttlpage', 'ttl'));
     }
 
     public function indexproduct()
@@ -749,28 +753,28 @@ class AdminController extends Controller
         if ($mainSearch != null) {
             $query->where(function ($query) use ($mainSearch) {
                 $query->where('product_name', 'like', '%' . $mainSearch . '%')
-                        ->orWhere('product_qty', 'like', '%' . $mainSearch . '%')
-                      ->orWhere('selling_price', 'like', '%' . $mainSearch . '%')
-                      ->orWhere('discount_percent', 'like', '%' . $mainSearch . '%')
-                      ->orWhere('commission', 'like', '%' . $mainSearch . '%');
+                    ->orWhere('product_qty', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('selling_price', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('discount_percent', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('commission', 'like', '%' . $mainSearch . '%');
             });
         }
         $query->leftjoin('coupons', 'products.coupon_id', '=', 'coupons.id')
-                ->select('products.*', 'coupons.enddate', 'coupon_code as coupon_code')
-                ->orderBy('products.created_at', 'desc');
+            ->select('products.*', 'coupons.enddate', 'coupon_code as coupon_code')
+            ->orderBy('products.created_at', 'desc');
 
         $lists = $query->with('Seller')->orderBy('products.created_at', 'desc')->paginate($limit);
 
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        $subCatTitle = SubCategoryTitle::whereHas('category', function($query) {
+        $subCatTitle = SubCategoryTitle::whereHas('category', function ($query) {
             $query->where('category_name', 'Special Corner');
         })->get();
 
-        $coupons = DB::table('coupons')->where('status',1)->orderBY('created_at', 'desc')->get();
+        $coupons = DB::table('coupons')->where('status', 1)->orderBY('created_at', 'desc')->get();
 
-        return view('admin.product.product_all',compact('lists','ttlpage','ttl', 'subCatTitle','coupons','mainSearch'));
+        return view('admin.product.product_all', compact('lists', 'ttlpage', 'ttl', 'subCatTitle', 'coupons', 'mainSearch'));
     }
 
     public function shoplist()
@@ -781,35 +785,35 @@ class AdminController extends Controller
         ]);
         $mainSearch = $validated['mainSearch'] ?? null;
         $query = Seller::query();
-            if ($mainSearch != null) {
-                $query->where(function ($query) use ($mainSearch) {
-                    $query->where('shop_name', 'like', '%' . $mainSearch . '%')
-                          ->orWhereHas('coupons', function ($query) use ($mainSearch) {
-                              $query->where('coupon_code', 'like', '%' . $mainSearch . '%');
-                          });
-                });
-            }
+        if ($mainSearch != null) {
+            $query->where(function ($query) use ($mainSearch) {
+                $query->where('shop_name', 'like', '%' . $mainSearch . '%')
+                    ->orWhereHas('coupons', function ($query) use ($mainSearch) {
+                        $query->where('coupon_code', 'like', '%' . $mainSearch . '%');
+                    });
+            });
+        }
 
         //Identify expired coupons
         $expiredCoupons = DB::table('coupons')
-                            ->where('enddate', '<', now())
-                            ->pluck('id');
+            ->where('enddate', '<', now())
+            ->pluck('id');
         // Update status of corresponding sellers
         $inactivestatus = DB::table('sellers')
-                            ->whereIn('coupon_id', $expiredCoupons)
-                            ->update(['coupon_id' => null]);
+            ->whereIn('coupon_id', $expiredCoupons)
+            ->update(['coupon_id' => null]);
 
         $lists = $query->with('user')
-                    ->with('user.products')
-                    ->with('user.products.reviews')
-                    ->latest('sellers.created_at')
-                    ->paginate($limit);
+            ->with('user.products')
+            ->with('user.products.reviews')
+            ->latest('sellers.created_at')
+            ->paginate($limit);
 
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
-        $coupons = DB::table('coupons')->where('status',1)->orderBY('created_at', 'desc')->get();
+        $coupons = DB::table('coupons')->where('status', 1)->orderBY('created_at', 'desc')->get();
 
-        return view('admin.allshop',compact('lists','ttlpage','ttl','coupons'));
+        return view('admin.allshop', compact('lists', 'ttlpage', 'ttl', 'coupons'));
     }
 
 
@@ -860,13 +864,14 @@ class AdminController extends Controller
         }
 
         if (!empty($rating)) {
-            $averageRated = Review::select('product_id',
+            $averageRated = Review::select(
+                'product_id',
                 DB::raw('FLOOR(AVG(stars_rated)) AS `average_rating`')
             )
-            ->join('products', 'products.id', '=', 'reviews.product_id')
-            ->where('products.seller_id', $id)
-            ->groupBy('product_id')
-            ->get();
+                ->join('products', 'products.id', '=', 'reviews.product_id')
+                ->where('products.seller_id', $id)
+                ->groupBy('product_id')
+                ->get();
             $matchedProductIds = [];
             foreach ($averageRated as $rated) {
                 if (in_array($rated->average_rating, $rating)) {
@@ -875,8 +880,7 @@ class AdminController extends Controller
             }
             if (!empty($matchedProductIds)) {
                 $query->whereIn('products.id', $matchedProductIds);
-            }
-            else {
+            } else {
                 $query->where('id', null);
             }
         }
@@ -926,9 +930,9 @@ class AdminController extends Controller
                 break;
         }
 
-        $shoplist = $query->where('products.seller_id',$id)
-                          ->where('products.status', 1)
-                          ->orderBy('created_at', 'desc')->paginate($limit);
+        $shoplist = $query->where('products.seller_id', $id)
+            ->where('products.status', 1)
+            ->orderBy('created_at', 'desc')->paginate($limit);
 
         $ttl = $shoplist->total();
         $ttlpage = (ceil($ttl / $limit));
@@ -936,32 +940,32 @@ class AdminController extends Controller
         $reviews = Review::all();
 
         $categoryWithProductCount = Category::leftJoin('products', 'categories.id', '=', 'products.category_id')
-                                    ->select('categories.*', DB::raw('COUNT(products.category_id) as product_count'))
-                                    ->where('products.status', '=', '1')
-                                    ->where('products.seller_id', $id)
-                                    ->groupBy('categories.id')
-                                    ->get();
+            ->select('categories.*', DB::raw('COUNT(products.category_id) as product_count'))
+            ->where('products.status', '=', '1')
+            ->where('products.seller_id', $id)
+            ->groupBy('categories.id')
+            ->get();
 
         $ratingWithProductCount = Review::select(
-                                        DB::raw('CAST(FLOOR(AVG(stars_rated)) AS UNSIGNED) AS `average_rating`')
-                                    )
-                                    ->join('products', 'products.id', '=', 'reviews.product_id')
-                                    ->where('products.seller_id', $id)
-                                    ->groupBy('product_id')
-                                    ->get()
-                                    ->groupBy('average_rating')
-                                    ->map(function ($grouped) {
-                                        return $grouped->count();
-                                    });
+            DB::raw('CAST(FLOOR(AVG(stars_rated)) AS UNSIGNED) AS `average_rating`')
+        )
+            ->join('products', 'products.id', '=', 'reviews.product_id')
+            ->where('products.seller_id', $id)
+            ->groupBy('product_id')
+            ->get()
+            ->groupBy('average_rating')
+            ->map(function ($grouped) {
+                return $grouped->count();
+            });
 
         $discountWithProductCount = Product::selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) <= 5 THEN 1 END) as group_1_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 5 AND CAST(discount_percent AS DECIMAL) <= 10 THEN 1 END) as group_2_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 10 AND CAST(discount_percent AS DECIMAL) <= 15 THEN 1 END) as group_3_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 15 AND CAST(discount_percent AS DECIMAL) <= 25 THEN 1 END) as group_4_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 25 THEN 1 END) as group_5_count')
-                                    ->where('seller_id', $id)
-                                    ->where('status', '=', '1')
-                                    ->first();
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 5 AND CAST(discount_percent AS DECIMAL) <= 10 THEN 1 END) as group_2_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 10 AND CAST(discount_percent AS DECIMAL) <= 15 THEN 1 END) as group_3_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 15 AND CAST(discount_percent AS DECIMAL) <= 25 THEN 1 END) as group_4_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 25 THEN 1 END) as group_5_count')
+            ->where('seller_id', $id)
+            ->where('status', '=', '1')
+            ->first();
 
         $shopInfo = Seller::with('user')->with('user.products')->with('user.products.reviews')->where('user_id', $id)->first();
         $ratingWith = 0;
@@ -969,12 +973,9 @@ class AdminController extends Controller
         $productStarReview = 0;
         $productCount = 0;
         $ratingForShop = [];
-        foreach($shopInfo->user->products as $product)
-        {
-            if ($product->reviews->isNotEmpty())
-            {
-                foreach($product->reviews as $review)
-                {
+        foreach ($shopInfo->user->products as $product) {
+            if ($product->reviews->isNotEmpty()) {
+                foreach ($product->reviews as $review) {
                     $ratingWith += $review->stars_rated;
                     $reviewCount++;
                 }
@@ -983,19 +984,33 @@ class AdminController extends Controller
             }
             $productCount++;
         }
-        if ($productStarReview > 0)
-        {
+        if ($productStarReview > 0) {
             $ratingForShop[0] = floor($productStarReview / $productCount);
             $ratingForShop[1] = $reviewCount;
-        }
-        else
-        {
+        } else {
             $ratingForShop[0] = 0;
             $ratingForShop[1] = 0;
         }
 
-        return view('front-end.shop-left-sidebar',compact('id','shoplist','ttlpage','ttl', 'price', 'search', 'rating', 'ratingWithProductCount', 'discount',
-        'discount','discountWithProductCount', 'sort', 'reviews', 'shopInfo', 'categoryWithProductCount', 'categories', 'ratingForShop'));
+        return view('front-end.shop-left-sidebar', compact(
+            'id',
+            'shoplist',
+            'ttlpage',
+            'ttl',
+            'price',
+            'search',
+            'rating',
+            'ratingWithProductCount',
+            'discount',
+            'discount',
+            'discountWithProductCount',
+            'sort',
+            'reviews',
+            'shopInfo',
+            'categoryWithProductCount',
+            'categories',
+            'ratingForShop'
+        ));
     }
 
     public function indexsubcategory()
@@ -1009,44 +1024,44 @@ class AdminController extends Controller
         if ($mainSearch != null) {
             $query->where(function ($query) use ($mainSearch) {
                 $query->where('category_name', 'like', '%' . $mainSearch . '%')
-                ->orWhere('sub_category_titlename', 'like', '%' . $mainSearch . '%')
-                ->orWhere('sub_category_name', 'like', '%' . $mainSearch . '%');
+                    ->orWhere('sub_category_titlename', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('sub_category_name', 'like', '%' . $mainSearch . '%');
             });
         }
-        $lists = $query->select('categories.id as categoryId', 'categories.category_name as category', 'Sb.id as subCatId', 'Sb.sub_category_name','S.id as subCatTitleId','S.sub_category_titlename')
-                    ->leftJoin('sub_category_titles as S', function ($join) {
-                        $join->on('categories.id', '=', 'S.category_id');
-                    })
-                    ->leftJoin('sub_categories as Sb', function ($join) {
-                        $join->on('Sb.sub_category_title_id', '=', 'S.id');
-                        $join->on('Sb.category_id', '=', 'categories.id');
-                    })
-                    ->paginate($limit);
+        $lists = $query->select('categories.id as categoryId', 'categories.category_name as category', 'Sb.id as subCatId', 'Sb.sub_category_name', 'S.id as subCatTitleId', 'S.sub_category_titlename')
+            ->leftJoin('sub_category_titles as S', function ($join) {
+                $join->on('categories.id', '=', 'S.category_id');
+            })
+            ->leftJoin('sub_categories as Sb', function ($join) {
+                $join->on('Sb.sub_category_title_id', '=', 'S.id');
+                $join->on('Sb.category_id', '=', 'categories.id');
+            })
+            ->paginate($limit);
 
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('admin.allsubcategory',compact('lists','ttlpage','ttl'));
+        return view('admin.allsubcategory', compact('lists', 'ttlpage', 'ttl'));
     }
 
     public function blogdetail($id)
     {
         $blog = DB::table('blogs')
-                ->select( 'blogs.*')
-                ->where('blogs.id',$id)->get();
+            ->select('blogs.*')
+            ->where('blogs.id', $id)->get();
         $blog = $blog[0];
 
-        return view('admin.blog.blog_detail',compact('blog'));
+        return view('admin.blog.blog_detail', compact('blog'));
     }
 
     public function faqdetail($id)
     {
         $faq = DB::table('faqs')
-                ->select( 'faqs.*')
-                ->where('faqs.id',$id)->get();
+            ->select('faqs.*')
+            ->where('faqs.id', $id)->get();
         $faq = $faq[0];
 
-        return view('admin.faqdetail',compact('faq'));
+        return view('admin.faqdetail', compact('faq'));
     }
     public function indexshop($id)
     {
@@ -1089,13 +1104,14 @@ class AdminController extends Controller
         }
 
         if (!empty($rating)) {
-            $averageRated = Review::select('product_id',
+            $averageRated = Review::select(
+                'product_id',
                 DB::raw('FLOOR(AVG(stars_rated)) AS `average_rating`')
             )
-            ->join('products', 'products.id', '=', 'reviews.product_id')
-            ->where('products.category_id', $id)
-            ->groupBy('product_id')
-            ->get();
+                ->join('products', 'products.id', '=', 'reviews.product_id')
+                ->where('products.category_id', $id)
+                ->groupBy('product_id')
+                ->get();
             $matchedProductIds = [];
             foreach ($averageRated as $rated) {
                 if (in_array($rated->average_rating, $rating)) {
@@ -1104,8 +1120,7 @@ class AdminController extends Controller
             }
             if (!empty($matchedProductIds)) {
                 $query->whereIn('products.id', $matchedProductIds);
-            }
-            else {
+            } else {
                 $query->where('id', null);
             }
         }
@@ -1155,8 +1170,8 @@ class AdminController extends Controller
                 break;
         }
 
-        $shoplist = $query->where('category_id',$id)->where('products.status', 1)
-                          ->orderBy('created_at', 'desc')->paginate($limit);
+        $shoplist = $query->where('category_id', $id)->where('products.status', 1)
+            ->orderBy('created_at', 'desc')->paginate($limit);
 
         $ttl = $shoplist->total();
         $ttlpage = (ceil($ttl / $limit));
@@ -1164,28 +1179,41 @@ class AdminController extends Controller
         $reviews = Review::all();
 
         $ratingWithProductCount = Review::select(
-                                        DB::raw('CAST(FLOOR(AVG(stars_rated)) AS UNSIGNED) AS `average_rating`')
-                                    )
-                                    ->join('products', 'products.id', '=', 'reviews.product_id')
-                                    ->where('products.category_id', $id)
-                                    ->groupBy('product_id')
-                                    ->get()
-                                    ->groupBy('average_rating')
-                                    ->map(function ($grouped) {
-                                        return $grouped->count();
-                                    });
+            DB::raw('CAST(FLOOR(AVG(stars_rated)) AS UNSIGNED) AS `average_rating`')
+        )
+            ->join('products', 'products.id', '=', 'reviews.product_id')
+            ->where('products.category_id', $id)
+            ->groupBy('product_id')
+            ->get()
+            ->groupBy('average_rating')
+            ->map(function ($grouped) {
+                return $grouped->count();
+            });
 
         $discountWithProductCount = Product::selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) <= 5 THEN 1 END) as group_1_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 5 AND CAST(discount_percent AS DECIMAL) <= 10 THEN 1 END) as group_2_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 10 AND CAST(discount_percent AS DECIMAL) <= 15 THEN 1 END) as group_3_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 15 AND CAST(discount_percent AS DECIMAL) <= 25 THEN 1 END) as group_4_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 25 THEN 1 END) as group_5_count')
-                                    ->where('category_id', $id)
-                                    ->where('status', '=', '1')
-                                    ->first();
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 5 AND CAST(discount_percent AS DECIMAL) <= 10 THEN 1 END) as group_2_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 10 AND CAST(discount_percent AS DECIMAL) <= 15 THEN 1 END) as group_3_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 15 AND CAST(discount_percent AS DECIMAL) <= 25 THEN 1 END) as group_4_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 25 THEN 1 END) as group_5_count')
+            ->where('category_id', $id)
+            ->where('status', '=', '1')
+            ->first();
 
-        return view('front-end.shop-left-sidebar',compact('id','shoplist','ttlpage','ttl', 'price', 'search', 'rating', 'ratingWithProductCount', 'discount',
-        'discount','discountWithProductCount', 'sort', 'reviews'));
+        return view('front-end.shop-left-sidebar', compact(
+            'id',
+            'shoplist',
+            'ttlpage',
+            'ttl',
+            'price',
+            'search',
+            'rating',
+            'ratingWithProductCount',
+            'discount',
+            'discount',
+            'discountWithProductCount',
+            'sort',
+            'reviews'
+        ));
     }
 
     public function indexcategoryproduct($id)
@@ -1234,13 +1262,14 @@ class AdminController extends Controller
         }
 
         if (!empty($rating)) {
-            $averageRated = Review::select('product_id',
+            $averageRated = Review::select(
+                'product_id',
                 DB::raw('FLOOR(AVG(stars_rated)) AS `average_rating`')
             )
-            ->join('products', 'products.id', '=', 'reviews.product_id')
-            ->where('products.category_id', $id)
-            ->groupBy('product_id')
-            ->get();
+                ->join('products', 'products.id', '=', 'reviews.product_id')
+                ->where('products.category_id', $id)
+                ->groupBy('product_id')
+                ->get();
             $matchedProductIds = [];
             foreach ($averageRated as $rated) {
                 if (in_array($rated->average_rating, $rating)) {
@@ -1249,8 +1278,7 @@ class AdminController extends Controller
             }
             if (!empty($matchedProductIds)) {
                 $query->whereIn('products.id', $matchedProductIds);
-            }
-            else {
+            } else {
                 $query->where('id', null);
             }
         }
@@ -1300,8 +1328,8 @@ class AdminController extends Controller
                 break;
         }
 
-        $shoplist = $query->where('category_id',$id)->where('products.status', 1)
-                          ->orderBy('created_at', 'desc')->paginate($limit);
+        $shoplist = $query->where('category_id', $id)->where('products.status', 1)
+            ->orderBy('created_at', 'desc')->paginate($limit);
 
         $ttl = $shoplist->total();
         $ttlpage = (ceil($ttl / $limit));
@@ -1309,36 +1337,51 @@ class AdminController extends Controller
         $reviews = Review::all();
 
         $categoryWithProductCount = Category::leftJoin('products', 'categories.id', '=', 'products.category_id')
-                                            ->select('categories.*', DB::raw('COUNT(products.category_id) as product_count'))
-                                            ->where('products.status', '=', '1')
-                                            ->where('products.category_id', $id)
-                                            ->groupBy('categories.id')
-                                            ->get();
+            ->select('categories.*', DB::raw('COUNT(products.category_id) as product_count'))
+            ->where('products.status', '=', '1')
+            ->where('products.category_id', $id)
+            ->groupBy('categories.id')
+            ->get();
 
         $ratingWithProductCount = Review::select(
-                                        DB::raw('CAST(FLOOR(AVG(stars_rated)) AS UNSIGNED) AS `average_rating`')
-                                    )
-                                    ->join('products', 'products.id', '=', 'reviews.product_id')
-                                    ->where('products.category_id', $id)
-                                    ->where('products.status', '=', '1')
-                                    ->groupBy('product_id')
-                                    ->get()
-                                    ->groupBy('average_rating')
-                                    ->map(function ($grouped) {
-                                        return $grouped->count();
-                                    });
+            DB::raw('CAST(FLOOR(AVG(stars_rated)) AS UNSIGNED) AS `average_rating`')
+        )
+            ->join('products', 'products.id', '=', 'reviews.product_id')
+            ->where('products.category_id', $id)
+            ->where('products.status', '=', '1')
+            ->groupBy('product_id')
+            ->get()
+            ->groupBy('average_rating')
+            ->map(function ($grouped) {
+                return $grouped->count();
+            });
 
         $discountWithProductCount = Product::selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) <= 5 THEN 1 END) as group_1_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 5 AND CAST(discount_percent AS DECIMAL) <= 10 THEN 1 END) as group_2_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 10 AND CAST(discount_percent AS DECIMAL) <= 15 THEN 1 END) as group_3_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 15 AND CAST(discount_percent AS DECIMAL) <= 25 THEN 1 END) as group_4_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 25 THEN 1 END) as group_5_count')
-                                    ->where('category_id', $id)
-                                    ->where('status', '=', '1')
-                                    ->first();
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 5 AND CAST(discount_percent AS DECIMAL) <= 10 THEN 1 END) as group_2_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 10 AND CAST(discount_percent AS DECIMAL) <= 15 THEN 1 END) as group_3_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 15 AND CAST(discount_percent AS DECIMAL) <= 25 THEN 1 END) as group_4_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 25 THEN 1 END) as group_5_count')
+            ->where('category_id', $id)
+            ->where('status', '=', '1')
+            ->first();
 
-        return view('front-end.category-left-sidebar',compact('id','shoplist','ttlpage','ttl', 'price', 'search', 'rating', 'ratingWithProductCount', 'discount',
-        'discount','discountWithProductCount', 'sort', 'reviews', 'categories', 'categoryWithProductCount'));
+        return view('front-end.category-left-sidebar', compact(
+            'id',
+            'shoplist',
+            'ttlpage',
+            'ttl',
+            'price',
+            'search',
+            'rating',
+            'ratingWithProductCount',
+            'discount',
+            'discount',
+            'discountWithProductCount',
+            'sort',
+            'reviews',
+            'categories',
+            'categoryWithProductCount'
+        ));
     }
 
     public function indexsubcategoryproduct($id)
@@ -1387,13 +1430,14 @@ class AdminController extends Controller
         }
 
         if (!empty($rating)) {
-            $averageRated = Review::select('product_id',
+            $averageRated = Review::select(
+                'product_id',
                 DB::raw('FLOOR(AVG(stars_rated)) AS `average_rating`')
             )
-            ->join('products', 'products.id', '=', 'reviews.product_id')
-            ->where('products.sub_category_id', $id)
-            ->groupBy('product_id')
-            ->get();
+                ->join('products', 'products.id', '=', 'reviews.product_id')
+                ->where('products.sub_category_id', $id)
+                ->groupBy('product_id')
+                ->get();
             $matchedProductIds = [];
             foreach ($averageRated as $rated) {
                 if (in_array($rated->average_rating, $rating)) {
@@ -1402,8 +1446,7 @@ class AdminController extends Controller
             }
             if (!empty($matchedProductIds)) {
                 $query->whereIn('products.id', $matchedProductIds);
-            }
-            else {
+            } else {
                 $query->where('id', null);
             }
         }
@@ -1453,9 +1496,9 @@ class AdminController extends Controller
                 break;
         }
 
-        $shoplist = $query->where('sub_category_id',$id)
-                        ->where('products.status', '=', '1')
-                          ->orderBy('created_at', 'desc')->paginate($limit);
+        $shoplist = $query->where('sub_category_id', $id)
+            ->where('products.status', '=', '1')
+            ->orderBy('created_at', 'desc')->paginate($limit);
 
         $ttl = $shoplist->total();
         $ttlpage = (ceil($ttl / $limit));
@@ -1463,36 +1506,51 @@ class AdminController extends Controller
         $reviews = Review::all();
 
         $categoryWithProductCount = Category::leftJoin('products', 'categories.id', '=', 'products.category_id')
-                                    ->select('categories.*', DB::raw('COUNT(products.category_id) as product_count'))
-                                    ->where('products.status', '=', '1')
-                                    ->where('products.sub_category_id', $id)
-                                    ->groupBy('categories.id')
-                                    ->get();
+            ->select('categories.*', DB::raw('COUNT(products.category_id) as product_count'))
+            ->where('products.status', '=', '1')
+            ->where('products.sub_category_id', $id)
+            ->groupBy('categories.id')
+            ->get();
 
         $ratingWithProductCount = Review::select(
-                                        DB::raw('CAST(FLOOR(AVG(stars_rated)) AS UNSIGNED) AS `average_rating`')
-                                    )
-                                    ->join('products', 'products.id', '=', 'reviews.product_id')
-                                    ->where('products.sub_category_id', $id)
-                                    ->where('products.status', '=', '1')
-                                    ->groupBy('product_id')
-                                    ->get()
-                                    ->groupBy('average_rating')
-                                    ->map(function ($grouped) {
-                                        return $grouped->count();
-                                    });
+            DB::raw('CAST(FLOOR(AVG(stars_rated)) AS UNSIGNED) AS `average_rating`')
+        )
+            ->join('products', 'products.id', '=', 'reviews.product_id')
+            ->where('products.sub_category_id', $id)
+            ->where('products.status', '=', '1')
+            ->groupBy('product_id')
+            ->get()
+            ->groupBy('average_rating')
+            ->map(function ($grouped) {
+                return $grouped->count();
+            });
 
         $discountWithProductCount = Product::selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) <= 5 THEN 1 END) as group_1_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 5 AND CAST(discount_percent AS DECIMAL) <= 10 THEN 1 END) as group_2_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 10 AND CAST(discount_percent AS DECIMAL) <= 15 THEN 1 END) as group_3_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 15 AND CAST(discount_percent AS DECIMAL) <= 25 THEN 1 END) as group_4_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 25 THEN 1 END) as group_5_count')
-                                    ->where('sub_category_id', $id)
-                                    ->where('status', '=', '1')
-                                    ->first();
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 5 AND CAST(discount_percent AS DECIMAL) <= 10 THEN 1 END) as group_2_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 10 AND CAST(discount_percent AS DECIMAL) <= 15 THEN 1 END) as group_3_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 15 AND CAST(discount_percent AS DECIMAL) <= 25 THEN 1 END) as group_4_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 25 THEN 1 END) as group_5_count')
+            ->where('sub_category_id', $id)
+            ->where('status', '=', '1')
+            ->first();
 
-        return view('front-end.sub-category-left-sidebar',compact('id','shoplist','ttlpage','ttl', 'price', 'search', 'rating', 'ratingWithProductCount', 'discount',
-        'discount','discountWithProductCount', 'sort', 'reviews', 'categories', 'categoryWithProductCount'));
+        return view('front-end.sub-category-left-sidebar', compact(
+            'id',
+            'shoplist',
+            'ttlpage',
+            'ttl',
+            'price',
+            'search',
+            'rating',
+            'ratingWithProductCount',
+            'discount',
+            'discount',
+            'discountWithProductCount',
+            'sort',
+            'reviews',
+            'categories',
+            'categoryWithProductCount'
+        ));
     }
 
     public function bloglistdetail($id)
@@ -1506,66 +1564,65 @@ class AdminController extends Controller
 
         if ($search) {
             $blogs = DB::table('blogs')
-                        ->select( 'U.name as authorby', 'blogs.*')
-                        ->join('users as U', function ($join) {
-                            $join->on('blogs.created_by', '=', 'U.id');
-                        })
-                        ->where('blogs.title', 'like', '%' . $search . '%')
-                        ->orderBy('created_at', 'desc')->paginate($limit);
-        }
-        else {
+                ->select('U.name as authorby', 'blogs.*')
+                ->join('users as U', function ($join) {
+                    $join->on('blogs.created_by', '=', 'U.id');
+                })
+                ->where('blogs.title', 'like', '%' . $search . '%')
+                ->orderBy('created_at', 'desc')->paginate($limit);
+        } else {
             $blogs = DB::table('blogs')
-                        ->select( 'U.name as authorby', 'blogs.*')
-                        ->join('users as U', function ($join) {
-                            $join->on('blogs.created_by', '=', 'U.id');
-                        })
-                        ->where('blogs.id',$id)
-                        ->orderBy('created_at', 'desc')->get();
-                        $blog = $blogs[0];
+                ->select('U.name as authorby', 'blogs.*')
+                ->join('users as U', function ($join) {
+                    $join->on('blogs.created_by', '=', 'U.id');
+                })
+                ->where('blogs.id', $id)
+                ->orderBy('created_at', 'desc')->get();
+            $blog = $blogs[0];
         }
 
         $limit = 4;
         $latestblog = DB::table('blogs')
-                    ->where('id','<>',$id)
-                    ->orderBy('created_at', 'desc')
-                    ->paginate($limit);
+            ->where('id', '<>', $id)
+            ->orderBy('created_at', 'desc')
+            ->paginate($limit);
 
-        return view('front-end.blog-detail',compact('blog','latestblog','search'));
+        return view('front-end.blog-detail', compact('blog', 'latestblog', 'search'));
     }
 
     public function productdetail($id)
     {
         $data = Product::find($id);
-        $multiImgs = MultiImg::where('product_id',$id)->get();
-        return view('admin.product.product_detail',compact('data','multiImgs'));
+        $multiImgs = MultiImg::where('product_id', $id)->get();
+        return view('admin.product.product_detail', compact('data', 'multiImgs'));
     }
 
     public function shopdetail($id)
     {
         $shops = DB::table('sellers')
-                    ->select( 'sellers.*')
-                    ->where('sellers.id',$id)->get();
+            ->select('sellers.*')
+            ->where('sellers.id', $id)->get();
         $coupon_id = DB::table('sellers')
-                        ->where('id', $id)
-                        ->pluck('coupon_id')
-                        ->first();
+            ->where('id', $id)
+            ->pluck('coupon_id')
+            ->first();
         $coupon_code = DB::table('coupons')
-                        ->where('id', $coupon_id)
-                        ->pluck('coupon_code')
-                        ->first();
+            ->where('id', $coupon_id)
+            ->pluck('coupon_code')
+            ->first();
         $shop = $shops[0];
 
-        return view('admin.shopdetail',compact('shop','coupon_code'));
+        return view('admin.shopdetail', compact('shop', 'coupon_code'));
     }
 
     public function coupondetail($id)
     {
         $coupon = DB::table('coupons')
-                        ->select('coupons.*')
-                        ->where('id', $id)
-                        ->first();
+            ->select('coupons.*')
+            ->where('id', $id)
+            ->first();
 
-        return view('admin.coupondetail',compact('coupon'));
+        return view('admin.coupondetail', compact('coupon'));
     }
 
 
@@ -1580,30 +1637,29 @@ class AdminController extends Controller
         if (strlen($id) > 5) {
             $id = substr($id, 5);
 
-        if ($role == 'admin')  {
-            $edituser = User::find($id);
-        }
-        if ($role == 'buyer')  {
-            $edituser = DB::table('users')
-                        ->select('buyers.*','users.*','users.id')
-                        ->join('buyers', function ($join) {
+            if ($role == 'admin') {
+                $edituser = User::find($id);
+            }
+            if ($role == 'buyer') {
+                $edituser = DB::table('users')
+                    ->select('buyers.*', 'users.*', 'users.id')
+                    ->join('buyers', function ($join) {
                         $join->on('users.id', '=', 'buyers.user_id');
                     })
-                    ->where('users.id',$id)
+                    ->where('users.id', $id)
                     ->orderBy('users.created_at', 'desc')->first();
-        }
-        if ($role == 'seller')  {
-            $editseller = DB::table('users')
-                        ->select('sellers.*','users.*','users.id')
-                        ->join('sellers', function ($join) {
+            }
+            if ($role == 'seller') {
+                $editseller = DB::table('users')
+                    ->select('sellers.*', 'users.*', 'users.id')
+                    ->join('sellers', function ($join) {
                         $join->on('users.id', '=', 'sellers.user_id');
                     })
-                    ->where('users.id',$id)
+                    ->where('users.id', $id)
                     ->orderBy('users.created_at', 'desc')->first();
-        }
+            }
 
             $editother = true;
-
         } else {
             $editother = false;
         }
@@ -1611,36 +1667,36 @@ class AdminController extends Controller
 
         if ($role == 'admin') {
 
-            return view('admin.edituser',compact('editmode','editother','edituser'));
+            return view('admin.edituser', compact('editmode', 'editother', 'edituser'));
         } else if ($role == 'buyer') {
-            return view('admin.editbuyerprofile',compact('editmode','editother','edituser'));
+            return view('admin.editbuyerprofile', compact('editmode', 'editother', 'edituser'));
         } else if ($role == 'seller') {
-            return view('admin.editsellerprofile',compact('editmode','editother','editseller'));
+            return view('admin.editsellerprofile', compact('editmode', 'editother', 'editseller'));
         } else {
-            return view('admin.edituser',compact('editmode','editother','edituser'));
+            return view('admin.edituser', compact('editmode', 'editother', 'edituser'));
         }
     }
 
     public function userdetail($id)
     {
         $userlist = DB::table('users')
-                    ->select( 'users.*')
-                    ->where('users.id',$id)->get();
+            ->select('users.*')
+            ->where('users.id', $id)->get();
 
         $user = $userlist[0];
 
-        return view('admin.usersdetail',compact('user'));
+        return view('admin.usersdetail', compact('user'));
     }
 
     public function subadmindetail($id)
     {
         $subadminlist = DB::table('users')
-                    ->select( 'users.*')
-                    ->where('users.id',$id)->get();
+            ->select('users.*')
+            ->where('users.id', $id)->get();
 
         $subadmin = $subadminlist[0];
 
-        return view('admin.subadmindetail',compact('subadmin'));
+        return view('admin.subadmindetail', compact('subadmin'));
     }
 
     public function takeremote(Request $request, $id)
@@ -1653,18 +1709,17 @@ class AdminController extends Controller
             $id = substr($id, 5);
             $edituser = User::find($id);
             $editother = true;
-
         }
-       Auth::loginUsingId($id);
+        Auth::loginUsingId($id);
 
-        session(['isadmincontrol' => $adminid , 'rolecontrol' => $adminrole , 'returnurl' => url()->previous()]);
+        session(['isadmincontrol' => $adminid, 'rolecontrol' => $adminrole, 'returnurl' => url()->previous()]);
         print_r(session()->all());
 
-        if (Auth::user()->role == 'admin' OR Auth::user()->role == 'subadmin') {
+        if (Auth::user()->role == 'admin' or Auth::user()->role == 'subadmin') {
             return redirect()->intended(RouteServiceProvider::ADMIN);
         } else if (Auth::user()->role == 'buyer') {
             return redirect()->intended(RouteServiceProvider::USER);
-        } else if (Auth::user()->role == 'seller' OR Auth::user()->role == 'idlehost') {
+        } else if (Auth::user()->role == 'seller' or Auth::user()->role == 'idlehost') {
             return redirect()->intended(RouteServiceProvider::SELLER);
         } else {
             return redirect()->intended(RouteServiceProvider::HOME);
@@ -1684,24 +1739,22 @@ class AdminController extends Controller
             $edituser = User::find($id);
 
             $editother = true;
-
         }
 
-       Auth::loginUsingId($id);
+        Auth::loginUsingId($id);
 
-       session(['isadmincontrol' => $adminid , 'rolecontrol' => $adminrole , 'returnurl' => url()->previous()]);
-       print_r(session()->all());
+        session(['isadmincontrol' => $adminid, 'rolecontrol' => $adminrole, 'returnurl' => url()->previous()]);
+        print_r(session()->all());
 
-       if (Auth::user()->role == 'admin' OR Auth::user()->role == 'subadmin') {
-           return redirect()->intended(RouteServiceProvider::ADMIN);
-       } else if (Auth::user()->role == 'buyer') {
-           return redirect()->intended(RouteServiceProvider::USER);
-       } else if (Auth::user()->role == 'seller' OR Auth::user()->role == 'idlehost') {
-           return redirect()->intended(RouteServiceProvider::SELLER);
-       } else {
-           return redirect()->intended(RouteServiceProvider::HOME);
-       }
-
+        if (Auth::user()->role == 'admin' or Auth::user()->role == 'subadmin') {
+            return redirect()->intended(RouteServiceProvider::ADMIN);
+        } else if (Auth::user()->role == 'buyer') {
+            return redirect()->intended(RouteServiceProvider::USER);
+        } else if (Auth::user()->role == 'seller' or Auth::user()->role == 'idlehost') {
+            return redirect()->intended(RouteServiceProvider::SELLER);
+        } else {
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }
     }
 
     public function indexstatus(Request $request)
@@ -1736,58 +1789,42 @@ class AdminController extends Controller
         $coupon->status = $request->status;
         $coupon->save();
 
-        if ($request->status == 0)
-        {
-            $shop = Seller::where('coupon_id',$request->coupon_id)->get();
-            if ($shop)
-            {
-                foreach ($shop as $sh)
-                {
+        if ($request->status == 0) {
+            $shop = Seller::where('coupon_id', $request->coupon_id)->get();
+            if ($shop) {
+                foreach ($shop as $sh) {
                     $sh->coupon_status = 0;
                     $sh->save();
                 }
             }
             $product = Product::where('coupon_id', $request->coupon_id)->get();
-            if ($product)
-            {
-                foreach ($product as $pr)
-                {
-                    if ($pr->coupon_status == 0)
-                    {
+            if ($product) {
+                foreach ($product as $pr) {
+                    if ($pr->coupon_status == 0) {
                         $pr->coupon_id = null;
                         $pr->save();
-                    }
-                    else
-                    {
+                    } else {
                         $pr->coupon_status = 0;
                         $pr->save();
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             $product = Product::where('coupon_id', $request->coupon_id)->get();
-            if ($product)
-            {
-                foreach ($product as $pr)
-                {
-                    {
+            if ($product) {
+                foreach ($product as $pr) { {
                         $pr->coupon_status = 1;
                         $pr->save();
                     }
                 }
             }
-            $shop = Seller::where('coupon_id',$request->coupon_id)->get();
-            if ($shop)
-            {
-                foreach ($shop as $sh)
-                {
+            $shop = Seller::where('coupon_id', $request->coupon_id)->get();
+            if ($shop) {
+                foreach ($shop as $sh) {
                     $sh->coupon_status = 1;
                     $sh->save();
                     $shopProducts = Product::where('seller_id', $sh->user_id)->where('coupon_status', 0)->whereNull('coupon_id')->get();
-                    foreach($shopProducts as $shProd)
-                    {
+                    foreach ($shopProducts as $shProd) {
                         $shProd->coupon_id = $sh->coupon_id;
                         $shProd->save();
                     }
@@ -1830,22 +1867,18 @@ class AdminController extends Controller
         $limit = 12;
 
         $lists = Seller::with('user')->with('user.products')->with('user.products.reviews')
-                    ->where('status', 1)->paginate($limit);
+            ->where('status', 1)->paginate($limit);
 
         $ratingWithProductCount = [];
-        foreach ($lists as $shop =>$seller) {
+        foreach ($lists as $shop => $seller) {
             $ratingWith = 0;
             $reviewCount = 0;
             $productStarReview = 0;
             $productCount = 0;
-            if ($seller->user->products->isNotEmpty())
-            {
-                foreach($seller->user->products as $product)
-                {
-                    if ($product->reviews->isNotEmpty())
-                    {
-                        foreach($product->reviews as $review)
-                        {
+            if ($seller->user->products->isNotEmpty()) {
+                foreach ($seller->user->products as $product) {
+                    if ($product->reviews->isNotEmpty()) {
+                        foreach ($product->reviews as $review) {
                             $ratingWith += $review->stars_rated;
                             $reviewCount++;
                         }
@@ -1855,13 +1888,10 @@ class AdminController extends Controller
                     $productCount++;
                 }
             }
-            if ($productStarReview > 0)
-            {
+            if ($productStarReview > 0) {
                 $ratingWithProductCount[$shop][0] = floor($productStarReview / $productCount);
                 $ratingWithProductCount[$shop][1] = $reviewCount;
-            }
-            else
-            {
+            } else {
                 $ratingWithProductCount[$shop][0] = 0;
                 $ratingWithProductCount[$shop][1] = 0;
             }
@@ -1870,24 +1900,24 @@ class AdminController extends Controller
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('front-end.seller-grid',compact('lists','ttlpage','ttl', 'ratingWithProductCount'));
+        return view('front-end.seller-grid', compact('lists', 'ttlpage', 'ttl', 'ratingWithProductCount'));
     }
 
 
     public function storeReply(Request $request)
     {
-         $help = new Help();
+        $help = new Help();
 
         if (!empty($request->image)) {
-            $imageName = time().'.'.$request->image->extension();
+            $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images'), $imageName);
         } else {
             $imageName = '';
         }
 
         $shopName = Seller::where('user_id', $request->help_id)->value('shop_name');
-        $seller_name = DB::table('users')->select('name')->where('id',$request->help_id)->first();
-        $seller_email = DB::table('users')->select('email')->where('id',$request->help_id)->first();
+        $seller_name = DB::table('users')->select('name')->where('id', $request->help_id)->first();
+        $seller_email = DB::table('users')->select('email')->where('id', $request->help_id)->first();
         $check = Help::find($request->id);
 
         $help->name = 'admin';
@@ -1903,12 +1933,14 @@ class AdminController extends Controller
         $adminemail =  'admin@asia-hd.com';
         $helpDate = Carbon::now()->format('M d, Y');
 
-        $data = ['title' => $request->title,
-                'content' => $request->message,
-                'imgName' => $imageName,
-                'helpDate' => $helpDate,
-                'adminemail' => $adminemail,
-            'sellername' => $seller_name->name];
+        $data = [
+            'title' => $request->title,
+            'content' => $request->message,
+            'imgName' => $imageName,
+            'helpDate' => $helpDate,
+            'adminemail' => $adminemail,
+            'sellername' => $seller_name->name
+        ];
 
         \Mail::to($seller_email)->send(new \App\Mail\AdminContact($data));
 
@@ -1929,7 +1961,7 @@ class AdminController extends Controller
         $getId = Help::find($id);
         $helpId = $getId->help_id;
         if ($helpId) {
-            $start = DB::table('helps')->where('id',$id)->first();
+            $start = DB::table('helps')->where('id', $id)->first();
             $reply = Help::where('help_id', $helpId)->get();
         } else {
             $start = $getId;
@@ -1937,84 +1969,81 @@ class AdminController extends Controller
         }
 
         return view('admin.helpdetail', compact('start', 'reply'));
-
     }
     public function storenewsletter(Request $request)
     {
-       $time = new DateTime();
+        $time = new DateTime();
 
-       $existingEmail = DB::table('newsletters')
-       ->where('email', $request->newsletter)
-       ->exists();
+        $existingEmail = DB::table('newsletters')
+            ->where('email', $request->newsletter)
+            ->exists();
 
-       if ($existingEmail) {
+        if ($existingEmail) {
 
-        $msg = trans('Email is duplicated.', [ 'name' => $request->title ]);
-        return redirect('/')->with('error', $msg );
-       }
+            $msg = trans('Email is duplicated.', ['name' => $request->title]);
+            return redirect('/')->with('error', $msg);
+        }
 
 
-       if (empty($request->id)) {
+        if (empty($request->id)) {
 
-           DB::table('newsletters')->insert([
-               'email' => $request->newsletter,
-               'created_at' => $time->format('Y-m-d H:i:s'),
-               'updated_at' => $time->format('Y-m-d H:i:s')
-           ]);
+            DB::table('newsletters')->insert([
+                'email' => $request->newsletter,
+                'created_at' => $time->format('Y-m-d H:i:s'),
+                'updated_at' => $time->format('Y-m-d H:i:s')
+            ]);
 
-           $msg = trans('Sending newsletter mail successfully', [ 'name' => $request->title ]);
-           return redirect('/')->with('success', $msg );
-       }
+            $msg = trans('Sending newsletter mail successfully', ['name' => $request->title]);
+            return redirect('/')->with('success', $msg);
+        }
 
-       return redirect('/')->with('success', $msg );
-
-       }
+        return redirect('/')->with('success', $msg);
+    }
 
     public function storeblog(Request $request)
     {
-       if (!empty($request->image)) {
-           $imageName = time().'.'.$request->image->extension();
-           $request->image->move(public_path('images'), $imageName);
-       } else {
-           $imageName = '';
-       }
+        if (!empty($request->image)) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+        } else {
+            $imageName = '';
+        }
 
-       $time = new DateTime();
+        $time = new DateTime();
 
-       if (empty($request->id)) {
+        if (empty($request->id)) {
 
-           DB::table('blogs')->insert([
-               'title' => $request->title,
-               'content' => $request->content_desc,
-               'image' => $imageName,
-               'created_by' => Auth::user()->id,
-               'author' => Auth::user()->name,
-               'created_at' => $time->format('Y-m-d H:i:s'),
-               'updated_at' => $time->format('Y-m-d H:i:s')
-           ]);
+            DB::table('blogs')->insert([
+                'title' => $request->title,
+                'content' => $request->content_desc,
+                'image' => $imageName,
+                'created_by' => Auth::user()->id,
+                'author' => Auth::user()->name,
+                'created_at' => $time->format('Y-m-d H:i:s'),
+                'updated_at' => $time->format('Y-m-d H:i:s')
+            ]);
 
 
-           $msg = trans('Register Successfully', [ 'name' => $request->title ]);
-           return redirect('/admin/all/blog')->with('success', $msg );
-       } else {
-           $updval = array('title' => $request->title,
-                           'content' => $request->content_desc,
-                           'created_by' => Auth::user()->id,
-                           'author' => Auth::user()->name,
-                           'updated_at' => $time->format('Y-m-d H:i:s')
-                           );
+            $msg = trans('Register Successfully', ['name' => $request->title]);
+            return redirect('/admin/all/blog')->with('success', $msg);
+        } else {
+            $updval = array(
+                'title' => $request->title,
+                'content' => $request->content_desc,
+                'created_by' => Auth::user()->id,
+                'author' => Auth::user()->name,
+                'updated_at' => $time->format('Y-m-d H:i:s')
+            );
 
-           if (!empty($request->image)) {
-               $updval['image'] = $imageName;
-           }
+            if (!empty($request->image)) {
+                $updval['image'] = $imageName;
+            }
 
-           DB::table('blogs')->where('id',$request->id)->update($updval);
+            DB::table('blogs')->where('id', $request->id)->update($updval);
 
-           return redirect('/admin/all/blog')->with('success','「'.$request->title.'」'.__('Updated Successfully.'));
-
-       }
-
-   }
+            return redirect('/admin/all/blog')->with('success', '「' . $request->title . '」' . __('Updated Successfully.'));
+        }
+    }
 
     public function storefaq(Request $request)
     {
@@ -2034,25 +2063,23 @@ class AdminController extends Controller
                 'updated_at' => $time->format('Y-m-d H:i:s')
             ]);
 
-            $msg = trans('Register Successfully', [ 'name' => $request->title ]);
-            return redirect('/admin/faq')->with('success', $msg );
-
+            $msg = trans('Register Successfully', ['name' => $request->title]);
+            return redirect('/admin/faq')->with('success', $msg);
         } else {
 
-            $updval = array('title' => $request->title_eng,
-                            'jptitle' => $request->title_japan,
-                            'que' => $request->content,
-                            'jpque' => $request->jpcontent_desc,
-                            'ans' => $request->content_ansdesc,
-                            'jpans' => $request->jpcontent_ansdesc,
-                            'updated_at' => $time->format('Y-m-d H:i:s')
-                            );
+            $updval = array(
+                'title' => $request->title_eng,
+                'jptitle' => $request->title_japan,
+                'que' => $request->content,
+                'jpque' => $request->jpcontent_desc,
+                'ans' => $request->content_ansdesc,
+                'jpans' => $request->jpcontent_ansdesc,
+                'updated_at' => $time->format('Y-m-d H:i:s')
+            );
 
-            DB::table('faqs')->where('id',$request->id)->update($updval);
-            return redirect('admin/faq') ->with('success',__('FAQ Updated Successfully'));
-
+            DB::table('faqs')->where('id', $request->id)->update($updval);
+            return redirect('admin/faq')->with('success', __('FAQ Updated Successfully'));
         }
-
     }
 
     public function indexfaq()
@@ -2066,9 +2093,9 @@ class AdminController extends Controller
         if ($mainSearch != null) {
             $query->where(function ($query) use ($mainSearch) {
                 $query->orWhere('title', 'like', '%' . $mainSearch . '%')
-                ->orWhere('ans', 'like', '%' . $mainSearch . '%')
-                ->orWhere('que', 'like', '%' . $mainSearch . '%')
-                ->orWhere('created_at', 'like', '%' . $mainSearch . '%');
+                    ->orWhere('ans', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('que', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('created_at', 'like', '%' . $mainSearch . '%');
             });
         }
         $faqlists = $query->orderBy('created_at', 'desc')->paginate($limit);
@@ -2076,14 +2103,13 @@ class AdminController extends Controller
         $ttlpage = (ceil($ttl / $limit));
         $lists = $query->orderBy('created_at', 'desc')->paginate(999);
 
-        if (Auth::check()){
+        if (Auth::check()) {
             if (Auth::user()->role == 'admin') {
-                return view('admin.indexfaq',compact('faqlists','ttlpage','ttl'));
+                return view('admin.indexfaq', compact('faqlists', 'ttlpage', 'ttl'));
             }
         }
 
-        return view('front-end.faq',compact('lists'));
-
+        return view('front-end.faq', compact('lists'));
     }
 
     public function indexcoupon()
@@ -2097,13 +2123,13 @@ class AdminController extends Controller
         if ($mainSearch != null) {
             $query->where(function ($query) use ($mainSearch) {
                 $query->orWhere('name', 'like', '%' . $mainSearch . '%')
-                ->orWhere('coupon_code', 'like', '%' . $mainSearch . '%')
-                ->orWhere('discount_amount', 'like', '%' . $mainSearch . '%')
-                ->orWhere('mini_amount', 'like', '%' . $mainSearch . '%')
-                ->orWhere('valid_count', 'like', '%' . $mainSearch . '%')
-                ->orWhere('startdate', 'like', '%' . $mainSearch . '%')
-                ->orWhere('enddate', 'like', '%' . $mainSearch . '%')
-                ->orWhere('created_at', 'like', '%' . $mainSearch . '%');
+                    ->orWhere('coupon_code', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('discount_amount', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('mini_amount', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('valid_count', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('startdate', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('enddate', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('created_at', 'like', '%' . $mainSearch . '%');
             });
         }
         $lists = $query->orderBy('created_at', 'desc')->paginate($limit);
@@ -2118,8 +2144,7 @@ class AdminController extends Controller
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('admin.indexcoupon',compact('lists','ttlpage','ttl'));
-
+        return view('admin.indexcoupon', compact('lists', 'ttlpage', 'ttl'));
     }
 
     public function indexuser()
@@ -2133,24 +2158,24 @@ class AdminController extends Controller
         if ($mainSearch != null) {
             $query->where(function ($query) use ($mainSearch) {
                 $query->orWhere('name', 'like', '%' . $mainSearch . '%')
-                ->orWhere('email', 'like', '%' . $mainSearch . '%')
-                ->orWhere('role', 'like', '%' . $mainSearch . '%')
-                ->orWhere('created_at', 'like', '%' . $mainSearch . '%');
+                    ->orWhere('email', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('role', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('created_at', 'like', '%' . $mainSearch . '%');
             });
         }
 
-        $users = $query->whereIn('role',['seller','buyer'])
-                    ->where('email_verified_at','<>','')
-                    ->where(function ($query) {
-                        $query->whereNotNull('email_verified_at')
+        $users = $query->whereIn('role', ['seller', 'buyer'])
+            ->where('email_verified_at', '<>', '')
+            ->where(function ($query) {
+                $query->whereNotNull('email_verified_at')
                     ->orWhereNull('email_verified_at');
-                    })
-                    ->orderBy('created_at', 'desc')->paginate($limit);
+            })
+            ->orderBy('created_at', 'desc')->paginate($limit);
 
         $ttl = $users->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('admin.users',compact('users','ttlpage','ttl'));
+        return view('admin.users', compact('users', 'ttlpage', 'ttl'));
     }
 
     public function indexsubadmin()
@@ -2169,20 +2194,20 @@ class AdminController extends Controller
         if ($mainSearch != null) {
             $query->where(function ($query) use ($mainSearch) {
                 $query->orWhere('name', 'like', '%' . $mainSearch . '%')
-                ->orWhere('email', 'like', '%' . $mainSearch . '%')
-                ->orWhere('role', 'like', '%' . $mainSearch . '%')
-                ->orWhere('created_at', 'like', '%' . $mainSearch . '%');
+                    ->orWhere('email', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('role', 'like', '%' . $mainSearch . '%')
+                    ->orWhere('created_at', 'like', '%' . $mainSearch . '%');
             });
         }
 
-        $subadmins = $query->where('role','admin')
-                    ->where('id', '!=' , 1)
-                    ->orderBy('created_at', 'desc')->paginate($limit);
+        $subadmins = $query->where('role', 'admin')
+            ->where('id', '!=', 1)
+            ->orderBy('created_at', 'desc')->paginate($limit);
 
         $ttl = $subadmins->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('admin.subadmin',compact('subadmins','ttlpage','ttl'));
+        return view('admin.subadmin', compact('subadmins', 'ttlpage', 'ttl'));
     }
 
 
@@ -2190,14 +2215,13 @@ class AdminController extends Controller
     {
         $validator = $this->validatesubadmin($request);
 
-        if($request->ajax()){
+        if ($request->ajax()) {
 
             if ($validator->passes()) {
 
-                return response()->json(['success'=>'allpasses']);
+                return response()->json(['success' => 'allpasses']);
             }
-            return response()->json(['error'=>$validator->errors()]);
-
+            return response()->json(['error' => $validator->errors()]);
         }
 
         //*******************************************************
@@ -2209,7 +2233,7 @@ class AdminController extends Controller
         }
 
         if (!empty($request->image)) {
-            $imageName = time().'.'.$request->image->extension();
+            $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images'), $imageName);
         } else {
             $imageName = '';
@@ -2227,8 +2251,7 @@ class AdminController extends Controller
 
         event(new Registered($user));
 
-        return redirect('admin/subadmin')->with('success','「'.$request->name.'」登録されました。');
-
+        return redirect('admin/subadmin')->with('success', '「' . $request->name . '」登録されました。');
     }
 
     public function indexsubtitle()
@@ -2241,17 +2264,17 @@ class AdminController extends Controller
         }
 
         $lists = DB::table('sub_category_titles')
-                    ->select('C.category_name as category','sub_category_titles.*')
-                    ->join('categories as C', function ($join) {
-                    $join->on('sub_category_titles.category_id', '=', 'C.id');
-                })
-                ->orderBy('created_at', 'desc')->paginate($limit);
+            ->select('C.category_name as category', 'sub_category_titles.*')
+            ->join('categories as C', function ($join) {
+                $join->on('sub_category_titles.category_id', '=', 'C.id');
+            })
+            ->orderBy('created_at', 'desc')->paginate($limit);
 
 
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('admin.allsubtitle',compact('lists','ttlpage','ttl'));
+        return view('admin.allsubtitle', compact('lists', 'ttlpage', 'ttl'));
     }
 
     public function deleteNotice(Request $request)
@@ -2264,34 +2287,31 @@ class AdminController extends Controller
             File::delete($imagePath);
         }
         $msg = ('Data deleted successfully');
-      return redirect()->back()->with('success', $msg);
+        return redirect()->back()->with('success', $msg);
     }
 
     public function deletecategory(Request $request)
     {
-        if($request->type=='1')
-        {
-                Category::where('id', $request->id)->delete();
-        }
-        else{
+        if ($request->type == '1') {
+            Category::where('id', $request->id)->delete();
+        } else {
             $cat = SubCategoryTitle::find($request->id);
             $categoryId = $cat->category_id;
             DB::table('sub_category_titles')->where('id', $request->id)->delete();
             $categoryIdExist = SubCategoryTitle::where('category_id', $categoryId)->exists();
-            if (!$categoryIdExist){
+            if (!$categoryIdExist) {
                 Category::where('id', $categoryId)->delete();
             }
         }
-        return redirect('/admin/category')->with('success','deleted.');
+        return redirect()->back()->with('success', 'deleted.');
     }
 
     public function deleteblog(Request $request)
     {
 
         $data = DB::table('blogs')
-                    ->delete($request->id);
-        return redirect('/admin/all/blog')->with('success','Deleted Successfully.');
-
+            ->delete($request->id);
+        return redirect()->back()->with('success', 'Deleted Successfully.');
     }
 
     // reset product commission
@@ -2302,8 +2322,7 @@ class AdminController extends Controller
         $item->commission_status = 0;
         $item->commission = $shop->commission;
         $item->save();
-        return redirect('/admin/product')->with('success','Deleted Successfully.');
-
+        return redirect()->back()->with('success', 'Deleted Successfully.');
     }
 
 
@@ -2311,45 +2330,40 @@ class AdminController extends Controller
     {
 
         $data = DB::table('newsletters')
-                    ->delete($request->id);
-        return redirect('/admin/newsletter')->with('success','Deleted Successfully.');
-
+            ->delete($request->id);
+        return redirect()->back()->with('success', 'Deleted Successfully.');
     }
 
     public function deleteorderlist(Request $request)
     {
 
         $data = DB::table('orders')
-                    ->delete($request->id);
-        return redirect('/admin/orderlist')->with('success','削除されました。');
-
+            ->delete($request->id);
+        return redirect()->back()->with('success', '削除されました。');
     }
 
     public function deletecoupon(Request $request)
     {
 
         $data = DB::table('coupons')
-                    ->delete($request->id);
-        return redirect('admin/coupon')->with('success','削除されました。');
-
+            ->delete($request->id);
+        return redirect()->back()->with('success', '削除されました。');
     }
 
     public function deletefaq(Request $request)
     {
 
         $data = DB::table('faqs')
-                    ->delete($request->id);
-        return redirect('/admin/faq')->with('success','削除されました。');
-
+            ->delete($request->id);
+        return redirect()->back()->with('success', '削除されました。');
     }
 
     public function deleteproduct(Request $request)
     {
 
         $data = DB::table('products')
-                    ->delete($request->id);
-        return redirect('/admin/all/product')->with('success','削除されました。');
-
+            ->delete($request->id);
+        return redirect()->back()->with('success', '削除されました。');
     }
 
     // update coupon for shop
@@ -2365,13 +2379,11 @@ class AdminController extends Controller
         ]);
 
         $products = Product::where('seller_id', $seller->user_id)->where('coupon_status', 0)->get();
-        foreach ($products as $product)
-        {
+        foreach ($products as $product) {
             $product->update(['coupon_id' => $request->couponid]);
         }
 
-        return redirect('/admin/shoplist')->with('success','coupon added');
-
+        return redirect('/admin/shoplist')->with('success', 'coupon added');
     }
 
     public function  updatecommission(Request $request)
@@ -2389,34 +2401,32 @@ class AdminController extends Controller
             $item->save();
         }
         $products = Product::where('seller_id', $item->user_id)
-                    ->where(function($query) {
-                        $query->where('commission_status', '!=', 1)
-                              ->orWhereNull('commission_status');
-                    })
-                    ->get();
+            ->where(function ($query) {
+                $query->where('commission_status', '!=', 1)
+                    ->orWhereNull('commission_status');
+            })
+            ->get();
 
-        foreach($products as $item)
-        {
-            $item->commission =   $commission ;
-            $item->commission_status =   0 ;
+        foreach ($products as $item) {
+            $item->commission =   $commission;
+            $item->commission_status =   0;
             $item->save();
         }
 
-        return redirect('/admin/shoplist')->with('success','commission added');
+        return redirect('/admin/shoplist')->with('success', 'commission added');
     }
 
     public function  updateadjust(Request $request)
     {
         $adjust = $request->input('adjust');
         $adjustId = $request->input('adjustId');
-        $item = Transfer::find( $adjustId);
+        $item = Transfer::find($adjustId);
 
         if ($item) {
             $item->adjust_amount = $adjust;
             $item->save();
         }
-        return redirect('/admin')->with('success','adjust added');
-
+        return redirect('/admin')->with('success', 'adjust added');
     }
 
     public function  updateproductcommission(Request $request)
@@ -2435,23 +2445,22 @@ class AdminController extends Controller
             $item->save();
         }
 
-        return redirect('/admin/product')->with('success','commission added');
-
+        return redirect('/admin/product')->with('success', 'commission added');
     }
 
     // update coupon for product
     public function  updateproductcoupon(Request $request)
     {
         $time = new DateTime();
-        $updval = array( 'coupon_id' => $request->couponid,
-                        'coupon_status' => 1,
-                        'updated_at' => $time->format('Y-m-d H:i:s')
-                        );
+        $updval = array(
+            'coupon_id' => $request->couponid,
+            'coupon_status' => 1,
+            'updated_at' => $time->format('Y-m-d H:i:s')
+        );
 
-        DB::table('products')->where('id',$request->id)->update($updval);
+        DB::table('products')->where('id', $request->id)->update($updval);
 
-        return redirect('/admin/product')->with('success','coupon added');
-
+        return redirect('/admin/product')->with('success', 'coupon added');
     }
 
 
@@ -2459,122 +2468,112 @@ class AdminController extends Controller
     {
 
         $data = DB::table('users')
-                    ->delete($request->id);
-        return redirect('/admin/all/users')->with('success','削除されました。');
-
+            ->delete($request->id);
+        return redirect('/admin/all/users')->with('success', '削除されました。');
     }
 
     public function deletesubadmin(Request $request)
     {
 
         $data = DB::table('users')
-                    ->delete($request->id);
-        return redirect('/admin/subadmin')->with('success','削除されました。');
-
+            ->delete($request->id);
+        return redirect('/admin/subadmin')->with('success', '削除されました。');
     }
     public function addsubtitle()
     {
         $categories = DB::table('categories')
-                    ->select('categories.*')
-                    ->orderBy('categories.created_at', 'asc')->get();
-        return view('admin.addsubtitle',compact('categories'));
+            ->select('categories.*')
+            ->orderBy('categories.created_at', 'asc')->get();
+        return view('admin.addsubtitle', compact('categories'));
     }
 
     public function addsubcategory()
     {
         $categories = DB::table('categories')
-                    ->select('categories.*')
-                    ->orderBy('categories.created_at', 'asc')->get();
-        return view('admin.addsubcategory',compact('categories'));
+            ->select('categories.*')
+            ->orderBy('categories.created_at', 'asc')->get();
+        return view('admin.addsubcategory', compact('categories'));
     }
 
     public function editcategory($id)
     {
 
         $data = DB::table('categories')
-                    ->find($id);
+            ->find($id);
         $editmode = true;
 
-        return view('admin.addcategory',compact('data','editmode'));
-
+        return view('admin.addcategory', compact('data', 'editmode'));
     }
 
     public function edittop($id)
     {
 
         $data = DB::table('tops')
-                    ->find($id);
+            ->find($id);
         $editmode = true;
-        return view('admin.registertop',compact('data','editmode'));
-
+        return view('admin.registertop', compact('data', 'editmode'));
     }
 
     public function editcustomer($id)
     {
 
         $data = DB::table('customers')
-                    ->find($id);
+            ->find($id);
         $editmode = true;
 
-        return view('admin.customer',compact('data','editmode'));
-
+        return view('admin.customer', compact('data', 'editmode'));
     }
 
     public function editblog($id)
     {
         $data = DB::table('blogs')
-                    ->find($id);
+            ->find($id);
         $editmode = true;
 
-        return view('admin.blog.addblog',compact('data','editmode'));
-
+        return view('admin.blog.addblog', compact('data', 'editmode'));
     }
 
     public function edithelp($id)
     {
         $data = DB::table('helps')
-                    ->find($id);
+            ->find($id);
         $editmode = true;
 
-        return view('admin.addhelp',compact('data','editmode'));
-
+        return view('admin.addhelp', compact('data', 'editmode'));
     }
 
     public function addhelp()
     {
         $data = DB::table('users')
-                ->select('users.*')
-                ->where('role', 'seller')
-                ->get();
+            ->select('users.*')
+            ->where('role', 'seller')
+            ->get();
 
-    return view('admin.addhelp', compact('data'));
-
+        return view('admin.addhelp', compact('data'));
     }
 
     public function addnotice()
     {
 
-    return view('admin.addnotice');
-
+        return view('admin.addnotice');
     }
 
     public function editcoupon($id)
     {
         $data = DB::table('coupons')
-                    ->find($id);
+            ->find($id);
         $editmode = true;
 
-        return view('admin.addcoupon',compact('data','editmode'));
-
+        return view('admin.addcoupon', compact('data', 'editmode'));
     }
 
     public function editfaq($id)
     {
         $faq = DB::table('faqs')
-                    ->find($id);
+            ->find($id);
         $editmode = true;
 
-        return view('admin.registerfaq',compact('faq','editmode'));
+        return view('admin.registerfaq', compact('faq', 'editmode'));
     }
 
     public function updateMultiImg(Request $request)
@@ -2583,14 +2582,13 @@ class AdminController extends Controller
             'multi_img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         $imgs = $request->multi_img;
-        foreach($imgs as $id => $img)
-        {
+        foreach ($imgs as $id => $img) {
             $imgDel = MultiImg::findOrFail($id);
             File::delete($imgDel->photo_name);
         }
         $filename = time() . '_' . rand(100, 999) . '.' . $img->getClientOriginalExtension();
         $img->move('upload/multiImg', $filename);
-        MultiImg::where('id',$id)->update([
+        MultiImg::where('id', $id)->update([
             'photo_name' => $filename,
             'updated_at' => Carbon::now(),
         ]);
@@ -2613,94 +2611,86 @@ class AdminController extends Controller
         $subcategories = SubCategory::latest()->get();
         $subcatitle = SubCategoryTitle::latest()->get();
         $products = Product::findOrFail($id);
-        $multiImgs = MultiImg::where('product_id',$id)->get();
+        $multiImgs = MultiImg::where('product_id', $id)->get();
 
-        return view('admin.editproduct',compact('brands','countries','products','categories','subcategories','subcatitle','multiImgs'));
-
+        return view('admin.editproduct', compact('brands', 'countries', 'products', 'categories', 'subcategories', 'subcatitle', 'multiImgs'));
     }
 
     public function editsubtitle($id)
     {
         $subtitle = DB::table('sub_category_titles')
-                    ->find($id);
+            ->find($id);
 
         $categories = DB::table('categories')
-                    ->select('categories.*')
-                    ->orderBy('categories.created_at', 'asc')->get();
+            ->select('categories.*')
+            ->orderBy('categories.created_at', 'asc')->get();
 
         $category = DB::table('categories')
-                    ->select('categories.*')
-                    ->where('id', $subtitle->sub_category_id)
-                    ->pluck('id')->toArray();
+            ->select('categories.*')
+            ->where('id', $subtitle->sub_category_id)
+            ->pluck('id')->toArray();
 
         $editmode = true;
-        return view('admin.addsubtitle',compact('subtitle','categories','category','editmode'));
-
+        return view('admin.addsubtitle', compact('subtitle', 'categories', 'category', 'editmode'));
     }
 
-    public function editsubcategory($type,$id)
+    public function editsubcategory($type, $id)
     {
 
-        if($type==3)
-        {
+        if ($type == 3) {
             $subtitle = DB::table('sub_categories')
-                        ->find($id);
+                ->find($id);
 
             $subcat_id = DB::table('sub_categories')
-                        ->select('sub_categories.sub_category_title_id')
-                        ->where('id',$id)->first();
+                ->select('sub_categories.sub_category_title_id')
+                ->where('id', $id)->first();
 
-            $subcategory_titlename = DB::table('sub_category_titles')->where('id',$subcat_id->sub_category_title_id)->first();
+            $subcategory_titlename = DB::table('sub_category_titles')->where('id', $subcat_id->sub_category_title_id)->first();
 
             $categories = DB::table('categories')
-                        ->select('categories.*')
-                        ->orderBy('categories.created_at', 'asc')->get();
+                ->select('categories.*')
+                ->orderBy('categories.created_at', 'asc')->get();
 
 
             $category = DB::table('sub_category_titles')
-                        ->select('S.sub_category_name as subcategory_name')
-                        ->join('sub_categories as S', function ($join) {
-                        $join->on('sub_category_titles.sub_category_id', '=', 'S.sub_category_title_id');
-                    })
-                    ->orderBy('sub_category_titles.created_at', 'desc')->get();
+                ->select('S.sub_category_name as subcategory_name')
+                ->join('sub_categories as S', function ($join) {
+                    $join->on('sub_category_titles.sub_category_id', '=', 'S.sub_category_title_id');
+                })
+                ->orderBy('sub_category_titles.created_at', 'desc')->get();
 
             $subcategory_name = DB::table('sub_categories')
-                                ->select('sub_categories.sub_category_name')
-                                ->where('id', $id)
-                                ->first();
+                ->select('sub_categories.sub_category_name')
+                ->where('id', $id)
+                ->first();
 
 
             $editmode = true;
 
-            return view('admin.editcategory',compact('subcat_id','subtitle','categories','subcategory_titlename','subcategory_name','editmode'));
-        }
-        else if($type == 1)
-        {
+            return view('admin.editcategory', compact('subcat_id', 'subtitle', 'categories', 'subcategory_titlename', 'subcategory_name', 'editmode'));
+        } else if ($type == 1) {
             $data = DB::table('categories')
-                        ->find($id);
+                ->find($id);
             $editmode = true;
 
-            return view('admin.addcategory',compact('data','editmode'));
-        }
-        else
-        {
+            return view('admin.addcategory', compact('data', 'editmode'));
+        } else {
             $subtitle = DB::table('sub_category_titles')
-                            ->find($id);
+                ->find($id);
 
             $categories = DB::table('categories')
-                        ->select('categories.*')
-                        ->orderBy('categories.created_at', 'asc')->get();
+                ->select('categories.*')
+                ->orderBy('categories.created_at', 'asc')->get();
 
             $category = DB::table('categories')
-                        ->select('categories.*')
-                        ->where('id', $subtitle->sub_category_id)
-                        ->pluck('id')->toArray();
+                ->select('categories.*')
+                ->where('id', $subtitle->sub_category_id)
+                ->pluck('id')->toArray();
 
             $editmode = true;
 
-            return view('admin.editsubcattitle',compact('subtitle','categories','category','editmode'));
+            return view('admin.editsubcattitle', compact('subtitle', 'categories', 'category', 'editmode'));
         }
-
     }
 
     public function storesubtitle(Request $request)
@@ -2723,25 +2713,25 @@ class AdminController extends Controller
 
                     'created_at' => $time->format('Y-m-d H:i:s'),
                     'updated_at' => $time->format('Y-m-d H:i:s')
-                    ]);
+                ]);
             }
 
-            $msg = trans('Register Successfully', [ 'name' => 'Subtitle' ]);
-            return redirect('/admin/category')->with('success', $msg );
+            $msg = trans('Register Successfully', ['name' => 'Subtitle']);
+            return redirect('/admin/category')->with('success', $msg);
         } else {
 
 
-            $updval = array( 'category_id' => $request->category,
-                            'sub_category_id' => $request->category,
-                            'sub_category_titlename' => $request->subtitle[0],
-                            'updated_at' => $time->format('Y-m-d H:i:s')
-                            );
+            $updval = array(
+                'category_id' => $request->category,
+                'sub_category_id' => $request->category,
+                'sub_category_titlename' => $request->subtitle[0],
+                'updated_at' => $time->format('Y-m-d H:i:s')
+            );
 
-            DB::table('sub_category_titles')->where('id',$request->id)->update($updval);
+            DB::table('sub_category_titles')->where('id', $request->id)->update($updval);
 
-            return redirect('/admin/category')->with('success',__('Subtitle Updated Successfully'));
+            return redirect('/admin/category')->with('success', __('Subtitle Updated Successfully'));
         }
-
     }
 
 
@@ -2758,14 +2748,13 @@ class AdminController extends Controller
                     'sub_category_title_id' => $request->subcategory,
                     'created_at' => $time->format('Y-m-d H:i:s'),
                     'updated_at' => $time->format('Y-m-d H:i:s')
-                    ]);
+                ]);
             }
-            $msg = trans('Register Successfully', [ 'name' => $request->title ]);
-            return redirect('/admin/category')->with('success', $msg );
-        }
-        else{
+            $msg = trans('Register Successfully', ['name' => $request->title]);
+            return redirect('/admin/category')->with('success', $msg);
+        } else {
             if (!empty($request->image)) {
-                $imageName = time().'.'.$request->image->extension();
+                $imageName = time() . '.' . $request->image->extension();
                 $request->image->move(public_path('images'), $imageName);
             } else {
                 $imageName = '';
@@ -2775,18 +2764,18 @@ class AdminController extends Controller
                 $updvals['category_icon'] = $imageName;
             }
 
-            $updval = array( 'category_id' => $request->category,
-                             'sub_category_name' => $request->subname ?? '',
-                             'sub_category_title_id' => $request->subcategory ?? '',
-                            'updated_at' => $time->format('Y-m-d H:i:s')
-                            );
+            $updval = array(
+                'category_id' => $request->category,
+                'sub_category_name' => $request->subname ?? '',
+                'sub_category_title_id' => $request->subcategory ?? '',
+                'updated_at' => $time->format('Y-m-d H:i:s')
+            );
             if (!empty($request->image)) {
-                DB::table('categories')->where('id',$request->category)->update($updvals);
+                DB::table('categories')->where('id', $request->category)->update($updvals);
             }
-                DB::table('sub_categories')->where('id',$request->id)->update($updval);
-                return redirect('/admin/category')->with('success',__('SubCategory Updated Successfully'));
+            DB::table('sub_categories')->where('id', $request->id)->update($updval);
+            return redirect('/admin/category')->with('success', __('SubCategory Updated Successfully'));
         }
-
     }
 
     public function contact(Request $request)
@@ -2794,80 +2783,82 @@ class AdminController extends Controller
         if ($request->from == 'faq') {
             $inquiry_email = 'info-test@asia-hd.com';
 
-            $data = array('name'=>$request->name);
+            $data = array('name' => $request->name);
 
             $adminemail =  'admin@asia-hd.com';
             $faqDate = Carbon::now()->format('M d, Y');
 
-            $data = ['name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'content' => $request->message,
-                    'faqDate' => $faqDate,
-                    'adminemail' => $adminemail];
+            $data = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'content' => $request->message,
+                'faqDate' => $faqDate,
+                'adminemail' => $adminemail
+            ];
 
             $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();;
-            if (!empty(  $adminMails)) {
+            if (!empty($adminMails)) {
                 foreach ($adminMails as $email) {
-                   $data = ['name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'content' => $request->message,
-                    'faqDate' => $faqDate,
-                    'adminemail' => $adminemail];
-                \Mail::to($email)->send(new \App\Mail\FAQContact($data));
+                    $data = [
+                        'name' => $request->name,
+                        'email' => $request->email,
+                        'phone' => $request->phone,
+                        'content' => $request->message,
+                        'faqDate' => $faqDate,
+                        'adminemail' => $adminemail
+                    ];
+                    \Mail::to($email)->send(new \App\Mail\FAQContact($data));
                 }
             }
 
-            return redirect('/faq#ts-form')->with('success','Your message has been successfully sent.');
-
-        }
-
-        else if( $request->from == 'contact')
-        {
+            return redirect('/faq#ts-form')->with('success', 'Your message has been successfully sent.');
+        } else if ($request->from == 'contact') {
             $adminemail =  'admin@asia-hd.com';
             $contactDate = Carbon::now()->format('M d, Y');
 
-            $data = ['name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'content' => $request->message,
-                    'contactDate' => $contactDate,
-                    'adminemail' => $adminemail];
+            $data = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'content' => $request->message,
+                'contactDate' => $contactDate,
+                'adminemail' => $adminemail
+            ];
 
             $adminMails = DB::table('users')->where('role', 'admin')->pluck('email')->toArray();;
-            if (!empty(  $adminMails)) {
+            if (!empty($adminMails)) {
                 foreach ($adminMails as $email) {
-                   $data = ['name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                    'content' => $request->message,
-                    'contactDate' => $contactDate,
-                    'adminemail' => $adminemail];
-                \Mail::to($email)->send(new \App\Mail\GuestContact($data));
+                    $data = [
+                        'name' => $request->name,
+                        'email' => $request->email,
+                        'phone' => $request->phone,
+                        'content' => $request->message,
+                        'contactDate' => $contactDate,
+                        'adminemail' => $adminemail
+                    ];
+                    \Mail::to($email)->send(new \App\Mail\GuestContact($data));
                 }
             }
-            return redirect('/contact#contact-form')->with('success','Your message has been successfully sent.');
-
+            return redirect('/contact#contact-form')->with('success', 'Your message has been successfully sent.');
         }
-
     }
 
     public function notice(Request $request)
     {
-        $seller_name = DB::table('users')->select('name')->where('id',$request->selleremail)->first();
-        $seller_email = DB::table('users')->select('email')->where('id',$request->selleremail)->first();
+        $seller_name = DB::table('users')->select('name')->where('id', $request->selleremail)->first();
+        $seller_email = DB::table('users')->select('email')->where('id', $request->selleremail)->first();
         $shopName = Seller::where('user_id', $request->selleremail)->value('shop_name');
 
         if (!empty($request->image)) {
-            $imageName = time().'.'.$request->image->extension();
+            $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images'), $imageName);
         } else {
             $imageName = '';
         }
-        $seller_email =  $seller_email ->email;
+        $seller_email =  $seller_email->email;
         $help = new Help();
-        $help->name =$seller_name->name;
+        $help->name = $seller_name->name;
         $help->shop_name =  $shopName;
         $help->help_id = $request->selleremail;
         $help->to = $seller_email;
@@ -2880,15 +2871,17 @@ class AdminController extends Controller
         $adminemail = 'admin@asia-hd.com';
         $helpDate = Carbon::now()->format('M d, Y');
 
-        $data = ['title' => $request->title,
-                'content' => $request->message,
-                'imgName' => $imageName,
-                'helpDate' => $helpDate,
-                'adminemail' => $adminemail,
-            'sellername' => $seller_name->name];
+        $data = [
+            'title' => $request->title,
+            'content' => $request->message,
+            'imgName' => $imageName,
+            'helpDate' => $helpDate,
+            'adminemail' => $adminemail,
+            'sellername' => $seller_name->name
+        ];
 
         $sellers = User::where('id', $request->selleremail)->orWhere('created_by', $request->selleremail)->get();
-        foreach($sellers as $seller){
+        foreach ($sellers as $seller) {
             \Mail::to($seller->email)->send(new \App\Mail\AdminContact($data));
         }
 
@@ -2900,19 +2893,19 @@ class AdminController extends Controller
             'seen' => 0,
         ]);
 
-        return redirect('/admin/indexhelp')->with('success','Sending Email successfully');
+        return redirect('/admin/indexhelp')->with('success', 'Sending Email successfully');
     }
 
     public function noticeall(Request $request)
     {
 
         $sellers = DB::table('users')
-        ->where('role', 'seller')
-        ->select('name', 'email','id')
-        ->get();
+            ->where('role', 'seller')
+            ->select('name', 'email', 'id')
+            ->get();
 
         if (!empty($request->image)) {
-            $imageName = time().'.'.$request->image->extension();
+            $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images'), $imageName);
         } else {
             $imageName = '';
@@ -2920,17 +2913,17 @@ class AdminController extends Controller
 
         // Create Help records for each seller
         foreach ($sellers as $seller) {
-        $help = new Help();
-        $help->name = $seller->name;
-        $help->to = $seller->email;
-        $help->noshow = 1;
-        $help->help_id =  $seller->id;
-        $help->from = 'info-test@asia-hd.com';
-        $help->subject = $request->title;
-        $help->body = $request->message;
-        $help->img =  $imageName;
-        $help->created_at = Carbon::now();
-        $help->save();
+            $help = new Help();
+            $help->name = $seller->name;
+            $help->to = $seller->email;
+            $help->noshow = 1;
+            $help->help_id =  $seller->id;
+            $help->from = 'info-test@asia-hd.com';
+            $help->subject = $request->title;
+            $help->body = $request->message;
+            $help->img =  $imageName;
+            $help->created_at = Carbon::now();
+            $help->save();
         }
         $help = new Help();
         $help->name = 'all';
@@ -2954,65 +2947,64 @@ class AdminController extends Controller
         }
 
         return redirect('/admin/indexhelp')->with('success', 'Sending Email successfully');
-
     }
 
-   public function storetop(Request $request)
-   {
-      if (!empty($request->image)) {
-          $imageName = time().'.'.$request->image->extension();
-          $request->image->move(public_path('images'), $imageName);
-      } else {
-          $imageName = '';
-      }
+    public function storetop(Request $request)
+    {
+        if (!empty($request->image)) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+        } else {
+            $imageName = '';
+        }
 
-       $time = new DateTime();
+        $time = new DateTime();
 
-           $updval = array('phaseone' => $request->phaseone,
-                             'phasetwo' => $request->phasetwo,
-                             'phasethree' => $request->phasethree,
-                             'updated_at' => $time->format('Y-m-d H:i:s')
-                           );
+        $updval = array(
+            'phaseone' => $request->phaseone,
+            'phasetwo' => $request->phasetwo,
+            'phasethree' => $request->phasethree,
+            'updated_at' => $time->format('Y-m-d H:i:s')
+        );
 
-           if (!empty($request->image)) {
-               $updval['image'] = $imageName;
-           }
+        if (!empty($request->image)) {
+            $updval['image'] = $imageName;
+        }
 
-           DB::table('tops')->where('id',$request->id)->update($updval);
+        DB::table('tops')->where('id', $request->id)->update($updval);
 
-           return redirect('/admin/top')->with('success','「'.$request->title.'」'.__('auth.doneedit'));
+        return redirect('/admin/top')->with('success', '「' . $request->title . '」' . __('auth.doneedit'));
+    }
 
-       }
 
+    public function storecustomer(Request $request)
+    {
+        if (!empty($request->image)) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+        } else {
+            $imageName = '';
+        }
 
-      public function storecustomer(Request $request)
-      {
-         if (!empty($request->image)) {
-             $imageName = time().'.'.$request->image->extension();
-             $request->image->move(public_path('images'), $imageName);
-         } else {
-             $imageName = '';
-         }
+        $time = new DateTime();
 
-         $time = new DateTime();
+        $updval = array(
+            'title' => $request->title,
+            'subtitle' => $request->subtitle,
+            'content' => $request->content,
+            'name' => $request->name,
+            'position' => $request->position,
+            'updated_at' => $time->format('Y-m-d H:i:s')
+        );
 
-             $updval = array('title' => $request->title,
-                               'subtitle' => $request->subtitle,
-                               'content' => $request->content,
-                               'name' => $request->name,
-                               'position' => $request->position,
-                               'updated_at' => $time->format('Y-m-d H:i:s')
-                             );
+        if (!empty($request->image)) {
+            $updval['image'] = $imageName;
+        }
 
-             if (!empty($request->image)) {
-                 $updval['image'] = $imageName;
-             }
+        DB::table('customers')->where('id', $request->id)->update($updval);
 
-             DB::table('customers')->where('id',$request->id)->update($updval);
-
-             return redirect('/admin/indexcustomer')->with('success','「'.$request->title.'」'.__('auth.doneedit'));
-
-         }
+        return redirect('/admin/indexcustomer')->with('success', '「' . $request->title . '」' . __('auth.doneedit'));
+    }
 
 
 
@@ -3020,150 +3012,152 @@ class AdminController extends Controller
     {
 
         $existingCoupon = DB::table('coupons')
-        ->where('coupon_code', $request->code)
-        ->exists();
+            ->where('coupon_code', $request->code)
+            ->exists();
 
         if ($existingCoupon && empty($request->id)) {
 
             $request->validate([
                 'code' => 'required|string|max:255|unique:coupons,coupon_code',
-                ], [
+            ], [
                 'code.required' => 'Code is required.',
-                'code.unique' => 'Coupon code "'.$request->code.'" already exists. Please choose a different one.',
-                ]);
+                'code.unique' => 'Coupon code "' . $request->code . '" already exists. Please choose a different one.',
+            ]);
         }
 
         if (empty($request->id)) {
-        $request->validate(['title' => 'required|string|max:255',
-        'code' => 'required|string|max:255',
-        'disamount' => 'required|numeric|max:9999999999.999999',
-        'miniamount' => 'required|numeric|max:9999999999.999999',
-        'validcount' => 'required|numeric|max:9999999999.999999',
-        'startdate' => 'required|date',
-        'enddate' => 'required|date',
-        ],
-            [
-                'code.required' => 'code is required',
-                'disamount.required' => 'disamount is required',
-                'miniamount.required' => 'miniamount is required',
-                'validcount.required' => 'validcount is required',
-                'validdate.required' => 'validdate is required',
-                ]);
-            }
+            $request->validate(
+                [
+                    'title' => 'required|string|max:255',
+                    'code' => 'required|string|max:255',
+                    'disamount' => 'required|numeric|max:9999999999.999999',
+                    'miniamount' => 'required|numeric|max:9999999999.999999',
+                    'validcount' => 'required|numeric|max:9999999999.999999',
+                    'startdate' => 'required|date',
+                    'enddate' => 'required|date',
+                ],
+                [
+                    'code.required' => 'code is required',
+                    'disamount.required' => 'disamount is required',
+                    'miniamount.required' => 'miniamount is required',
+                    'validcount.required' => 'validcount is required',
+                    'validdate.required' => 'validdate is required',
+                ]
+            );
+        }
 
         $time = new DateTime();
 
         if ($existingCoupon == false && empty($request->id)) {
 
-                DB::table('coupons')->insert([
-                    'name' => $request->title,
-                    'coupon_code' => $request->code,
-                    'discount_amount' => $request->disamount,
-                    'mini_amount' => $request->miniamount,
-                    'valid_count' => $request->validcount,
-                    'used_count' => 0,
-                    'startdate' => $request->startdate,
-                    'enddate' => $request->enddate,
-                    'status' => '1',
-                    'created_at' => $time->format('Y-m-d H:i:s'),
-                    'updated_at' => $time->format('Y-m-d H:i:s')
+            DB::table('coupons')->insert([
+                'name' => $request->title,
+                'coupon_code' => $request->code,
+                'discount_amount' => $request->disamount,
+                'mini_amount' => $request->miniamount,
+                'valid_count' => $request->validcount,
+                'used_count' => 0,
+                'startdate' => $request->startdate,
+                'enddate' => $request->enddate,
+                'status' => '1',
+                'created_at' => $time->format('Y-m-d H:i:s'),
+                'updated_at' => $time->format('Y-m-d H:i:s')
 
-                ]);
-
-                $msg = trans('Coupon Register Successfully', [ 'name' => $request->title ]);
-                return redirect('/admin/coupon')->with('success', $msg );
-            } else {
-
-                $updval = array('name' => $request->title,
-                                'coupon_code' => $request->code,
-                                'discount_amount' => $request->disamount,
-                                'mini_amount' => $request->miniamount,
-                                'valid_count' => $request->validcount,
-                                'startdate' => $request->startdate,
-                                'enddate' => $request->enddate,
-                                'updated_at' => $time->format('Y-m-d H:i:s')
-                                );
-
-                DB::table('coupons')->where('id',$request->id)->update($updval);
-
-                return redirect('/admin/coupon')->with('success','「'.$request->title.'」'.__('Updated Successfully'));
-
-            }
-        }
-
-        public function storeproduct(Request $request)
-        {
-
-            $time = new DateTime();
-
-            //commision calculate
-            $originalPrice = $request->selling_price;
-            $discountPercentage = $request->discount_percent;
-            $discountAmount = ($originalPrice * $discountPercentage) / 100;
-            $discountedPrice = $originalPrice - $discountAmount;
-            $product = Product::find($request->id);
-            $old_img = $request->old_img;
-            $request->validate([
-                'country_id'  => 'required|exists:countries,id',
-                'category_id' => 'required|exists:categories,id',
-                'sub_category_title_id' => 'present|exists:sub_category_titles,id',
-                'sub_category_id' => 'present|exists:sub_categories,id',
-                'product_name' => 'required|string',
-                'product_qty' => 'required|numeric',
-                'product_tags' => 'required|string|max:255',
-                'product_size' => 'required|string|max:255',
-                'product_color' => 'required|string|max:255',
-                'original_price' => 'required|numeric',
-                'short_desc' => 'required|string',
-                'long_desc' => 'required|string',
-                'care_instructions' => 'required|string',
-                'estimate_date' => 'required|string',
-                'shipping_country'=> 'required',
             ]);
 
-            if($request->hasFile('product_thambnail')) {
-                if(File::exists($old_img)) {
-                    File::delete($old_img);
-                }
-                $img = $request->file('product_thambnail');
-                $filename = time() . '.' . $img->getClientOriginalExtension();
-                $img->move(public_path('images'), $filename);
-            } else {
-                $filename = $old_img;
-            }
-            $product->brand_id = $request->brand_id;
-            $product->country_id = $request->country_id;
-            $product->category_id= $request->category_id;
-            $product->sub_category_id= $request->sub_category_id;
-            $product->sub_category_title_id= $request->sub_category_title_id;
-            $product->product_name= $request->product_name;
-            $product->product_qty= $request->product_qty;
-            $product->in_stock= $request->product_qty;
-            $product->product_tags= $request->product_tags;
-            $product->product_size= $request->product_size;
-            $product->product_color= $request->product_color;
-            $product->original_price= $request->original_price;
-            $product->discount_percent= $request->discount_percent ?? 0;
-            $product->selling_price = $request->calculated_selling_price;
-            $product->short_desc= $request->short_desc;
-            $product->long_desc= $request->long_desc;
-            $product->care_instructions= $request->care_instructions;
-            $product->product_thambnail= $filename;
-            $product->estimate_date= $request->estimate_date;
-            // $product->status= 1;
-            $product->delivery_price= $request->delivery_price;
-            $product->shipping_country = $request->shipping_country;
-            $product->updated_by = Auth::user()->id;
-            $product->updated_at= Carbon::now();
-            $product->update();
-            $msg = ('Product updated Successfully');
-        return redirect('/admin/product')->with('success','「'.$request->title.'」'.__('auth.doneedit'));
+            $msg = trans('Coupon Register Successfully', ['name' => $request->title]);
+            return redirect('/admin/coupon')->with('success', $msg);
+        } else {
 
+            $updval = array(
+                'name' => $request->title,
+                'coupon_code' => $request->code,
+                'discount_amount' => $request->disamount,
+                'mini_amount' => $request->miniamount,
+                'valid_count' => $request->validcount,
+                'startdate' => $request->startdate,
+                'enddate' => $request->enddate,
+                'updated_at' => $time->format('Y-m-d H:i:s')
+            );
+
+            DB::table('coupons')->where('id', $request->id)->update($updval);
+
+            return redirect('/admin/coupon')->with('success', '「' . $request->title . '」' . __('Updated Successfully'));
+        }
+    }
+
+    public function storeproduct(Request $request)
+    {
+
+        $time = new DateTime();
+
+        //commision calculate
+        $originalPrice = $request->selling_price;
+        $discountPercentage = $request->discount_percent;
+        $discountAmount = ($originalPrice * $discountPercentage) / 100;
+        $discountedPrice = $originalPrice - $discountAmount;
+        $product = Product::find($request->id);
+        $old_img = $request->old_img;
+        $request->validate([
+            'country_id'  => 'required|exists:countries,id',
+            'category_id' => 'required|exists:categories,id',
+            'sub_category_title_id' => 'present|exists:sub_category_titles,id',
+            'sub_category_id' => 'present|exists:sub_categories,id',
+            'product_name' => 'required|string',
+            'product_qty' => 'required|numeric',
+            'product_tags' => 'required|string|max:255',
+            'product_size' => 'required|string|max:255',
+            'product_color' => 'required|string|max:255',
+            'original_price' => 'required|numeric',
+            'short_desc' => 'required|string',
+            'long_desc' => 'required|string',
+            'care_instructions' => 'required|string',
+            'estimate_date' => 'required|string',
+            'shipping_country' => 'required',
+        ]);
+
+        if ($request->hasFile('product_thambnail')) {
+            if (File::exists($old_img)) {
+                File::delete($old_img);
+            }
+            $img = $request->file('product_thambnail');
+            $filename = time() . '.' . $img->getClientOriginalExtension();
+            $img->move(public_path('images'), $filename);
+        } else {
+            $filename = $old_img;
+        }
+        $product->brand_id = $request->brand_id;
+        $product->country_id = $request->country_id;
+        $product->category_id = $request->category_id;
+        $product->sub_category_id = $request->sub_category_id;
+        $product->sub_category_title_id = $request->sub_category_title_id;
+        $product->product_name = $request->product_name;
+        $product->product_qty = $request->product_qty;
+        $product->in_stock = $request->product_qty;
+        $product->product_tags = $request->product_tags;
+        $product->product_size = $request->product_size;
+        $product->product_color = $request->product_color;
+        $product->original_price = $request->original_price;
+        $product->discount_percent = $request->discount_percent ?? 0;
+        $product->selling_price = $request->calculated_selling_price;
+        $product->short_desc = $request->short_desc;
+        $product->long_desc = $request->long_desc;
+        $product->care_instructions = $request->care_instructions;
+        $product->product_thambnail = $filename;
+        $product->estimate_date = $request->estimate_date;
+        // $product->status= 1;
+        $product->delivery_price = $request->delivery_price;
+        $product->shipping_country = $request->shipping_country;
+        $product->updated_by = Auth::user()->id;
+        $product->updated_at = Carbon::now();
+        $product->update();
+        $msg = ('Product updated Successfully');
+        return redirect('/admin/product')->with('success', '「' . $request->title . '」' . __('auth.doneedit'));
     }
 
 
     public function storecategory(Request $request)
-     {
+    {
 
         $valarr = array('title' => 'required|string|max:255',);
 
@@ -3174,7 +3168,7 @@ class AdminController extends Controller
         $request->validate($valarr);
 
         if (!empty($request->image)) {
-            $imageName = time().'.'.$request->image->extension();
+            $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('images'), $imageName);
         } else {
             $imageName = '';
@@ -3191,33 +3185,33 @@ class AdminController extends Controller
                 'updated_at' => $time->format('Y-m-d H:i:s')
             ]);
 
-            $msg = trans('Register Successfully', [ 'name' => $request->title ]);
-            return redirect('/admin/category')->with('success', $msg );
+            $msg = trans('Register Successfully', ['name' => $request->title]);
+            return redirect('/admin/category')->with('success', $msg);
         } else {
 
-            $updval = array('category_name' => $request->title,
-                            'updated_at' => $time->format('Y-m-d H:i:s')
-                            );
+            $updval = array(
+                'category_name' => $request->title,
+                'updated_at' => $time->format('Y-m-d H:i:s')
+            );
 
             if (!empty($request->image)) {
                 $updval['category_icon'] = $imageName;
             }
 
-            DB::table('categories')->where('id',$request->id)->update($updval);
+            DB::table('categories')->where('id', $request->id)->update($updval);
 
-            return redirect('/admin/category')->with('success','「'.$request->title.'」'.__('Updated Successfully.'));
-
+            return redirect('/admin/category')->with('success', '「' . $request->title . '」' . __('Updated Successfully.'));
         }
     }
 
-    public function getSubcategories(Request $request) {
+    public function getSubcategories(Request $request)
+    {
 
-        $subcategories =   DB::table('sub_category_titles')->where('category_id','=',$request->category)->get();
+        $subcategories =   DB::table('sub_category_titles')->where('category_id', '=', $request->category)->get();
         return response()->json([
             'status' => 'success',
             'subcategories' => $subcategories,
         ]);
-
     }
 
     public function indexorderlist()
@@ -3237,12 +3231,12 @@ class AdminController extends Controller
             ->orderBy('created_at', 'desc');
 
         if ($mainSearch) {
-            $orderQuery->where(function($orderQuery) use ($mainSearch) {
+            $orderQuery->where(function ($orderQuery) use ($mainSearch) {
                 $orderQuery->where('order_id', 'LIKE', "%{$mainSearch}%")
                     ->orWhere('status', 'LIKE', "%{$mainSearch}%")
-                    ->orWhereHas('order', function($orderQuery) use ($mainSearch) {
+                    ->orWhereHas('order', function ($orderQuery) use ($mainSearch) {
                         $orderQuery->where('order_code', 'LIKE', "%{$mainSearch}%")
-                                ->orWhere('payment_type', 'LIKE', "%{$mainSearch}%");
+                            ->orWhere('payment_type', 'LIKE', "%{$mainSearch}%");
                     });
             });
         }
@@ -3255,9 +3249,9 @@ class AdminController extends Controller
             ->orderBy('order_details.created_at', 'desc');
 
         if ($mainSearch) {
-            $cancelledOrderQuery->where(function($cancelledOrderQuery) use ($mainSearch) {
+            $cancelledOrderQuery->where(function ($cancelledOrderQuery) use ($mainSearch) {
                 $cancelledOrderQuery->where('order_id', 'LIKE', "%{$mainSearch}%")
-                    ->orWhereHas('order', function($cancelledOrderQuery) use ($mainSearch) {
+                    ->orWhereHas('order', function ($cancelledOrderQuery) use ($mainSearch) {
                         $cancelledOrderQuery->where('order_code', 'LIKE', "%{$mainSearch}%");
                     })
                     ->orWhere('products.product_name', 'LIKE', "%{$mainSearch}%")
@@ -3271,28 +3265,28 @@ class AdminController extends Controller
         $cancelttl = $cancelledOrder->total();
         $cancelttlPage = ceil($cancelttl / $limit);
 
-        return view('admin.order.indexorderlist', compact('order','ttl','ttlpage','cancelledOrder','cancelttl','cancelttlPage'));
+        return view('admin.order.indexorderlist', compact('order', 'ttl', 'ttlpage', 'cancelledOrder', 'cancelttl', 'cancelttlPage'));
     }
 
     public function orderdetail($id)
     {
 
         $orderDetails = OrderDetail::join('orders', 'order_details.order_id', 'orders.id')
-                ->join('products', 'products.id', 'order_details.product_id')
-                ->with('prefecture')
-                ->select(
-                    'orders.id as order_id',
-                    'order_details.id as order_detail_id',
-                    'products.id as product_id',
-                    'orders.*',
-                    'products.*',
-                    'products.selling_price as price',
-                    'order_details.*',
-                    'orders.created_at as order_created_at',
-                )
-                ->where('order_details.order_id', $id)
-                ->where('order_details.status', '!=', 'Cancel')
-                ->get();
+            ->join('products', 'products.id', 'order_details.product_id')
+            ->with('prefecture')
+            ->select(
+                'orders.id as order_id',
+                'order_details.id as order_detail_id',
+                'products.id as product_id',
+                'orders.*',
+                'products.*',
+                'products.selling_price as price',
+                'order_details.*',
+                'orders.created_at as order_created_at',
+            )
+            ->where('order_details.order_id', $id)
+            ->where('order_details.status', '!=', 'Cancel')
+            ->get();
 
         return view('admin.order.orderdetail', compact('orderDetails'));
     }
@@ -3300,35 +3294,42 @@ class AdminController extends Controller
     public function ordertracking($id)
     {
         $orderDetail = OrderDetail::with('prefecture')->with('seller')
-                                    ->select('order_details.*', 'products.*','order_details.post_code as cus_post_code', 'order_details.city as cus_city',
-                                            'order_details.chome as cus_chome','order_details.building as cus_building',
-                                            'order_details.room_no as cus_room', 'order_details.created_at as order_detail_created_at')
-                                    ->leftjoin('products', 'order_details.product_id', 'products.id')
-                                    ->where('order_details.id', $id)
-                                    ->first();
-        return view('admin.order.ordertracking',compact('orderDetail'));
+            ->select(
+                'order_details.*',
+                'products.*',
+                'order_details.post_code as cus_post_code',
+                'order_details.city as cus_city',
+                'order_details.chome as cus_chome',
+                'order_details.building as cus_building',
+                'order_details.room_no as cus_room',
+                'order_details.created_at as order_detail_created_at'
+            )
+            ->leftjoin('products', 'order_details.product_id', 'products.id')
+            ->where('order_details.id', $id)
+            ->first();
+        return view('admin.order.ordertracking', compact('orderDetail'));
     }
 
     public function admindashboard()
     {
         $currentDate = Carbon::now();
-        $limit=10;
+        $limit = 10;
         $id = Auth::user()->created_by ?? Auth::id();
         $revenue = OrderDetail::where('status', 'Delivered')
-                        ->whereMonth('created_at', $currentDate->month)
-                        ->whereYear('created_at', $currentDate->year)
-                        ->sum('amount');
+            ->whereMonth('created_at', $currentDate->month)
+            ->whereYear('created_at', $currentDate->year)
+            ->sum('amount');
 
         $orderCount = OrderDetail::count();
         $pending = OrderDetail::where('status', 'Pending')->count();
         $currentDate = Carbon::now()->format('Y-m-d');
-        $product = Product::whereDate('created_at','<=',$currentDate)->count();
+        $product = Product::whereDate('created_at', '<=', $currentDate)->count();
         $transfers = OrderDetail::latest()->paginate($limit);
         $orders = OrderDetail::selectRaw("COUNT(*) as count, DATE_FORMAT(created_at, '%M') as month_name, MONTH(created_at) as month_number")
-                        ->whereYear('created_at', date('Y'))
-                        ->groupBy(DB::raw("MONTH(created_at)"), DB::raw("DATE_FORMAT(created_at, '%M')"))
-                        ->orderBy(DB::raw("MONTH(created_at)"))
-                        ->get();
+            ->whereYear('created_at', date('Y'))
+            ->groupBy(DB::raw("MONTH(created_at)"), DB::raw("DATE_FORMAT(created_at, '%M')"))
+            ->orderBy(DB::raw("MONTH(created_at)"))
+            ->get();
 
         $labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         $data = array_fill(0, 12, 0);
@@ -3344,40 +3345,47 @@ class AdminController extends Controller
         $currentDate = Carbon::now()->format('Y-m-d');
         $transfer = [];
         $subquery = DB::table('sellers')
-                        ->select(
-                            'sellers.user_id as seller_id',
-                            'sellers.shop_name',
-                            'products.commission as product_commission',
-                            'products.id as product_id',
-                            DB::raw('(SUM(order_details.amount) * (1 - products.commission / 100) +
+            ->select(
+                'sellers.user_id as seller_id',
+                'sellers.shop_name',
+                'products.commission as product_commission',
+                'products.id as product_id',
+                DB::raw('(SUM(order_details.amount) * (1 - products.commission / 100) +
                                         SUM(CASE WHEN order_details.used_delivery_price = 1 THEN order_details.delivery_price ELSE 0 END)) as seller_amount')
-                        )
-                        ->leftJoin('order_details', 'order_details.seller_id', '=', 'sellers.user_id')
-                        ->leftJoin('products', 'order_details.product_id', '=', 'products.id')
-                        ->where('products.commission', '!=', 0)
+            )
+            ->leftJoin('order_details', 'order_details.seller_id', '=', 'sellers.user_id')
+            ->leftJoin('products', 'order_details.product_id', '=', 'products.id')
+            ->where('products.commission', '!=', 0)
 
-                        ->whereBetween(DB::raw("DATE_FORMAT(order_details.created_at, '%Y-%m-%d')"), [$currentMonthStart, $currentMonthEnd])
-                        ->groupBy('sellers.user_id', 'sellers.shop_name', 'products.commission', 'products.id');
+            ->whereBetween(DB::raw("DATE_FORMAT(order_details.created_at, '%Y-%m-%d')"), [$currentMonthStart, $currentMonthEnd])
+            ->groupBy('sellers.user_id', 'sellers.shop_name', 'products.commission', 'products.id');
 
-        if ( $currentDate === $currentMonthEnd) {
-            $transfer = Seller::rightJoin(DB::raw("({$subquery->toSql()}) as P"), function($join) {
+        if ($currentDate === $currentMonthEnd) {
+            $transfer = Seller::rightJoin(DB::raw("({$subquery->toSql()}) as P"), function ($join) {
                 $join->on('P.seller_id', '=', 'sellers.user_id');
             })
-            ->Bindings($subquery)
-            ->select('sellers.user_id','sellers.commission', DB::raw('MAX(sellers.shop_name) AS shop_name'),
-                DB::raw('SUM(P.seller_amount) AS total_seller_amount'))
-            ->groupBy('sellers.user_id','sellers.commission')
-            ->paginate($limit);
-        }
-        elseif ( $currentDate === $nextMonthstartdate) {
-            $transfer = Seller::rightJoin(DB::raw("({$subquery->toSql()}) as P"), function($join) {
+                ->Bindings($subquery)
+                ->select(
+                    'sellers.user_id',
+                    'sellers.commission',
+                    DB::raw('MAX(sellers.shop_name) AS shop_name'),
+                    DB::raw('SUM(P.seller_amount) AS total_seller_amount')
+                )
+                ->groupBy('sellers.user_id', 'sellers.commission')
+                ->paginate($limit);
+        } elseif ($currentDate === $nextMonthstartdate) {
+            $transfer = Seller::rightJoin(DB::raw("({$subquery->toSql()}) as P"), function ($join) {
                 $join->on('P.seller_id', '=', 'sellers.user_id');
             })
-            ->Bindings($subquery)
-            ->select('sellers.user_id','sellers.commission', DB::raw('MAX(sellers.shop_name) AS shop_name'),
-                DB::raw('SUM(P.seller_amount) AS total_seller_amount'))
-            ->groupBy('sellers.user_id','sellers.commission')
-            ->paginate($limit);
+                ->Bindings($subquery)
+                ->select(
+                    'sellers.user_id',
+                    'sellers.commission',
+                    DB::raw('MAX(sellers.shop_name) AS shop_name'),
+                    DB::raw('SUM(P.seller_amount) AS total_seller_amount')
+                )
+                ->groupBy('sellers.user_id', 'sellers.commission')
+                ->paginate($limit);
         }
 
         foreach ($transfer as $record) {
@@ -3413,15 +3421,15 @@ class AdminController extends Controller
         $ttl = $transfer_history->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('admin.index',compact('labels', 'data','transfer_history','revenue','orderCount','pending','product','ttl','ttlpage'));
+        return view('admin.index', compact('labels', 'data', 'transfer_history', 'revenue', 'orderCount', 'pending', 'product', 'ttl', 'ttlpage'));
     }
 
 
     public function detailProduct($id)
     {
         $product = Product::find($id);
-        $multiImgs = MultiImg::where('product_id',$id)->get();
-        return view('admin.product.product_detail',compact('product','multiImgs'));
+        $multiImgs = MultiImg::where('product_id', $id)->get();
+        return view('admin.product.product_detail', compact('product', 'multiImgs'));
     }
 
     public function indexhelp()
@@ -3442,7 +3450,7 @@ class AdminController extends Controller
         }
 
         $email = 'admin@asia-hd.com';
-        $received = Help::where('to',$email)->latest()->paginate(10);
+        $received = Help::where('to', $email)->latest()->paginate(10);
 
         $sent = Help::where('from', $email)->where('noshow', null)->latest()->paginate(10);
 
@@ -3457,8 +3465,7 @@ class AdminController extends Controller
         $notice_ttl = $sent->total();
         $notice_ttlpage = (ceil($notice_ttl / $limit));
 
-        return view('admin.indexhelp',compact('received','sent','notice','ttl','ttlpage','sent_ttl','sent_ttlpage','notice_ttl','notice_ttlpage'));
-
+        return view('admin.indexhelp', compact('received', 'sent', 'notice', 'ttl', 'ttlpage', 'sent_ttl', 'sent_ttlpage', 'notice_ttl', 'notice_ttlpage'));
     }
     public function addToSpecial(Request $request)
     {
@@ -3469,8 +3476,7 @@ class AdminController extends Controller
         ]);
         $limit = 10;
         $product = Product::find($request->productId);
-        if($product)
-        {
+        if ($product) {
             $product->special_sub_category_id = $request->sub_category_id;
             $product->save();
         }
@@ -3480,19 +3486,18 @@ class AdminController extends Controller
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        $subCatTitle = SubCategoryTitle::whereHas('category', function($query) {
+        $subCatTitle = SubCategoryTitle::whereHas('category', function ($query) {
             $query->where('category_name', 'Special Corner');
         })->get();
 
-        return redirect()->route('admin.all.product',compact('lists','ttlpage','ttl', 'subCatTitle'));
+        return redirect()->route('admin.all.product', compact('lists', 'ttlpage', 'ttl', 'subCatTitle'));
     }
 
     public function removeFromSpecial($id)
     {
         $limit = 10;
         $product = Product::find($id);
-        if($product)
-        {
+        if ($product) {
             $product->special_sub_category_id = NULL;
             $product->save();
         }
@@ -3502,11 +3507,11 @@ class AdminController extends Controller
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        $subCatTitle = SubCategoryTitle::whereHas('category', function($query) {
+        $subCatTitle = SubCategoryTitle::whereHas('category', function ($query) {
             $query->where('category_name', 'Special Corner');
         })->get();
 
-        return redirect()->route('admin.all.product',compact('lists','ttlpage','ttl', 'subCatTitle'));
+        return redirect()->route('admin.all.product', compact('lists', 'ttlpage', 'ttl', 'subCatTitle'));
     }
 
     // remove coupon from product
@@ -3514,15 +3519,12 @@ class AdminController extends Controller
     {
         $product = Product::find($request->id);
         $seller = Seller::where('user_id', $product->seller_id)->first();
-        if ($seller->coupon_status == 1)
-        {
+        if ($seller->coupon_status == 1) {
             $product->update([
                 'coupon_id' => $seller->coupon_id,
                 'coupon_status' => 0,
             ]);
-        }
-        else
-        {
+        } else {
             $product->update([
                 'coupon_id' => null,
                 'coupon_status' => 0,
@@ -3602,13 +3604,14 @@ class AdminController extends Controller
         }
 
         if (!empty($rating)) {
-            $averageRated = Review::select('product_id',
+            $averageRated = Review::select(
+                'product_id',
                 DB::raw('FLOOR(AVG(stars_rated)) AS `average_rating`')
             )
-            ->join('products', 'products.id', '=', 'reviews.product_id')
-            ->where('products.sub_category_id', $id)
-            ->groupBy('product_id')
-            ->get();
+                ->join('products', 'products.id', '=', 'reviews.product_id')
+                ->where('products.sub_category_id', $id)
+                ->groupBy('product_id')
+                ->get();
             $matchedProductIds = [];
             foreach ($averageRated as $rated) {
                 if (in_array($rated->average_rating, $rating)) {
@@ -3617,8 +3620,7 @@ class AdminController extends Controller
             }
             if (!empty($matchedProductIds)) {
                 $query->whereIn('products.id', $matchedProductIds);
-            }
-            else {
+            } else {
                 $query->where('id', null);
             }
         }
@@ -3668,8 +3670,8 @@ class AdminController extends Controller
                 break;
         }
 
-        $shoplist = $query->where('special_sub_category_id',$id)->where('products.status', 1)
-                          ->orderBy('created_at', 'desc')->paginate($limit);
+        $shoplist = $query->where('special_sub_category_id', $id)->where('products.status', 1)
+            ->orderBy('created_at', 'desc')->paginate($limit);
 
         $ttl = $shoplist->total();
         $ttlpage = (ceil($ttl / $limit));
@@ -3677,35 +3679,50 @@ class AdminController extends Controller
         $reviews = Review::all();
 
         $categoryWithProductCount = Category::leftJoin('products', 'categories.id', '=', 'products.category_id')
-                                    ->select('categories.*', DB::raw('COUNT(products.category_id) as product_count'))
-                                    ->where('products.status', '=', '1')
-                                    ->where('products.special_sub_category_id', $id)
-                                    ->groupBy('categories.id')
-                                    ->get();
+            ->select('categories.*', DB::raw('COUNT(products.category_id) as product_count'))
+            ->where('products.status', '=', '1')
+            ->where('products.special_sub_category_id', $id)
+            ->groupBy('categories.id')
+            ->get();
 
         $ratingWithProductCount = Review::select(
-                                        DB::raw('CAST(FLOOR(AVG(stars_rated)) AS UNSIGNED) AS `average_rating`')
-                                    )
-                                    ->join('products', 'products.id', '=', 'reviews.product_id')
-                                    ->where('products.special_sub_category_id', $id)
-                                    ->groupBy('product_id')
-                                    ->get()
-                                    ->groupBy('average_rating')
-                                    ->map(function ($grouped) {
-                                        return $grouped->count();
-                                    });
+            DB::raw('CAST(FLOOR(AVG(stars_rated)) AS UNSIGNED) AS `average_rating`')
+        )
+            ->join('products', 'products.id', '=', 'reviews.product_id')
+            ->where('products.special_sub_category_id', $id)
+            ->groupBy('product_id')
+            ->get()
+            ->groupBy('average_rating')
+            ->map(function ($grouped) {
+                return $grouped->count();
+            });
 
         $discountWithProductCount = Product::selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) <= 5 THEN 1 END) as group_1_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 5 AND CAST(discount_percent AS DECIMAL) <= 10 THEN 1 END) as group_2_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 10 AND CAST(discount_percent AS DECIMAL) <= 15 THEN 1 END) as group_3_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 15 AND CAST(discount_percent AS DECIMAL) <= 25 THEN 1 END) as group_4_count')
-                                    ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 25 THEN 1 END) as group_5_count')
-                                    ->where('special_sub_category_id', $id)
-                                    ->where('status', '=', '1')
-                                    ->first();
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 5 AND CAST(discount_percent AS DECIMAL) <= 10 THEN 1 END) as group_2_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 10 AND CAST(discount_percent AS DECIMAL) <= 15 THEN 1 END) as group_3_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 15 AND CAST(discount_percent AS DECIMAL) <= 25 THEN 1 END) as group_4_count')
+            ->selectRaw('COUNT(CASE WHEN CAST(discount_percent AS DECIMAL) > 25 THEN 1 END) as group_5_count')
+            ->where('special_sub_category_id', $id)
+            ->where('status', '=', '1')
+            ->first();
 
-        return view('front-end.sub-category-left-sidebar',compact('id','shoplist','ttlpage','ttl', 'price', 'search', 'rating', 'ratingWithProductCount', 'discount',
-        'discount','discountWithProductCount', 'sort', 'reviews', 'categories', 'categoryWithProductCount'));
+        return view('front-end.sub-category-left-sidebar', compact(
+            'id',
+            'shoplist',
+            'ttlpage',
+            'ttl',
+            'price',
+            'search',
+            'rating',
+            'ratingWithProductCount',
+            'discount',
+            'discount',
+            'discountWithProductCount',
+            'sort',
+            'reviews',
+            'categories',
+            'categoryWithProductCount'
+        ));
     }
 
     public function shopTransferDetail($id)
@@ -3721,13 +3738,13 @@ class AdminController extends Controller
         $end_date = Carbon::parse($transfer->end_date)->format('Y/m/d');
 
         $lists = OrderDetail::with('order')->with('buyer')->with('product')
-                ->where('seller_id', $transfer->seller_id)
-                ->whereBetween(DB::raw("DATE_FORMAT(created_at, '%Y/%m/%d')"), [$start_date, $end_date])
-                ->paginate($limit);
+            ->where('seller_id', $transfer->seller_id)
+            ->whereBetween(DB::raw("DATE_FORMAT(created_at, '%Y/%m/%d')"), [$start_date, $end_date])
+            ->paginate($limit);
         $ttl = $lists->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('admin.transfer_order_detail',compact('lists','ttlpage','ttl'));
+        return view('admin.transfer_order_detail', compact('lists', 'ttlpage', 'ttl'));
     }
 
     public function cashPaymentReceived($id)
@@ -3763,13 +3780,12 @@ class AdminController extends Controller
             foreach ($sellers as $seller) {
                 if ($seller->created_by) {
                     $orderDetails = OrderDetail::with('order')->with('buyer')->with('seller')
-                                    ->where('buyer_id', $order->buyer_id)->where('order_id', $order->id)
-                                    ->where('seller_id', $seller->created_by)->get();
-                }
-                else {
+                        ->where('buyer_id', $order->buyer_id)->where('order_id', $order->id)
+                        ->where('seller_id', $seller->created_by)->get();
+                } else {
                     $orderDetails = OrderDetail::with('order')->with('buyer')->with('seller')
-                                    ->where('buyer_id', $order->buyer_id)->where('order_id', $order->id)
-                                    ->where('seller_id', $seller->id)->get();
+                        ->where('buyer_id', $order->buyer_id)->where('order_id', $order->id)
+                        ->where('seller_id', $seller->id)->get();
                 }
                 \Mail::to($seller->email)->send(new \App\Mail\SellerOrderReceived($orderDetails, $seller));
             }
@@ -3790,7 +3806,7 @@ class AdminController extends Controller
                 ]);
             }
 
-            return redirect()->back()->with('success', 'Payment approved successfully for the order code '. $order->order_code);
+            return redirect()->back()->with('success', 'Payment approved successfully for the order code ' . $order->order_code);
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'An error occurred while approving the payment: ' . $e->getMessage());
@@ -3804,7 +3820,7 @@ class AdminController extends Controller
         $ttl = $bankAccs->total();
         $ttlpage = (ceil($ttl / $limit));
 
-        return view('admin.bank_account',compact('bankAccs','ttlpage','ttl'));
+        return view('admin.bank_account', compact('bankAccs', 'ttlpage', 'ttl'));
     }
 
     function addBankAccount(Request $request)
@@ -3824,14 +3840,13 @@ class AdminController extends Controller
     {
         $bankAcc = BankAccount::find($id);
 
-        return view('admin.edit_bank_account',compact('bankAcc'));
+        return view('admin.edit_bank_account', compact('bankAcc'));
     }
 
     function editBankAccount(Request $request)
     {
         $bankAcc = BankAccount::find($request->id);
-        if($bankAcc)
-        {
+        if ($bankAcc) {
             $bankAcc->bank_name = $request->bank_name;
             $bankAcc->branch_name = $request->bank_branch;
             $bankAcc->account_type = $request->bank_acc_type;
@@ -3846,7 +3861,7 @@ class AdminController extends Controller
     public function deleteBankAccount(Request $request)
     {
         $data = BankAccount::findOrFail($request->id)->delete();
-        return redirect()->route('admin.bank_account')->with('success','Deleted Successfully.');
+        return redirect()->route('admin.bank_account')->with('success', 'Deleted Successfully.');
     }
 
     public function markAsSeen($id)
