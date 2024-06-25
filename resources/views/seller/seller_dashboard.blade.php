@@ -6,9 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Fastkart admin is super flexible, powerful, clean &amp; modern responsive bootstrap 5 admin template with unlimited possibilities.">
+        content="New Style Life admin is super flexible, powerful, clean &amp; modern responsive bootstrap 5 admin template with unlimited possibilities.">
     <meta name="keywords"
-        content="admin template, Fastkart admin template, dashboard template, flat admin template, responsive admin template, web app">
+        content="admin template, New Style Life admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="pixelstrap">
     <link rel="icon" href="{{ asset('frontend/assets/logos/newstyle_slogo.png') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('frontend/assets/logos/newstyle_slogo.png') }}" type="image/x-icon">
@@ -25,9 +25,11 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap">
 
     <!-- Template css -->
 
@@ -184,6 +186,7 @@
                 padding: 0 20px;
             }
         }
+
         .active-link {
             /* background-color: #7faec9; */
             background: linear-gradient(-45deg, #3f525e, #2b6b95, #021d2c);
@@ -207,33 +210,33 @@
                 <div class="header-logo-wrapper p-0">
                     <div class="logo-wrapper">
                         <a href="{{ route('seller.dashboard') }}">
-                            <img class="img-fluid main-logo" src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" alt="logo">
-                            <img class="img-fluid white-logo" src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" alt="logo">
+                            <img class="img-fluid main-logo"
+                                src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" alt="logo">
+                            <img class="img-fluid white-logo"
+                                src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" alt="logo">
                         </a>
                     </div>
                     <div class="toggle-sidebar">
                         <i class="status_toggle middle sidebar-toggle" data-feather="align-center"></i>
                         <a href="{{ route('seller.dashboard') }}">
-                            <img src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" class="img-fluid" alt="">
+                            <img src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" class="img-fluid"
+                                alt="">
                         </a>
                     </div>
                 </div>
 
-                @if (request()->is('productlist') ||
-                    request()->is('orderlist') ||
-                    request()->is('review') ||
-                    request()->is('help')
-                    )
-                <div class="search-box1">
-                    <form id="mainSearchForm" action="{{ url()->current() }}" method="GET">
-                        <div class="input-group1">
-                            <input type="search" class="form-control1" name="search" placeholder="" value="{{ request('search') }}">
-                            <button class="btn1 theme-bg-color" type="submit" id="button-addon2">
-                                <i data-feather="search"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                @if (request()->is('productlist') || request()->is('orderlist') || request()->is('review') || request()->is('help'))
+                    <div class="search-box1">
+                        <form id="mainSearchForm" action="{{ url()->current() }}" method="GET">
+                            <div class="input-group1">
+                                <input type="search" class="form-control1" name="search" placeholder=""
+                                    value="{{ request('search') }}">
+                                <button class="btn1 theme-bg-color" type="submit" id="button-addon2">
+                                    <i data-feather="search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 @endif
 
                 @php
@@ -241,68 +244,78 @@
                     use Carbon\Carbon;
                     $today = Carbon::today();
                     $notifications = SellerNotification::where('seller_id', Auth::user()->id)
-                    ->whereDate('created_at', $today)->orderBy('seen', 'ASC')->orderBy('created_at', 'DESC')->get();
-                    $notiCount = $notifications->filter(function($notify) {
-                        return $notify->seen == 0;
-                    })->count();
+                        ->whereDate('created_at', $today)
+                        ->orderBy('seen', 'ASC')
+                        ->orderBy('created_at', 'DESC')
+                        ->get();
+                    $notiCount = $notifications
+                        ->filter(function ($notify) {
+                            return $notify->seen == 0;
+                        })
+                        ->count();
                 @endphp
                 <div class="nav-right col-6 pull-right right-header p-0">
                     <ul class="nav-menus">
                         <li class="onhover-dropdown">
                             <div class="notification-box">
                                 <i class="ri-notification-line"></i>
-                                <span id="notification-badge" class="badge rounded-pill badge-theme">{{ $notiCount }}</span>
+                                <span id="notification-badge"
+                                    class="badge rounded-pill badge-theme">{{ $notiCount }}</span>
                             </div>
-                            <ul class="onhover-show-div" >
+                            <ul class="onhover-show-div">
                                 <li style="display:block">
                                     <i class="ri-notification-line"></i>
                                     <h6 class="f-18 mb-0">Notitications</h6>
                                 </li>
                                 @php
-                                    $iro = ["#417394","#9e65c2","#a927f9","#6670bd"];
+                                    $iro = ['#417394', '#9e65c2', '#a927f9', '#6670bd'];
                                 @endphp
 
-                                @foreach($notifications as $key => $notify)
-                                @if(!empty($notify->time))
-                                <li>
-                                    @if ($notify->message == 'A new order added:')
-                                    <a href="{{ route('detail.order',['id' => $notify->related_id]) }}" class="notification-link" data-id="{{ $notify->id }}">
-                                    @elseif ($notify->message == 'A new contact added:')
-                                    <a href="{{ route('help.detail', ['id' => $notify->related_id]) }}" class="notification-link" data-id="{{ $notify->id }}">
-                                    @elseif ($notify->message == 'A new product added:')
-                                    <a href="{{ route('detail.product',['id' => $notify->related_id]) }}" class="notification-link" data-id="{{ $notify->id }}">
-                                    @endif
-                                        <p>
-                                            @if ($notify->seen == 0)
-                                            @php
-                                                $color = '';
-                                                if ($notify->message == 'A new order added:') {
-                                                    $color = $iro[0];
-                                                } elseif ($notify->message == 'A new contact added:') {
-                                                    $color = $iro[1];
-                                                } elseif ($notify->message == 'A new product added:') {
-                                                    $color = $iro[2];
-                                                }
-                                            @endphp
-                                            <i class="fa fa-circle me-2 font-primary notification-circle"
-                                                style="font-size:11px;color: {{ $color }} !important">
-                                            </i>
-                                            @else
-                                            <i class="fa fa-circle me-2 font-primary notification-circle"
-                                                style="font-size:11px;color: white !important">
-                                            </i>
+                                @foreach ($notifications as $key => $notify)
+                                    @if (!empty($notify->time))
+                                        <li>
+                                            @if ($notify->message == 'A new order added:')
+                                                <a href="{{ route('detail.order', ['id' => $notify->related_id]) }}"
+                                                    class="notification-link" data-id="{{ $notify->id }}">
+                                                @elseif ($notify->message == 'A new contact added:')
+                                                    <a href="{{ route('help.detail', ['id' => $notify->related_id]) }}"
+                                                        class="notification-link" data-id="{{ $notify->id }}">
+                                                    @elseif ($notify->message == 'A new product added:')
+                                                        <a href="{{ route('detail.product', ['id' => $notify->related_id]) }}"
+                                                            class="notification-link" data-id="{{ $notify->id }}">
                                             @endif
-                                            {{ $notify->message }}
-                                            <span class="pull-right">
-                                                &nbsp;&nbsp;&nbsp;{{ \Carbon\Carbon::parse($notify->time)->format('y-m-d H:i') }}
-                                            </span>
-                                        </p>
-                                    </a>
-                                </li>
-                                @endif
+                                            <p>
+                                                @if ($notify->seen == 0)
+                                                    @php
+                                                        $color = '';
+                                                        if ($notify->message == 'A new order added:') {
+                                                            $color = $iro[0];
+                                                        } elseif ($notify->message == 'A new contact added:') {
+                                                            $color = $iro[1];
+                                                        } elseif ($notify->message == 'A new product added:') {
+                                                            $color = $iro[2];
+                                                        }
+                                                    @endphp
+                                                    <i class="fa fa-circle me-2 font-primary notification-circle"
+                                                        style="font-size:11px;color: {{ $color }} !important">
+                                                    </i>
+                                                @else
+                                                    <i class="fa fa-circle me-2 font-primary notification-circle"
+                                                        style="font-size:11px;color: white !important">
+                                                    </i>
+                                                @endif
+                                                {{ $notify->message }}
+                                                <span class="pull-right">
+                                                    &nbsp;&nbsp;&nbsp;{{ \Carbon\Carbon::parse($notify->time)->format('y-m-d H:i') }}
+                                                </span>
+                                            </p>
+                                            </a>
+                                        </li>
+                                    @endif
                                 @endforeach
                                 <li style="display:block">
-                                    <a class="btn btn-primary mx-auto" href="/seller-notifications/allseen">Check all notification</a>
+                                    <a class="btn btn-primary mx-auto" href="/seller-notifications/allseen">Check all
+                                        notification</a>
                                 </li>
                             </ul>
                         </li>
@@ -315,7 +328,8 @@
 
                         <li class="profile-nav onhover-dropdown pe-0 me-0">
                             <div class="media profile-media">
-                                <img src="{{ (!empty(Auth::user()->user_photo)) ? url('images/'.Auth::user()->user_photo) : url('images/profile.jpg') }}" class="user-profile rounded-circle">
+                                <img src="{{ !empty(Auth::user()->user_photo) ? url('images/' . Auth::user()->user_photo) : url('images/profile.jpg') }}"
+                                    class="user-profile rounded-circle">
                                 <div class="user-name-hide media-body">
                                     <span>{{ Auth::user()->name }}</span>
 
@@ -353,7 +367,8 @@
                 <div>
                     <div class="logo-wrapper logo-wrapper-center">
                         <a href="{{ route('seller.dashboard') }}" data-bs-original-title="" title="">
-                            <img class="img-fluid for-white" src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" alt="logo">
+                            <img class="img-fluid for-white"
+                                src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" alt="logo">
                         </a>
                         <div class="back-btn">
                             <i class="fa fa-angle-left"></i>
@@ -364,9 +379,10 @@
                     </div>
                     <div class="logo-icon-wrapper">
                         <a href="{{ route('seller.dashboard') }}">
-                            <img class="img-fluid main-logo main-white" src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" alt="logo">
-                            <img class="img-fluid main-logo main-dark" src="{{ asset('backend/assets/images/logo/logo-white.png') }}"
-                                alt="logo">
+                            <img class="img-fluid main-logo main-white"
+                                src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" alt="logo">
+                            <img class="img-fluid main-logo main-dark"
+                                src="{{ asset('backend/assets/images/logo/logo-white.png') }}" alt="logo">
                         </a>
                     </div>
                     <nav class="sidebar-main">
@@ -380,10 +396,10 @@
 
                                 <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav
-                                     {{ request()->routeIs('seller.dashboard')
-                                    || request()->is('admin/transfer-order-details/*')
-                                     ? 'active-link' : '' }}" 
-                                      href="{{ route('seller.dashboard') }}">
+                                     {{ request()->routeIs('seller.dashboard') || request()->is('admin/transfer-order-details/*')
+                                         ? 'active-link'
+                                         : '' }}"
+                                        href="{{ route('seller.dashboard') }}">
                                         <i class="ri-home-line"></i>
                                         <span>Dashboard</span>
                                     </a>
@@ -391,12 +407,13 @@
 
                                 <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav
-                                     {{ request()->routeIs('all.product')
-                                    || request()->is('productadd')
-                                    || request()->is('productdetail/*')
-                                    || request()->is('productedit/*')
-                                     ? 'active-link' : '' }}" 
-                                      href="{{ route('all.product') }}">
+                                     {{ request()->routeIs('all.product') ||
+                                     request()->is('productadd') ||
+                                     request()->is('productdetail/*') ||
+                                     request()->is('productedit/*')
+                                         ? 'active-link'
+                                         : '' }}"
+                                        href="{{ route('all.product') }}">
                                         <i class="ri-store-3-line"></i>
                                         <span>Product</span>
                                     </a>
@@ -404,11 +421,10 @@
 
                                 <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav
-                                     {{ request()->routeIs('all.order')
-                                    || request()->is('orderdetail/*')
-                                    || request()->is('ordertracking/*')
-                                     ? 'active-link' : '' }}" 
-                                      href="{{ route('all.order') }}">
+                                     {{ request()->routeIs('all.order') || request()->is('orderdetail/*') || request()->is('ordertracking/*')
+                                         ? 'active-link'
+                                         : '' }}"
+                                        href="{{ route('all.order') }}">
                                         <i class="ri-archive-line"></i>
                                         <span>Order</span>
                                     </a>
@@ -416,31 +432,29 @@
 
                                 <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav
-                                     {{ request()->routeIs('seller.review') ? 'active-link' : '' }}" 
-                                      href="{{ route('seller.review') }}">
+                                     {{ request()->routeIs('seller.review') ? 'active-link' : '' }}"
+                                        href="{{ route('seller.review') }}">
                                         <i class="ri-star-line"></i>
                                         <span>Review</span>
                                     </a>
                                 </li>
 
-                                @if(Auth::user()->created_by == NULL)
-                                <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title link-nav
-                                     {{ request()->routeIs('all.subseller')
-                                    || request()->is('subselleradd')
-                                     ? 'active-link' : '' }}" 
-                                      href="{{ route('all.subseller') }}">
-                                        <i class="ri-user-3-line"></i>
-                                        <span>Subseller</span>
-                                    </a>
-                                </li>
+                                @if (Auth::user()->created_by == null)
+                                    <li class="sidebar-list">
+                                        <a class="sidebar-link sidebar-title link-nav
+                                     {{ request()->routeIs('all.subseller') || request()->is('subselleradd') ? 'active-link' : '' }}"
+                                            href="{{ route('all.subseller') }}">
+                                            <i class="ri-user-3-line"></i>
+                                            <span>Subseller</span>
+                                        </a>
+                                    </li>
                                 @endif
 
 
                                 <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav
-                                     {{ request()->routeIs('seller.profile') ? 'active-link' : '' }}" 
-                                      href="{{ route('seller.profile') }}">
+                                     {{ request()->routeIs('seller.profile') ? 'active-link' : '' }}"
+                                        href="{{ route('seller.profile') }}">
                                         <i class="ri-user-3-line"></i>
                                         <span>Profile</span>
                                     </a>
@@ -448,18 +462,17 @@
 
                                 <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav
-                                     {{ request()->routeIs('seller.help')
-                                    || request()->is('helpdetail/*')
-                                     ? 'active-link' : '' }}" 
-                                      href="{{ route('seller.help') }}">
+                                     {{ request()->routeIs('seller.help') || request()->is('helpdetail/*') ? 'active-link' : '' }}"
+                                        href="{{ route('seller.help') }}">
                                         <i class="ri-mail-line"></i>
                                         <span>Contact</span>
                                     </a>
                                 </li>
 
-                                <li class="sidebar-list" >
-                                    <a class="sidebar-link sidebar-title link-nav" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                    href="javascript:void(0)">
+                                <li class="sidebar-list">
+                                    <a class="sidebar-link sidebar-title link-nav" href="#"
+                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                        href="javascript:void(0)">
                                         <i class="ri-logout-box-r-line"></i>
                                         <span>Log Out</span>
                                     </a>
@@ -495,7 +508,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <form method="POST" action="{{ route('adminlogout')}}">
+                    <form method="POST" action="{{ route('adminlogout') }}">
                         @csrf
                         <button type="submit" class="btn btn-animation btn-primary">Yes</button>
                     </form>
@@ -576,8 +589,10 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            link.find('.notification-circle').css('color', 'white'); // Optionally change color to indicate it was seen
-                            window.location.href = link.attr('href'); // Redirect to the link's target
+                            link.find('.notification-circle').css('color',
+                            'white'); // Optionally change color to indicate it was seen
+                            window.location.href = link.attr(
+                            'href'); // Redirect to the link's target
                         } else {
                             alert('Error marking notification as seen.');
                         }
