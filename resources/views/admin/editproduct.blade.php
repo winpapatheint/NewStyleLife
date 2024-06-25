@@ -168,7 +168,7 @@
                                             <div class="col-sm-9">
                                                 <input type="file" class="form-control" name="product_thambnail">
                                                 <img id="prev_thambnail"
-                                                    src="{{ asset('images/' . $products->product_thambnail) }}"
+                                                    src="{{ asset('upload/product_thambnail/' . $products->product_thambnail) }}"
                                                     width="80">
                                             </div>
                                         </div>
@@ -219,28 +219,6 @@
                                             <div class="col-sm-9">
                                                 <input class="form-control" name="delivery_price" type="number"
                                                     min="1" value="{{ $products->delivery_price }}">
-                                            </div>
-                                        </div>
-
-                                        <div class="mb-4 row align-items-center">
-                                            <label class="col-sm-3 form-label-title">Shipping Country</label>
-                                            <div class="col-sm-9">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="form-check me-3">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="shipping_country" id="japan" value="0"
-                                                            {{ $products->shipping_country == '0' ? 'checked' : '' }}>
-                                                        <label class="form-check-label" for="japan">Japan</label>
-                                                    </div>
-                                                    <div class="form-check me-3">
-                                                        <input class="form-check-input" type="radio"
-                                                            name="shipping_country" id="abroad" value="1"
-                                                            {{ $products->shipping_country == '1' ? 'checked' : '' }}>
-                                                        <label class="form-check-label" for="abroad">Abroad</label>
-                                                    </div>
-                                                </div>
-                                                <p class="error" style="color:red; margin-top: 0.1rem;"
-                                                    id="error-shipping_country"></p>
                                             </div>
                                         </div>
 
@@ -309,7 +287,7 @@
                                         </thead>
                                         <tbody id="imageTableBody">
                                             <form class="theme-form theme-form-2 mega-form" method="POST"
-                                                action="{{ route('update.multiImg') }}" enctype="multipart/form-data"
+                                                action="{{ route('updatemultiImg') }}" enctype="multipart/form-data"
                                                 id="imageForm">
                                                 @csrf
                                                 @foreach ($multiImgs as $key => $img)
@@ -437,7 +415,7 @@
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
-                    <form method="POST" action="{{ route('update.multiImg') }}" enctype="multipart/form-data"
+                    <form method="POST" action="{{ route('updatemultiImg') }}" enctype="multipart/form-data"
                         id="new-img-form">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $products->id }}">
@@ -450,7 +428,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-animation" onclick="validateForm()">Yes</button>
+                            <button type="button" class="btn btn-animation" onclick="validateForm()">Yess</button>
                             <button type="button" class="btn btn-animation btn-secondary"
                                 data-bs-dismiss="modal">No</button>
                         </div>
@@ -478,7 +456,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <form method="POST" action="{{ route('delete.multiImg') }}">
+                            <form method="GET" action="{{ route('deletemultiImg', $img->id) }}">
                                 @csrf
                                 <input type="hidden" name="id" value="{{ $img->id }}">
                                 <button type="submit" class="btn btn-animation">Yes</button>

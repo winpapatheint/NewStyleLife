@@ -2578,21 +2578,37 @@ class AdminController extends Controller
 
     public function updateMultiImg(Request $request)
     {
-        $request->validate([
-            'multi_img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-        $imgs = $request->multi_img;
-        foreach ($imgs as $id => $img) {
-            $imgDel = MultiImg::findOrFail($id);
-            File::delete($imgDel->photo_name);
+        $id = $request->product_id;
+        if ($request->has('multi_img')) {
+            foreach ($request->multi_img as $id => $img) {
+                if ($img->isValid()) {
+                    $filename = time() . '_' . rand(100, 999) . '.' . $img->getClientOriginalExtension();
+                    $img->move(public_path('upload/multiImg'), $filename);
+
+                    MultiImg::where('id', $id)->update([
+                        'photo_name' => $filename,
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
         }
-        $filename = time() . '_' . rand(100, 999) . '.' . $img->getClientOriginalExtension();
-        $img->move('upload/multiImg', $filename);
-        MultiImg::where('id', $id)->update([
-            'photo_name' => $filename,
-            'updated_at' => Carbon::now(),
-        ]);
-        return back()->with('flash_message', 'Image updated successfully');
+
+        if ($request->hasFile('new_img')) {
+            $newImg = $request->File('new_img');
+            if ($newImg->isValid()) {
+                $filename = time() . '_' . rand(100, 999) . '.' . $newImg->getClientOriginalExtension();
+                $newImg->move(public_path('upload/multiImg'), $filename);
+
+                MultiImg::create([
+                    'product_id' => $id,
+                    'photo_name' => $filename,
+                    'created_at' => Carbon::now(),
+                ]);
+            }
+        }
+
+        $msg = ('Image updated Successfully');
+        return redirect()->back()->with('success', $msg);
     }
 
     public function deleteMultiImg($id)
@@ -2600,7 +2616,7 @@ class AdminController extends Controller
         $old_img = MultiImg::findOrFail($id);
         File::delete($old_img->photo_name);
         MultiImg::findOrFail($id)->delete();
-        return back()->with('flash_message', 'Image deleted successfully');
+        return redirect()->back()->with('flash_message', 'Image deleted successfully');
     }
 
     public function editproduct($id)
@@ -2973,7 +2989,7 @@ class AdminController extends Controller
 
         DB::table('tops')->where('id', $request->id)->update($updval);
 
-        return redirect('/admin/top')->with('success', '「' . $request->title . '」' . __('auth.doneedit'));
+        return redirect('/admin/top')->with('success', 'Successfully updated!');
     }
 
 
@@ -3003,7 +3019,7 @@ class AdminController extends Controller
 
         DB::table('customers')->where('id', $request->id)->update($updval);
 
-        return redirect('/admin/indexcustomer')->with('success', '「' . $request->title . '」' . __('auth.doneedit'));
+        return redirect('/admin/indexcustomer')->with('success', 'Successfully updated!');
     }
 
 
@@ -3152,7 +3168,7 @@ class AdminController extends Controller
         $product->updated_at = Carbon::now();
         $product->update();
         $msg = ('Product updated Successfully');
-        return redirect('/admin/product')->with('success', '「' . $request->title . '」' . __('auth.doneedit'));
+        return redirect('/admin/product')->with('success', 'Successfully updated!');
     }
 
 
