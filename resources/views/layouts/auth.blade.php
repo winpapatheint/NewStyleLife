@@ -194,6 +194,13 @@
             background: linear-gradient(-45deg, #3f525e, #2b6b95, #021d2c);
             /* Add any other styles you need */
         }
+
+        .scrollable-dropdown {
+            max-height: 500px;
+            overflow-y: auto;
+            z-index: 1000;
+            /* Ensure it's above other elements */
+        }
     </style>
 </head>
 
@@ -271,107 +278,114 @@
                                     class="badge rounded-pill badge-theme">{{ $notiCount }}</span>
                             </div>
                             <ul class="onhover-show-div">
-                                <li style="display:block">
-                                    <i class="ri-notification-line"></i>
-                                    <h6 class="f-18 mb-0">Notitications</h6>
-                                </li>
-                                @php
-                                    $iro = [
-                                        '#0da487',
-                                        '#9e65c2',
-                                        '#a927f9',
-                                        '#6670bd',
-                                        '#9944ff',
-                                        '#dc3545',
-                                        '#0da487',
-                                        '#dc3545',
-                                        '#6670bd',
-                                    ];
-                                @endphp
+                                <div class="scrollable-dropdown">
+                                    <li style="display:block">
+                                        <i class="ri-notification-line"></i>
+                                        <h6 class="f-18 mb-0">Notitications</h6>
+                                    </li>
+                                    @php
+                                        $iro = [
+                                            '#0da487',
+                                            '#9e65c2',
+                                            '#a927f9',
+                                            '#6670bd',
+                                            '#9944ff',
+                                            '#dc3545',
+                                            '#0da487',
+                                            '#dc3545',
+                                            '#6670bd',
+                                        ];
+                                    @endphp
 
-                                @foreach ($notifications as $key => $notify)
-                                    @if (!empty($notify->time))
-                                        <li>
-                                            @if ($notify->message == 'A new store added:')
-                                                <a href="{{ url('/shop/' . $notify->related_id) }}"
-                                                    class="notification-link" data-id="{{ $notify->id }}">
-                                                @elseif ($notify->message == 'A new user added:')
-                                                    <a href="{{ url('/userdetail/' . $notify->related_id) }}"
+                                    @foreach ($notifications as $key => $notify)
+                                        @if (!empty($notify->time))
+                                            <li>
+                                                @if ($notify->message == 'A new store added:')
+                                                    <a href="{{ url('/shop/' . $notify->related_id) }}"
                                                         class="notification-link" data-id="{{ $notify->id }}">
-                                                    @elseif ($notify->message == 'A new product added:')
-                                                        <a href="{{ url('admin/productdetail/' . $notify->related_id) }}"
+                                                    @elseif ($notify->message == 'A new user added:')
+                                                        <a href="{{ url('/userdetail/' . $notify->related_id) }}"
                                                             class="notification-link" data-id="{{ $notify->id }}">
-                                                        @elseif ($notify->message == 'A new order added:')
-                                                            <a href="{{ url('/admin/orderdetail/' . $notify->related_id) }}"
+                                                        @elseif ($notify->message == 'A new product added:')
+                                                            <a href="{{ url('admin/productdetail/' . $notify->related_id) }}"
                                                                 class="notification-link"
                                                                 data-id="{{ $notify->id }}">
-                                                            @elseif ($notify->message == 'A new contact added:')
-                                                                <a href="{{ url('helpdetails/' . $notify->related_id) }}"
+                                                            @elseif ($notify->message == 'A new order added:')
+                                                                <a href="{{ url('/admin/orderdetail/' . $notify->related_id) }}"
                                                                     class="notification-link"
                                                                     data-id="{{ $notify->id }}">
-                                                                @elseif (Str::contains($notify->message, 'Product deleted by'))
-                                                                    <a href="" class="notification-link"
+                                                                @elseif ($notify->message == 'A new contact added:')
+                                                                    <a href="{{ url('helpdetails/' . $notify->related_id) }}"
+                                                                        class="notification-link"
                                                                         data-id="{{ $notify->id }}">
-                                                                    @elseif (Str::contains($notify->message, 'A new sub seller added by'))
+                                                                    @elseif (Str::contains($notify->message, 'Product deleted by'))
                                                                         <a href="" class="notification-link"
                                                                             data-id="{{ $notify->id }}">
-                                                                        @elseif (Str::contains($notify->message, 'did not pay in time for cash order'))
-                                                                            <a href="{{ url('admin/orderlist') }}"
+                                                                        @elseif (Str::contains($notify->message, 'A new sub seller added by'))
+                                                                            <a href=""
                                                                                 class="notification-link"
                                                                                 data-id="{{ $notify->id }}">
-                                            @endif
-                                            <p>
-                                                @if ($notify->seen == 0)
-                                                    @php
-                                                        $color = '';
-                                                        if ($notify->message == 'A new store added:') {
-                                                            $color = $iro[0];
-                                                        } elseif ($notify->message == 'A new user added:') {
-                                                            $color = $iro[1];
-                                                        } elseif ($notify->message == 'A new product added:') {
-                                                            $color = $iro[2];
-                                                        } elseif ($notify->message == 'A new order added:') {
-                                                            $color = $iro[3];
-                                                        } elseif ($notify->message == 'A new contact added:') {
-                                                            $color = $iro[4];
-                                                        } elseif (
-                                                            Str::contains($notify->message, 'Product deleted by')
-                                                        ) {
-                                                            $color = $iro[5];
-                                                        } elseif (
-                                                            Str::contains($notify->message, 'A new sub seller added by')
-                                                        ) {
-                                                            $color = $iro[6];
-                                                        } elseif (
-                                                            Str::contains(
-                                                                $notify->message,
-                                                                'did not pay in time for cash order',
-                                                            )
-                                                        ) {
-                                                            $color = $iro[7];
-                                                        }
-                                                    @endphp
-                                                    <i class="fa fa-circle me-2 font-primary notification-circle"
-                                                        style="font-size:11px;color: {{ $color }} !important">
-                                                    </i>
-                                                @else
-                                                    <i class="fa fa-circle me-2 font-primary notification-circle"
-                                                        style="font-size:11px;color: white !important">
-                                                    </i>
+                                                                            @elseif (Str::contains($notify->message, 'did not pay in time for cash order'))
+                                                                                <a href="{{ url('admin/orderlist') }}"
+                                                                                    class="notification-link"
+                                                                                    data-id="{{ $notify->id }}">
                                                 @endif
-                                                {{ $notify->message }}
-                                                <span class="pull-right">
-                                                    &nbsp;&nbsp;&nbsp;{{ \Carbon\Carbon::parse($notify->time)->format('y-m-d H:i') }}
-                                                </span>
-                                            </p>
-                                            </a>
-                                        </li>
-                                    @endif
-                                @endforeach
-                                <li style="display:block">
-                                    <a class="btn btn-primary mx-auto"
-                                        href="{{ url('/notifications/allseen') }}">Check all notification</a>
-                                </li>
+                                                <p>
+                                                    @if ($notify->seen == 0)
+                                                        @php
+                                                            $color = '';
+                                                            if ($notify->message == 'A new store added:') {
+                                                                $color = $iro[0];
+                                                            } elseif ($notify->message == 'A new user added:') {
+                                                                $color = $iro[1];
+                                                            } elseif ($notify->message == 'A new product added:') {
+                                                                $color = $iro[2];
+                                                            } elseif ($notify->message == 'A new order added:') {
+                                                                $color = $iro[3];
+                                                            } elseif ($notify->message == 'A new contact added:') {
+                                                                $color = $iro[4];
+                                                            } elseif (
+                                                                Str::contains($notify->message, 'Product deleted by')
+                                                            ) {
+                                                                $color = $iro[5];
+                                                            } elseif (
+                                                                Str::contains(
+                                                                    $notify->message,
+                                                                    'A new sub seller added by',
+                                                                )
+                                                            ) {
+                                                                $color = $iro[6];
+                                                            } elseif (
+                                                                Str::contains(
+                                                                    $notify->message,
+                                                                    'did not pay in time for cash order',
+                                                                )
+                                                            ) {
+                                                                $color = $iro[7];
+                                                            }
+                                                        @endphp
+                                                        <i class="fa fa-circle me-2 font-primary notification-circle"
+                                                            style="font-size:11px;color: {{ $color }} !important">
+                                                        </i>
+                                                    @else
+                                                        <i class="fa fa-circle me-2 font-primary notification-circle"
+                                                            style="font-size:11px;color: white !important">
+                                                        </i>
+                                                    @endif
+                                                    {{ $notify->message }}
+                                                    <span class="pull-right">
+                                                        &nbsp;&nbsp;&nbsp;{{ \Carbon\Carbon::parse($notify->time)->format('y-m-d H:i') }}
+                                                    </span>
+                                                </p>
+                                                </a>
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                    <li style="display:block">
+                                        <a class="btn btn-primary mx-auto"
+                                            href="{{ url('/notifications/allseen') }}">Check all notification</a>
+                                    </li>
+                                </div>
                             </ul>
                         </li>
 
@@ -746,9 +760,9 @@
                     success: function(response) {
                         if (response.success) {
                             link.find('.notification-circle').css('color',
-                            'white'); // Optionally change color to indicate it was seen
+                                'white'); // Optionally change color to indicate it was seen
                             window.location.href = link.attr(
-                            'href'); // Redirect to the link's target
+                                'href'); // Redirect to the link's target
                         } else {
                             alert('Error marking notification as seen.');
                         }

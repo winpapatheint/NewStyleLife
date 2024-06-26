@@ -1,9 +1,8 @@
 <x-auth-layout>
 
     <style>
-        .table>:not(caption)>*>*
-        {
-            border-bottom-width:0px !important;
+        .table>:not(caption)>*>* {
+            border-bottom-width: 0px !important;
         }
     </style>
 
@@ -31,32 +30,36 @@
                                         </thead>
 
                                         <tbody>
-                                            @foreach( $lists as $key => $list )
+                                            @foreach ($lists as $key => $list)
+                                                <tr>
+                                                    <td style="text-align:center">
+                                                        {{ $ttl + 1 - ($lists->firstItem() + $key) }}</td>
+                                                    <td data-label="タイトル">{{ $list->discount }}</td>
+                                                    <td style="text-align:left;min-width: 250px">{{ $list->phaseone }}
+                                                    </td>
+                                                    <td style="text-align:left;min-width: 250px">{{ $list->phasetwo }}
+                                                    </td>
+                                                    <td style="text-align:left;">
+                                                        @if (mb_strlen($list->phasethree) > 30)
+                                                            {!! mb_substr($list->phasethree, 0, mb_strlen($list->phasethree) / 2) .
+                                                                '<br>' .
+                                                                mb_substr($list->phasethree, mb_strlen($list->phasethree) / 2) !!}
+                                                        @else
+                                                            {!! nl2br(e($list->phasethree)) !!}
+                                                        @endif
+                                                    </td>
 
-                                            <tr>
-                                                <td style="text-align:center">{{ ($ttl+1) - ($lists->firstItem() + $key) }}</td>
-                                                <td data-label="タイトル">{{ $list->discount }}</td>
-                                                <td style="text-align:left;min-width: 250px">{{ $list->phaseone }}</td>
-                                                <td style="text-align:left;min-width: 250px">{{ $list->phasetwo }}</td>
-                                                <td style="text-align:left;">
-                                                @if(mb_strlen($list->phasethree) > 30)
-                                                    {!! mb_substr($list->phasethree, 0, (mb_strlen($list->phasethree) /2)) . '<br>' . mb_substr($list->phasethree, (mb_strlen($list->phasethree) /2)) !!}
-                                                @else
-                                                    {!! nl2br(e($list->phasethree)) !!}
-                                                @endif
-                                                </td>
+                                                    <td>
+                                                        <ul>
+                                                            <li>
+                                                                <a href='{{ url('/edittop/' . $list->id) }}'>
+                                                                    <i class="ri-pencil-line"></i>
+                                                                </a>
+                                                            </li>
 
-                                              <td>
-                                                <ul>
-                                                    <li>
-                                                        <a href='{{ url("/edittop/".$list->id ) }}'>
-                                                            <i class="ri-pencil-line"></i>
-                                                        </a>
-                                                    </li>
-
-                                                </ul>
-                                            </td>
-                                            </tr>
+                                                        </ul>
+                                                    </td>
+                                                </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -65,8 +68,8 @@
                         </div>
                     </div>
                 </div>
-                    <!--pagination -->
-                    @include('components.pagination')
+                <!--pagination -->
+                @include('components.pagination')
             </div>
         </div>
         <!-- Container-fluid Ends-->
