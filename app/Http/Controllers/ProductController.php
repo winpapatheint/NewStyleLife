@@ -240,7 +240,7 @@ class ProductController extends Controller
         $product->updated_at= Carbon::now();
         $product->update();
         $msg = ('Product updated Successfully');
-        return redirect('/productlist')->with('success', $msg);
+        return back()->with('success', $msg);
     }
 
     public function deleteProduct(Request $request)
@@ -313,7 +313,7 @@ class ProductController extends Controller
         }
 
         $msg = ('Image updated Successfully');
-        return redirect('/productlist')->with('success', $msg);
+        return back()->with('success', $msg);
     }
 
     public function deleteMultiImg(Request $request)

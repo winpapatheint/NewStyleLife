@@ -13,8 +13,27 @@
             border-radius: 0%;
         }
 
+<<<<<<< HEAD
         .btn-group input,
         .btn-group button {
+=======
+        border-radius: 0%;
+    }
+</style>
+<div class="page-body">
+<!-- New Product Add Start -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    @include('components.messagebox')
+                    <div class="col-sm-8 m-auto">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-header-2">
+                                    <h5>Product Information</h5>
+                                </div>
+>>>>>>> 17f3ef94 (update)
 
             border-radius: 0%;
         }
