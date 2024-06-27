@@ -1599,9 +1599,7 @@ class AdminController extends Controller
 
     public function shopdetail($id)
     {
-        $shops = DB::table('sellers')
-            ->select('sellers.*')
-            ->where('sellers.id', $id)->get();
+        $shops = Seller::where('sellers.id', $id)->get();
         $coupon_id = DB::table('sellers')
             ->where('id', $id)
             ->pluck('coupon_id')
