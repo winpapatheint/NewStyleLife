@@ -37,34 +37,6 @@
                 }
                 return $zipCode; // return as-is if not a standard 7 digit zip code
             }
-            function formatPhoneNumber($phone)
-            {
-                // Remove any non-digit characters
-                $phone = preg_replace('/\D+/', '', $phone);
-
-                // Assume international format if the phone number starts with '00' or '+'
-                if (substr($phone, 0, 2) == '00') {
-                    $phone = substr($phone, 2);
-                } elseif (substr($phone, 0, 1) == '+') {
-                    $phone = substr($phone, 1);
-                } else {
-                    // Default country code (change '81' to your default country code)
-                    $phone = '' . $phone;
-                }
-
-                // Format the phone number (example: +81 80 3829 8333)
-                $formatted =
-                    '+' .
-                    substr($phone, 0, 2) .
-                    ' ' .
-                    substr($phone, 2, 3) .
-                    ' ' .
-                    substr($phone, 5, 4) .
-                    ' ' .
-                    substr($phone, 9);
-
-                return $formatted;
-            }
         @endphp
         <div class="container-fluid-lg">
             <div class="row g-4">
