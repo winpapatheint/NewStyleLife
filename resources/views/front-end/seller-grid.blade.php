@@ -69,7 +69,7 @@
 
                                         <div class="contact-detail">
 
-                                            <h5>Contact Us: <span>{{ formatPhoneNumber($seller->phone) }}</span></h5>
+                                            <h5>Contact Us: <span>{{ $seller->phone }}</span></h5>
                                         </div>
                                     </div>
                                 </div>
