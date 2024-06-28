@@ -2446,6 +2446,41 @@ class AdminController extends Controller
         return redirect('/admin/product')->with('success', 'commission added');
     }
 
+    public function  updatesubcatname(Request $request)
+    {
+        // Retrieve the input values
+        $subcat = $request->input('subcat');
+
+        $subcatId = $request->input('subcatid');
+        // Process the data (e.g., update the database)
+        $item = SubCategoryTitle::find($subcatId);
+
+        if ($item) {
+            $item->sub_category_titlename = $subcat;
+            $item->save();
+        }
+
+        return redirect('/admin/category')->with('success', 'updated subcategory');
+    }
+
+    public function  updatecategoryname(Request $request)
+    {
+        // Retrieve the input values
+        $category = $request->input('category');
+
+        $categoryId = $request->input('categoryid');
+        // Process the data (e.g., update the database)
+        $item = Category::find($categoryId);
+
+        if ($item) {
+            $item->category_name = $category;
+            $item->save();
+        }
+
+        return redirect('/admin/category')->with('success', 'updated category');
+    }
+
+
     // update coupon for product
     public function  updateproductcoupon(Request $request)
     {
@@ -2462,6 +2497,7 @@ class AdminController extends Controller
     }
 
 
+
     public function deleteuser(Request $request)
     {
 
@@ -2472,7 +2508,6 @@ class AdminController extends Controller
 
     public function deletesubadmin(Request $request)
     {
-
         $data = DB::table('users')
             ->delete($request->id);
         return redirect('/admin/subadmin')->with('success', '削除されました。');
