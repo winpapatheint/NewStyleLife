@@ -1,5 +1,6 @@
 <x-guest-layout>
-    @php$error = $errors->toArray();
+    @php
+        $error = $errors->toArray();
     @endphp
     <style>
         .home-section pt-2 {
@@ -154,7 +155,8 @@
                             <div class="section-b-space">
                                 <div
                                     class="row row-cols-xxl-5 row-cols-md-4 row-cols-sm-3 row-cols-2 g-sm-4 g-3 no-arrow">
-                                    @foreach ($couponProducts as $couponProduct)
+                                    @foreach ($couponProducts as $keycoupon => $couponProduct)
+                                    @if ($keycoupon < 30)
                                         <div>
                                             <div class="product-box product-white-bg wow fadeIn" data-wow-delay="0.1s">
                                                 <div class="product-image">
@@ -351,7 +353,7 @@
                                                                                             <input
                                                                                                 class="form-check-input"
                                                                                                 type="radio"
-                                                                                                name="selected_size_{{ $couponProduct->id }}"
+                                                                                                name="selected_coupon_size_{{ $couponProduct->id }}"
                                                                                                 value="{{ $size }}"
                                                                                                 id="size_{{ $couponProduct->id }}_{{ $size }}"
                                                                                                 {{ $key === 0 ? 'checked' : '' }}>
@@ -378,7 +380,7 @@
                                                                                             <input
                                                                                                 class="form-check-input"
                                                                                                 type="radio"
-                                                                                                name="selected_color_{{ $couponProduct->id }}"
+                                                                                                name="selected_coupon_color_{{ $couponProduct->id }}"
                                                                                                 value="{{ $color }}"
                                                                                                 id="color_{{ $couponProduct->id }}_{{ $color }}"
                                                                                                 {{ $key === 0 ? 'checked' : '' }}>
@@ -391,7 +393,7 @@
                                                                         </ul>
                                                                         <div class="modal-button">
                                                                             <button
-                                                                                onclick="addToCart({{ $couponProduct->id }})"
+                                                                                onclick="addToCartCoupon({{ $couponProduct->id }})"
                                                                                 class="btn btn-md add-cart-button icon"
                                                                                 @if ($couponProduct->in_stock < 1) disabled @endif>
                                                                                 Add To Cart</button>
@@ -409,6 +411,7 @@
                                                 </div>
                                             </div>
                                             <!-- Quick View Modal Box End -->
+                                        @endif
                                         @endif
                                     @endforeach
                                 </div>
@@ -449,7 +452,7 @@
                                                                 style="color: #417394;">Publisher : New Style Life</h4>
                                                         @endif
                                                     @endif
-                                                    <h6 class="coupon-code" style="color: #417394;">Use Code :
+                                                    <h6 class="coupon-code">Use Code :
                                                         {{ $coupon->coupon_code }}</h6>
                                                 </div>
                                             </div>
@@ -726,7 +729,7 @@
                                                                                 style="margin-left: 10px; margin-top: 15px;">
                                                                                 <input class="form-check-input"
                                                                                     type="radio"
-                                                                                    name="selected_size_{{ $latestProduct->id }}"
+                                                                                    name="selected_latest_size_{{ $latestProduct->id }}"
                                                                                     value="{{ $size }}"
                                                                                     id="size_{{ $latestProduct->id }}_{{ $size }}"
                                                                                     {{ $key === 0 ? 'checked' : '' }}>
@@ -752,7 +755,7 @@
                                                                                 style="margin-left: 10px; margin-top: 15px;">
                                                                                 <input class="form-check-input"
                                                                                     type="radio"
-                                                                                    name="selected_color_{{ $latestProduct->id }}"
+                                                                                    name="selected_latest_color_{{ $latestProduct->id }}"
                                                                                     value="{{ $color }}"
                                                                                     id="color_{{ $latestProduct->id }}_{{ $color }}"
                                                                                     {{ $key === 0 ? 'checked' : '' }}>
@@ -764,7 +767,7 @@
                                                                 </li>
                                                             </ul>
                                                             <div class="modal-button">
-                                                                <button onclick="addToCart({{ $latestProduct->id }})"
+                                                                <button onclick="addToCartLatest({{ $latestProduct->id }})"
                                                                     class="btn btn-md add-cart-button icon"
                                                                     @if ($latestProduct->in_stock < 1) disabled @endif>
                                                                     Add To Cart</button>
@@ -1091,9 +1094,19 @@
         });
     </script>
     <script>
-        function addToCart(productId) {
-            const selectedSize = document.querySelector(`input[name="selected_size_${productId}"]:checked`).value;
-            const selectedColor = document.querySelector(`input[name="selected_color_${productId}"]:checked`).value;
+        function addToCartCoupon(productId) {
+            const selectedSize = document.querySelector(`input[name="selected_coupon_size_${productId}"]:checked`).value;
+            const selectedColor = document.querySelector(`input[name="selected_coupon_color_${productId}"]:checked`).value;
+
+            const url = new URL('{{ route('show_carts', ['id' => '__ID__']) }}'.replace('__ID__', productId));
+            url.searchParams.append('size', selectedSize);
+            url.searchParams.append('color', selectedColor);
+
+            location.href = url.toString();
+        }
+        function addToCartLatest(productId) {
+            const selectedSize = document.querySelector(`input[name="selected_latest_size_${productId}"]:checked`).value;
+            const selectedColor = document.querySelector(`input[name="selected_latest_color_${productId}"]:checked`).value;
 
             const url = new URL('{{ route('show_carts', ['id' => '__ID__']) }}'.replace('__ID__', productId));
             url.searchParams.append('size', selectedSize);
