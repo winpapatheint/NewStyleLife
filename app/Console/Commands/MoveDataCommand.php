@@ -53,6 +53,19 @@ class MoveDataCommand extends Command
                     ]);
 
                     $userMapping[$user->id] = $newUserId;
+                    // Move user photo
+                    $sourcePath = public_path('upload/profile/' . $user->user_photo);
+                    $destinationPath = base_path('/Users/mac_4/Documents/EC_Project/public/upload/profile/' . $user->user_photo);
+
+                    if (file_exists($sourcePath)) {
+                        if (!file_exists(dirname($destinationPath))) {
+                            mkdir(dirname($destinationPath), 0777, true);
+                        }
+                        copy($sourcePath, $destinationPath);
+                        Log::info('Photo moved for user: ' . $user->email);
+                    } else {
+                        Log::warning('Photo not found for user: ' . $user->email);
+                    }
                 } else {
                     $userMapping[$user->id] = $existingUser->id;
                 }

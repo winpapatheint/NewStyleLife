@@ -48,37 +48,6 @@
                                                     @endif
                                                     </div>
                                                 </div>
-
-                                                {{-- @if(isset($reply))
-                                                    @foreach ($reply as $item)
-                                                    <div class="mb-4 row">
-                                                        @if (!empty($item->img))
-                                                            <div class="mb-4 row align-items-center">
-                                                                <label class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
-                                                                <div class="col-md-9 col-lg-10">
-                                                                    <img width="100" src="{{ asset('upload/shop/'.$item->img) }}">
-                                                                </div>
-                                                            </div>
-                                                        @endif
-
-                                                        <div class="row align-items-center">
-                                                            <label
-                                                                class="col-lg-2 col-md-3 col-form-label form-label-title">Me
-                                                                </label>
-                                                            <div class="col-md-9 col-lg-10">
-                                                                <p>{{ $item->body }}</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    @endforeach
-                                                @endif
-    {{-- --}}
-
-                                                {{-- <div class="d-grid gap-2 d-md-block"  style="margin-top: 20px;">
-                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#replyModal">
-                                                        <button class="btn btn-animation" type="submit">Reply</button>
-                                                    </a>
-                                                </div> --}}
                                             </form>
                                         </div>
                                     </div>

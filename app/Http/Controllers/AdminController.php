@@ -415,7 +415,7 @@ class AdminController extends Controller
             $time = new DateTime();
             $imageNames = time() . '.' . $request->shoplogo->extension();
 
-            $request->shoplogo->move(public_path('upload/shop'), $imageNames);
+            $request->shoplogo->move(public_path('images'), $imageNames);
             $newval['shop_logo'] = $imageNames;
         }
         if (!empty($request->image)) {
@@ -561,7 +561,7 @@ class AdminController extends Controller
             $time = new DateTime();
             $imageNames = time() . '.' . $request->shoplogo->extension();
 
-            $request->shoplogo->move(public_path('upload/shop'), $imageNames);
+            $request->shoplogo->move(public_path('images'), $imageNames);
             $newval['shop_logo'] = $imageNames;
         }
         if (!empty($request->image)) {
@@ -2279,7 +2279,7 @@ class AdminController extends Controller
     {
         $id = $request->id;
         $help = Help::findOrFail($id);
-        $imagePath = public_path('upload/shop/' . $help->img);
+        $imagePath = public_path('images/' . $help->img);
         $help->delete();
         if (File::exists($imagePath)) {
             File::delete($imagePath);

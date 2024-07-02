@@ -59,7 +59,7 @@
                                                     <input type="file" name="shoplogo" id="shoplogo" class="form-control" >
                                                     <img id="preview-image-before-upload" alt="your image"
                                                         @if(!empty($editseller->shop_logo))
-                                                            src="{{ asset('upload/shop'.( $editseller->shop_logo ?? 'blog/blog-details.jpg')   ) }}"
+                                                            src="{{ asset('images'.( $editseller->shop_logo ?? 'blog/blog-details.jpg')   ) }}"
                                                             style="max-width: 100%;"
                                                         @else
                                                             style="display: none; max-width: 100%;"
