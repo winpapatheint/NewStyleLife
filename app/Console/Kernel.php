@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\LogTime::class,
     ];
 
     /**
@@ -25,7 +25,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('data:move')->daily();
+        $schedule->command('data:move')->dailyAt('17:00');
+        // $schedule->command('log:time')->everyMinute();
+        // $schedule->command('log:env')->everyMinute();
     }
 
     /**
