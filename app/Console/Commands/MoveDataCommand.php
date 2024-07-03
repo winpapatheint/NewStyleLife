@@ -21,8 +21,11 @@ class MoveDataCommand extends Command
         try {
             Log::info('MoveDataCommand started.');
 
+            // Calculate yesterday's date
+            $yesterday = \Carbon\Carbon::yesterday();
+
             // Retrieve data from NewStyleLife
-            $users = DB::connection('mysql')->table('users')->where('role', 'seller')->get();
+            $users = DB::connection('mysql')->table('users')->where('role', 'seller')->whereDate('created_at', $yesterday)->get();
             $userMapping = [];
 
             foreach ($users as $user) {
@@ -55,7 +58,7 @@ class MoveDataCommand extends Command
                     $userMapping[$user->id] = $newUserId;
                     // Move user photo
                     $sourcePath = public_path('upload/profile/' . $user->user_photo);
-                    $destinationPath = base_path('/Users/mac_4/Documents/EC_Project/public/upload/profile/' . $user->user_photo);
+                    $destinationPath = ('/Users/mac_4/Documents/MadeInJapan/public/upload/profile/' . $user->user_photo);
 
                     if (file_exists($sourcePath)) {
                         if (!file_exists(dirname($destinationPath))) {
@@ -107,6 +110,19 @@ class MoveDataCommand extends Command
                     ]);
 
                     $sellerMapping[$seller->id] = $newSellerId;
+                    // Move shop logo
+                    $sourcePath = public_path('images/' . $seller->shop_logo);
+                    $destinationPath = ('/Users/mac_4/Documents/MadeInJapan/public/images/' . $seller->shop_logo);
+
+                    if (file_exists($sourcePath)) {
+                        if (!file_exists(dirname($destinationPath))) {
+                            mkdir(dirname($destinationPath), 0777, true);
+                        }
+                        copy($sourcePath, $destinationPath);
+                        Log::info('Photo moved for seller: ' . $seller->shop_logo);
+                    } else {
+                        Log::warning('Photo not found for seller: ' . $seller->shop_logo);
+                    }
                 } else {
                     $sellerMapping[$seller->id] = $existingSeller->id;
                 }
@@ -137,136 +153,196 @@ class MoveDataCommand extends Command
             Log::info('Sub Seller Moved.');
 
             // Move products data here
-            $products = DB::connection('mysql')->table('products')->where('country_id', 111)->get();
+            $products = DB::connection('mysql')->table('products')->where('country_id', 111)->whereDate('created_at', $yesterday)->get();
             $brandMapping = [];
             $categoryMapping = [];
             $subCategoryTitleMapping = [];
             $subCategoryMapping = [];
 
             foreach ($products as $product) {
-                // Handle brands
-                $brand = DB::connection('mysql')->table('brands')->where('id', $product->brand_id)->first();
-                if ($brand) {
-                    $existingBrand = DB::connection('made_in_japan')->table('brands')->where('brand_name', $brand->brand_name)->first();
-                    if (!$existingBrand) {
-                        $newBrandId = DB::connection('made_in_japan')->table('brands')->insertGetId([
-                            'brand_name' => $brand->brand_name,
-                            'brand_icon' => $brand->brand_icon,
-                            'created_at' => $brand->created_at,
-                            'updated_at' => $brand->updated_at
-                        ]);
-                        $brandMapping[$brand->id] = $newBrandId;
-                    } else {
-                        $brandMapping[$brand->id] = $existingBrand->id;
+                $existingProduct = DB::connection('made_in_japan')
+                    ->table('products')
+                    ->where('product_code', $product->product_code . 'S')
+                    ->first();
+
+                if (!$existingProduct) {
+                    // Handle brands
+                    $brand = DB::connection('mysql')->table('brands')->where('id', $product->brand_id)->first();
+                    if ($brand) {
+                        $existingBrand = DB::connection('made_in_japan')->table('brands')->where('brand_name', $brand->brand_name)->first();
+                        if (!$existingBrand) {
+                            $newBrandId = DB::connection('made_in_japan')->table('brands')->insertGetId([
+                                'brand_name' => $brand->brand_name,
+                                'brand_icon' => $brand->brand_icon,
+                                'created_at' => $brand->created_at,
+                                'updated_at' => $brand->updated_at
+                            ]);
+                            $brandMapping[$brand->id] = $newBrandId;
+                            // Move brand icon
+                            $sourcePath = public_path('images/' . $brand->brand_icon);
+                            $destinationPath = ('/Users/mac_4/Documents/MadeInJapan/public/images/' . $brand->brand_icon);
+
+                            if (file_exists($sourcePath)) {
+                                if (!file_exists(dirname($destinationPath))) {
+                                    mkdir(dirname($destinationPath), 0777, true);
+                                }
+                                copy($sourcePath, $destinationPath);
+                                Log::info('Photo moved for brand: ' . $brand->brand_icon);
+                            } else {
+                                Log::warning('Photo not found for brand: ' . $brand->brand_icon);
+                            }
+                        } else {
+                            $brandMapping[$brand->id] = $existingBrand->id;
+                        }
                     }
-                }
 
-                // Handle categories
-                $category = DB::connection('mysql')->table('categories')->where('id', $product->category_id)->first();
-                if ($category) {
-                    $existingCategory = DB::connection('made_in_japan')->table('categories')->where('category_name', $category->category_name)->first();
-                    if (!$existingCategory) {
-                        $newCategoryId = DB::connection('made_in_japan')->table('categories')->insertGetId([
-                            'category_name' => $category->category_name,
-                            'category_icon' => $category->category_icon,
-                            'created_at' => $category->created_at,
-                            'updated_at' => $category->updated_at
-                        ]);
-                        $categoryMapping[$category->id] = $newCategoryId;
-                    } else {
-                        $categoryMapping[$category->id] = $existingCategory->id;
+                    // Handle categories
+                    $category = DB::connection('mysql')->table('categories')->where('id', $product->category_id)->first();
+                    if ($category) {
+                        $existingCategory = DB::connection('made_in_japan')->table('categories')->where('category_name', $category->category_name)->first();
+                        if (!$existingCategory) {
+                            $newCategoryId = DB::connection('made_in_japan')->table('categories')->insertGetId([
+                                'category_name' => $category->category_name,
+                                'category_icon' => $category->category_icon,
+                                'created_at' => $category->created_at,
+                                'updated_at' => $category->updated_at
+                            ]);
+                            $categoryMapping[$category->id] = $newCategoryId;
+                            // Move category icon
+                            $sourcePath = public_path('images/' . $category->category_icon);
+                            $destinationPath = ('/Users/mac_4/Documents/MadeInJapan/public/images/' . $category->category_icon);
+
+                            if (file_exists($sourcePath)) {
+                                if (!file_exists(dirname($destinationPath))) {
+                                    mkdir(dirname($destinationPath), 0777, true);
+                                }
+                                copy($sourcePath, $destinationPath);
+                                Log::info('Photo moved for category: ' . $category->category_icon);
+                            } else {
+                                Log::warning('Photo not found for category: ' . $category->category_icon);
+                            }
+                        } else {
+                            $categoryMapping[$category->id] = $existingCategory->id;
+                        }
                     }
-                }
 
-                // Handle sub_category_titles
-                $subCategoryTitle = DB::connection('mysql')->table('sub_category_titles')->where('id', $product->sub_category_title_id)->first();
-                if ($subCategoryTitle) {
-                    $existingSubCategoryTitle = DB::connection('made_in_japan')->table('sub_category_titles')->where('sub_category_titlename', $subCategoryTitle->sub_category_titlename)->first();
-                    if (!$existingSubCategoryTitle) {
-                        $newSubCategoryTitleId = DB::connection('made_in_japan')->table('sub_category_titles')->insertGetId([
-                            'category_id' => $categoryMapping[$subCategoryTitle->category_id] ?? null,
-                            'sub_category_id' => $subCategoryMapping[$subCategoryTitle->sub_category_id] ?? null,
-                            'sub_category_titlename' => $subCategoryTitle->sub_category_titlename,
-                            'created_at' => $subCategoryTitle->created_at,
-                            'updated_at' => $subCategoryTitle->updated_at
-                        ]);
-                        $subCategoryTitleMapping[$subCategoryTitle->id] = $newSubCategoryTitleId;
-                    } else {
-                        $subCategoryTitleMapping[$subCategoryTitle->id] = $existingSubCategoryTitle->id;
+                    // Handle sub_category_titles
+                    $subCategoryTitle = DB::connection('mysql')->table('sub_category_titles')->where('id', $product->sub_category_title_id)->first();
+                    if ($subCategoryTitle) {
+                        $existingSubCategoryTitle = DB::connection('made_in_japan')->table('sub_category_titles')->where('sub_category_titlename', $subCategoryTitle->sub_category_titlename)->first();
+                        if (!$existingSubCategoryTitle) {
+                            $newSubCategoryTitleId = DB::connection('made_in_japan')->table('sub_category_titles')->insertGetId([
+                                'category_id' => $categoryMapping[$subCategoryTitle->category_id] ?? null,
+                                'sub_category_id' => $subCategoryMapping[$subCategoryTitle->sub_category_id] ?? null,
+                                'sub_category_titlename' => $subCategoryTitle->sub_category_titlename,
+                                'created_at' => $subCategoryTitle->created_at,
+                                'updated_at' => $subCategoryTitle->updated_at
+                            ]);
+                            $subCategoryTitleMapping[$subCategoryTitle->id] = $newSubCategoryTitleId;
+                        } else {
+                            $subCategoryTitleMapping[$subCategoryTitle->id] = $existingSubCategoryTitle->id;
+                        }
                     }
-                }
 
-                // Handle sub_categories
-                $subCategory = DB::connection('mysql')->table('sub_categories')->where('id', $product->sub_category_id)->first();
-                if ($subCategory) {
-                    $existingSubCategory = DB::connection('made_in_japan')->table('sub_categories')->where('sub_category_name', $subCategory->sub_category_name)->first();
-                    if (!$existingSubCategory) {
-                        $newSubCategoryId = DB::connection('made_in_japan')->table('sub_categories')->insertGetId([
-                            'category_id' => $categoryMapping[$subCategory->category_id] ?? null,
-                            'sub_category_name' => $subCategory->sub_category_name,
-                            'sub_category_title_id' => $subCategoryTitleMapping[$subCategory->sub_category_title_id] ?? null,
-                            'created_at' => $subCategory->created_at,
-                            'updated_at' => $subCategory->updated_at
-                        ]);
-                        $subCategoryMapping[$subCategory->id] = $newSubCategoryId;
-                    } else {
-                        $subCategoryMapping[$subCategory->id] = $existingSubCategory->id;
+                    // Handle sub_categories
+                    $subCategory = DB::connection('mysql')->table('sub_categories')->where('id', $product->sub_category_id)->first();
+                    if ($subCategory) {
+                        $existingSubCategory = DB::connection('made_in_japan')->table('sub_categories')->where('sub_category_name', $subCategory->sub_category_name)->first();
+                        if (!$existingSubCategory) {
+                            $newSubCategoryId = DB::connection('made_in_japan')->table('sub_categories')->insertGetId([
+                                'category_id' => $categoryMapping[$subCategory->category_id] ?? null,
+                                'sub_category_name' => $subCategory->sub_category_name,
+                                'sub_category_title_id' => $subCategoryTitleMapping[$subCategory->sub_category_title_id] ?? null,
+                                'created_at' => $subCategory->created_at,
+                                'updated_at' => $subCategory->updated_at
+                            ]);
+                            $subCategoryMapping[$subCategory->id] = $newSubCategoryId;
+                        } else {
+                            $subCategoryMapping[$subCategory->id] = $existingSubCategory->id;
+                        }
                     }
-                }
 
-                $sellerNewStyle = DB::connection('mysql')->table('users')->where('id', $product->seller_id)->first();
-                $sellerMadeIn = DB::connection('made_in_japan')->table('users')->where('email', $sellerNewStyle->email)->first();
-                // Insert product data into MadeInJapan with the new IDs
-                $newProductId = DB::connection('made_in_japan')->table('products')->insertGetId([
-                    'product_code' => $product->product_code . 'S',
-                    'brand_id' => $brandMapping[$product->brand_id],
-                    'country_id' => $product->country_id,
-                    'category_id' => $categoryMapping[$product->category_id],
-                    'sub_category_title_id' => $subCategoryTitleMapping[$product->sub_category_title_id],
-                    'sub_category_id' => $subCategoryMapping[$product->sub_category_id],
-                    'special_sub_category_id' => NULL,
-                    'seller_id' => $sellerMadeIn->id,
-                    'subseller_id' => NULL,
-                    'product_name' => $product->product_name,
-                    'product_qty' => $product->product_qty,
-                    'in_stock' => $product->in_stock,
-                    'product_tags' => $product->product_tags,
-                    'product_size' => $product->product_size,
-                    'product_color' => $product->product_color,
-                    'original_price' => $product->original_price,
-                    'selling_price' => $product->selling_price,
-                    'seller_amount' => $product->seller_amount,
-                    'discount_percent' => $product->discount_percent,
-                    'short_desc' => $product->short_desc,
-                    'long_desc' => $product->long_desc,
-                    'care_instructions' => $product->care_instructions,
-                    'product_thambnail' => $product->product_thambnail,
-                    'commission' => $product->commission,
-                    'commission_status' => $product->commission_status,
-                    'com_price' => $product->com_price,
-                    'status' => $product->status,
-                    'coupon_status' => 0,
-                    'coupon_id' => NULL,
-                    'estimate_date' => $product->estimate_date,
-                    'delivery_price' => $product->delivery_price,
-                    'shipping_country' => $product->shipping_country,
-                    'updated_by' => NULL,
-                    'created_at' => $product->created_at,
-                    'updated_at' => $product->updated_at
-                ]);
-
-                $productMapping[$product->id] = $newProductId;
-
-                // Move multi_imgs data
-                $multiImgs = DB::connection('mysql')->table('multi_imgs')->where('product_id', $product->id)->get();
-
-                foreach ($multiImgs as $img) {
-                    DB::connection('made_in_japan')->table('multi_imgs')->insert([
-                        'product_id' => $newProductId,
-                        'photo_name' => $img->photo_name,
-                        'created_at' => $img->created_at,
-                        'updated_at' => $img->updated_at
+                    $sellerNewStyle = DB::connection('mysql')->table('users')->where('id', $product->seller_id)->first();
+                    $sellerMadeIn = DB::connection('made_in_japan')->table('users')->where('email', $sellerNewStyle->email)->first();
+                    // Insert product data into MadeInJapan with the new IDs
+                    $newProductId = DB::connection('made_in_japan')->table('products')->insertGetId([
+                        'product_code' => $product->product_code . 'S',
+                        'brand_id' => $brandMapping[$product->brand_id],
+                        'country_id' => $product->country_id,
+                        'category_id' => $categoryMapping[$product->category_id],
+                        'sub_category_title_id' => $subCategoryTitleMapping[$product->sub_category_title_id],
+                        'sub_category_id' => $subCategoryMapping[$product->sub_category_id],
+                        'special_sub_category_id' => NULL,
+                        'seller_id' => $sellerMadeIn->id,
+                        'subseller_id' => NULL,
+                        'product_name' => $product->product_name,
+                        'product_qty' => $product->product_qty,
+                        'in_stock' => $product->in_stock,
+                        'product_tags' => $product->product_tags,
+                        'product_size' => $product->product_size,
+                        'product_color' => $product->product_color,
+                        'original_price' => $product->original_price,
+                        'selling_price' => $product->selling_price,
+                        'seller_amount' => $product->seller_amount,
+                        'discount_percent' => $product->discount_percent,
+                        'short_desc' => $product->short_desc,
+                        'long_desc' => $product->long_desc,
+                        'care_instructions' => $product->care_instructions,
+                        'product_thambnail' => $product->product_thambnail,
+                        'commission' => $product->commission,
+                        'commission_status' => $product->commission_status,
+                        'com_price' => $product->com_price,
+                        'status' => $product->status,
+                        'coupon_status' => 0,
+                        'coupon_id' => NULL,
+                        'estimate_date' => $product->estimate_date,
+                        'delivery_price' => $product->delivery_price,
+                        'shipping_country' => $product->shipping_country,
+                        'updated_by' => NULL,
+                        'created_at' => $product->created_at,
+                        'updated_at' => $product->updated_at
                     ]);
+
+                    $productMapping[$product->id] = $newProductId;
+                    // Move product image
+                    $sourcePath = public_path('images/' . $product->product_thambnail);
+                    $destinationPath = ('/Users/mac_4/Documents/MadeInJapan/public/images/' . $product->product_thambnail);
+
+                    if (file_exists($sourcePath)) {
+                        if (!file_exists(dirname($destinationPath))) {
+                            mkdir(dirname($destinationPath), 0777, true);
+                        }
+                        copy($sourcePath, $destinationPath);
+                        Log::info('Photo moved for product: ' . $product->product_thambnail);
+                    } else {
+                        Log::warning('Photo not found for product: ' . $product->product_thambnail);
+                    }
+
+                    // Move multi_imgs data
+                    $multiImgs = DB::connection('mysql')->table('multi_imgs')->where('product_id', $product->id)->get();
+
+                    foreach ($multiImgs as $img) {
+                        DB::connection('made_in_japan')->table('multi_imgs')->insert([
+                            'product_id' => $newProductId,
+                            'photo_name' => $img->photo_name,
+                            'created_at' => $img->created_at,
+                            'updated_at' => $img->updated_at
+                        ]);
+
+                        // Move product image
+                        $sourcePath = public_path('upload/multiImg/' . $img->photo_name);
+                        $destinationPath = ('/Users/mac_4/Documents/MadeInJapan/public/upload/multiImg/' . $img->photo_name);
+
+                        if (file_exists($sourcePath)) {
+                            if (!file_exists(dirname($destinationPath))) {
+                                mkdir(dirname($destinationPath), 0777, true);
+                            }
+                            copy($sourcePath, $destinationPath);
+                            Log::info('Photo moved for multi images: ' . $img->photo_name);
+                        } else {
+                            Log::warning('Photo not found for multi images: ' . $img->photo_name);
+                        }
+                    }
                 }
             }
             Log::info('Product Moved.');
