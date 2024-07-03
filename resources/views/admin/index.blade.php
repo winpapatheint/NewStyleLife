@@ -32,7 +32,15 @@
                                 <div class="media-body p-0">
                                     <h7>This month</h7><br>
                                     <span class="m-0">Total Revenue</span>
-                                    <h4 class="mb-0 counter">¥{{number_format($revenue) }}</h4>
+                                    @php
+                                    function formatCurrency($revenue) {
+                                        if ($revenue >= 1000000) {
+                                            return '¥' . round($revenue / 1000000) . 'M';
+                                        }
+                                        return '¥' . number_format($revenue);
+                                    }
+                                    @endphp
+                                    <h4 class="mb-0 counter">{{ formatCurrency($revenue) }} </h4>
                                 </div>
                                 <div class="align-self-center text-center">
                                     <i class="ri-database-2-line"></i>
