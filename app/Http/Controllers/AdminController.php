@@ -3369,13 +3369,19 @@ class AdminController extends Controller
             ->whereYear('created_at', $currentDate->year)
             ->sum('amount');
 
-        $orderCount = OrderDetail::count();
+        $orderCount = OrderDetail::whereMonth('created_at', '=', Carbon::now()->month)->count();
         $pending = OrderDetail::where('status', 'Pending')->count();
-        $currentDate = Carbon::now()->format('Y-m-d');
+        $currentDate = Carbon::now();
+
+        $lastDate = Carbon::now(); 
+        $subtractedDate = $lastDate->subDay(); 
+        $endmonthDate = $subtractedDate;
+
         $product = Product::whereDate('created_at', '<=', $currentDate)->count();
         $transfers = OrderDetail::latest()->paginate($limit);
         $orders = OrderDetail::selectRaw("COUNT(*) as count, DATE_FORMAT(created_at, '%M') as month_name, MONTH(created_at) as month_number")
             ->whereYear('created_at', date('Y'))
+            ->where('order_details.payment_approved','1')
             ->groupBy(DB::raw("MONTH(created_at)"), DB::raw("DATE_FORMAT(created_at, '%M')"))
             ->orderBy(DB::raw("MONTH(created_at)"))
             ->get();
@@ -3387,11 +3393,16 @@ class AdminController extends Controller
             $monthIndex = $order->month_number - 1;
             $data[$monthIndex] = $order->count;
         }
+        //half month
+        $currentMonthStart = Carbon::now()->startOfMonth();
+        $currentMonthHalfEnd = Carbon::now()->startOfMonth()->copy()->subMonth()->addDays(16)->subDay();
+        $previousMonthEnd = Carbon::now()->startOfMonth()->copy()->subMonth()->copy()->endOfMonth();
+        $lastMonthHalfDay = Carbon::now()->subMonth()->setDay(16);
+        //-----//
+        $halfMonthEnd = Carbon::now()->startOfMonth()->addDays(15);
+        // $nextMonthstartdate = Carbon::now()->endOfMonth()->addDays(1)->format('Y-m-d');
+        $nextMonthstartdate = Carbon::now()->endOfMonth();
 
-        $currentMonthStart = Carbon::now()->startOfMonth()->format('Y-m-d');
-        $currentMonthEnd = Carbon::now()->startOfMonth()->addDays(15)->subDay()->format('Y-m-d');
-        $nextMonthstartdate = Carbon::now()->endOfMonth()->addDays(1)->format('Y-m-d');
-        $currentDate = Carbon::now()->format('Y-m-d');
         $transfer = [];
         $subquery = DB::table('sellers')
             ->select(
@@ -3404,16 +3415,31 @@ class AdminController extends Controller
             )
             ->leftJoin('order_details', 'order_details.seller_id', '=', 'sellers.user_id')
             ->leftJoin('products', 'order_details.product_id', '=', 'products.id')
-            ->where('products.commission', '!=', 0)
-
-            ->whereBetween(DB::raw("DATE_FORMAT(order_details.created_at, '%Y-%m-%d')"), [$currentMonthStart, $currentMonthEnd])
+            ->where('order_details.payment_approved','1')
+            ->whereBetween("order_details.created_at", [$currentMonthStart, $currentMonthHalfEnd])
             ->groupBy('sellers.user_id', 'sellers.shop_name', 'products.commission', 'products.id');
 
-        if ($currentDate === $currentMonthEnd) {
+        $next_subquery = DB::table('sellers')
+            ->select(
+                'sellers.user_id as seller_id',
+                'sellers.shop_name',
+                'products.commission as product_commission',
+                // 'products.id as product_id',
+                DB::raw('(SUM(order_details.amount) * (1 - products.commission / 100) +
+                                        SUM(CASE WHEN order_details.used_delivery_price = 1 THEN order_details.delivery_price ELSE 0 END)) as seller_amount')
+            )
+            ->leftJoin('order_details', 'order_details.seller_id', '=', 'sellers.user_id')
+            ->leftJoin('products', 'order_details.product_id', '=', 'products.id')
+            ->where('order_details.payment_approved','1')
+            ->whereBetween('order_details.created_at', [$currentMonthHalfEnd, $previousMonthEnd])
+            ->groupBy('sellers.user_id', 'sellers.shop_name', 'products.commission');
+ 
+        if ($currentDate >= $currentMonthHalfEnd && $currentDate <= $previousMonthEnd) {
+
             $transfer = Seller::rightJoin(DB::raw("({$subquery->toSql()}) as P"), function ($join) {
                 $join->on('P.seller_id', '=', 'sellers.user_id');
             })
-                ->Bindings($subquery)
+                ->mergeBindings($subquery)
                 ->select(
                     'sellers.user_id',
                     'sellers.commission',
@@ -3422,11 +3448,11 @@ class AdminController extends Controller
                 )
                 ->groupBy('sellers.user_id', 'sellers.commission')
                 ->paginate($limit);
-        } elseif ($currentDate === $nextMonthstartdate) {
-            $transfer = Seller::rightJoin(DB::raw("({$subquery->toSql()}) as P"), function ($join) {
+        } else {
+            $transfer = Seller::rightJoin(DB::raw("({$next_subquery->toSql()}) as P"), function ($join) {
                 $join->on('P.seller_id', '=', 'sellers.user_id');
             })
-                ->Bindings($subquery)
+                ->mergeBindings($next_subquery)
                 ->select(
                     'sellers.user_id',
                     'sellers.commission',
@@ -3436,7 +3462,6 @@ class AdminController extends Controller
                 ->groupBy('sellers.user_id', 'sellers.commission')
                 ->paginate($limit);
         }
-
         foreach ($transfer as $record) {
             $datePrefix = date('ym');
             $sequentialNumber = 1;
@@ -3445,8 +3470,13 @@ class AdminController extends Controller
 
             // Check if a record with the same transfer code already exists
             $existingTransfer = Transfer::where('transfer_code', $newProductCode)->first();
-            $currentMonthStart = Carbon::now()->startOfMonth()->format('y/m/d');
-            $currentMonthEnd = Carbon::now()->startOfMonth()->addDays(15)->subDay()->format('y/m/d');
+            if ($currentDate >= $currentMonthHalfEnd && $currentDate <= $previousMonthEnd) {
+                $transferStart = Carbon::now()->startOfMonth();
+                $transferEnd = Carbon::now()->startOfMonth()->addDays(15)->subDay()->endOfDay();
+            } else {
+                $transferStart = Carbon::now()->startOfMonth()->copy()->subMonth()->addDays(16)->subDay();
+                $transferEnd = Carbon::now()->startOfMonth()->copy()->subMonth()->copy()->endOfMonth();
+            }
 
             // If no matching record is found, create a new one
             if (!$existingTransfer) {
@@ -3456,8 +3486,8 @@ class AdminController extends Controller
                     'commission' => $record->commission,
                     'seller_amount' => $record->total_seller_amount,
                     'transfer_code' => $newProductCode,
-                    'start_date' => $currentMonthStart,
-                    'end_date' => $currentMonthEnd,
+                    'start_date' => $transferStart,
+                    'end_date' => $transferEnd,
                     'status' => 0,
 
                 ]);
@@ -3467,12 +3497,12 @@ class AdminController extends Controller
             $sequentialNumber++;
         }
         $transfer_history = Transfer::latest()->paginate($limit);
+        // dd($transfer_history);
         $ttl = $transfer_history->total();
         $ttlpage = (ceil($ttl / $limit));
 
         return view('admin.index', compact('labels', 'data', 'transfer_history', 'revenue', 'orderCount', 'pending', 'product', 'ttl', 'ttlpage'));
     }
-
 
     public function detailProduct($id)
     {
