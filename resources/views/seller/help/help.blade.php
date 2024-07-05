@@ -98,6 +98,9 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
+                                                <div>
+                                                    @include('components.pagination')
+                                                </div>
                                             </div>
 
                                             <div class="tab-pane fade" id="info" role="tabpanel">
@@ -149,6 +152,12 @@
                                                             @endif
                                                         </tbody>
                                                     </table>
+                                                </div>
+                                                @php
+                                                    $ttlpage = $sentttlpage;
+                                                @endphp
+                                                <div>
+                                                    @include('components.pagination')
                                                 </div>
                                             </div>
                                         </div>
