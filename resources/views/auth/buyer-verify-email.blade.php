@@ -126,7 +126,7 @@
                             <td class="header-logo" style="padding: 10px 32px;">
                                 <a href="{{ url('/') }}" style="display: block; text-align: left;">
                                     <img src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" class="main-logo"
-                                        alt="logo">
+                                        alt="logo" style="width: 200px; height:80px;">
                                 </a>
                             </td>
                             <td class="header-menu" style="display: block; padding: 10px 32px;text-align: right;">

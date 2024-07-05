@@ -35,7 +35,7 @@
                                             <label class="col-sm-3 col-form-label form-label-title">Category</label>
                                                 <div class="col-sm-8">
                                                     <select class="js-example-basic-single w-100" name="category" id="category">
-                                                        <option  value="0">select Category</option>
+                                                        <option  value="0">Select Category</option>
                                                         @foreach($categories as $category)
                                                             <option value="{{ $category -> id }}" @if($category -> id == $subtitle->category_id ) selected @endif >
                                                                 {{ $category -> category_name }}  </option>
