@@ -95,11 +95,6 @@
                                     type="button" role="tab" style="font-size: 14px; text-align: center;" href="{{route ('user_addresses')}}"><i
                                         data-feather="map-pin"></i>Addresses</a>
                             </li>
-                            {{-- <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="pills-card-tab"
-                                    type="button" role="tab" style="font-size: 14px; text-align: center;" href="{{route ('user_cards')}}"><i
-                                        data-feather="credit-card"></i>Payment Methods</a>
-                            </li> --}}
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link active" id="pills-profile-tab"
                                     type="button" role="tab" style="font-size: 14px; text-align: center;" href="{{route ('user_profile')}}"><i data-feather="user"></i>
@@ -182,7 +177,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    {{ $user->phone }}
+                                                    {{ $user->buyer->phone }}
                                                 </div>
                                                 <div class="col-md-4"></div>
                                             </div>

@@ -493,7 +493,7 @@ class UserController extends Controller
     //Show Profile
     public function showProfile(Request $request)
     {
-        $user = DB::table('users')->where('id', Auth::user()->id)->first();
+        $user = User::where('id', Auth::user()->id)->first();
         $buyer = DB::table('buyers')
             ->join('users', 'buyers.user_id', '=', 'users.id')
             ->where('buyers.user_id', Auth::user()->id)
