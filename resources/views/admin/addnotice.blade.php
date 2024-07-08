@@ -23,7 +23,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="card-header-2">
-                                    <h5>Contact-Us</h5>
+                                    <h5>Notice All</h5>
                                 </div>
 
                                 @php $action= route('noticeall'); @endphp
@@ -50,7 +50,7 @@
                                         <div class="mb-4 row align-items-center">
                                             <label class="col-lg-2 col-md-3 col-form-label form-label-title">Image</label>
                                             <div class="col-md-9 col-lg-10">
-                                                <input class="form-control" type="file" id="image" name="image" onchange="validateImage(this)">
+                                                <input class="form-control" type="file" id="image" name="image" onchange="mainThamUrl(this)">
                                                 <img src="" id="mainThmb">
                                                 <span class="error" style="color:red" id="error-image"></span>
                                             </div>
@@ -204,5 +204,5 @@ $('#confirmModal').modal('show');
             }
         }
     }
-    </script>
+</script>
 </x-auth-layout>

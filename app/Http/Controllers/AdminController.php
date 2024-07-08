@@ -1909,27 +1909,27 @@ class AdminController extends Controller
             $imageName = '';
         }
 
-        $shopName = Seller::where('user_id', $request->help_id)->value('shop_name');
-        $seller_name = DB::table('users')->select('name')->where('id', $request->help_id)->first();
-        $seller_email = DB::table('users')->select('email')->where('id', $request->help_id)->first();
         $check = Help::find($request->id);
-
-        $help->name = 'admin';
+        $shopName = Seller::where('user_id', $check->help_id)->value('shop_name');
+        $seller_name = DB::table('users')->select('name')->where('id', $check->help_id)->first();
+        $seller_email = DB::table('users')->select('email')->where('id', $check->help_id)->first();
+        $help->help_id = $check->help_id;
+        $help->name = $seller_name->name;
         $help->shop_name =   $shopName;
-        $help->to =  $check->from;
-        $help->from = 'admin@asia-hd.com';
-        $help->subject = $request->subject;
-        $help->body =  $request->message;
+        $help->to =  $check->to == Auth::user()->email ? $check->from : $check->to;
+        $help->from = Auth::user()->email;
+        $help->subject = $check->subject;
+        $help->body =  $request->body;
         $help->img = $imageName;
         $help->updated_at = Carbon::now();
         $help->save();
 
-        $adminemail =  'admin@asia-hd.com';
+        $adminemail =  Auth::user()->email;
         $helpDate = Carbon::now()->format('M d, Y');
 
         $data = [
-            'title' => $request->title,
-            'content' => $request->message,
+            'title' => $check->subject,
+            'content' => $request->body,
             'imgName' => $imageName,
             'helpDate' => $helpDate,
             'adminemail' => $adminemail,
@@ -1939,7 +1939,7 @@ class AdminController extends Controller
         \Mail::to($seller_email)->send(new \App\Mail\AdminContact($data));
 
         SellerNotification::create([
-            'seller_id' => $request->help_id,
+            'seller_id' => $help->help_id,
             'related_id' => $help->id,
             'message' => 'A new contact added:',
             'time' => Carbon::now(),
@@ -1952,18 +1952,20 @@ class AdminController extends Controller
 
     public function helpDetail($id)
     {
-        $getId = Help::find($id);
-        $helpId = $getId->help_id;
-        if ($helpId) {
-            $start = DB::table('helps')->where('id', $id)->first();
-            $reply = Help::where('help_id', $helpId)->get();
+        $start = Help::find($id);
+        if ($start) {
+            if ($start->to == 'all') {
+                $reply = Help::where('to', 'all')->where('subject', $start->subject)->get();
+            } else {
+                $reply = Help::where('help_id', $start->help_id)->where('subject', $start->subject)->get();
+            }
         } else {
-            $start = $getId;
             $reply = null;
         }
 
         return view('admin.helpdetail', compact('start', 'reply'));
     }
+
     public function storenewsletter(Request $request)
     {
         $time = new DateTime();
@@ -2940,9 +2942,7 @@ class AdminController extends Controller
     public function noticeall(Request $request)
     {
 
-        $sellers = DB::table('users')
-            ->where('role', 'seller')
-            ->select('name', 'email', 'id')
+        $sellers = User::where('role', 'seller')
             ->get();
 
         if (!empty($request->image)) {
@@ -2954,12 +2954,18 @@ class AdminController extends Controller
 
         // Create Help records for each seller
         foreach ($sellers as $seller) {
+            if ($seller->created_by) {
+                $seller_name = Seller::where('user_id', $seller->created_by)->first();
+            } else {
+                $seller_name = Seller::where('user_id', $seller->id)->first();
+            }
             $help = new Help();
             $help->name = $seller->name;
+            $help->shop_name = $seller_name->shop_name;
             $help->to = $seller->email;
             $help->noshow = 1;
             $help->help_id =  $seller->id;
-            $help->from = 'info-test@asia-hd.com';
+            $help->from = Auth::user()->email;
             $help->subject = $request->title;
             $help->body = $request->message;
             $help->img =  $imageName;
@@ -2970,7 +2976,7 @@ class AdminController extends Controller
         $help->name = 'all';
         $help->to = 'all';
         $help->noshow = 1;
-        $help->from = 'info-test@asia-hd.com';
+        $help->from = Auth::user()->email;
         $help->subject = $request->title;
         $help->body = $request->message;
         $help->img =  $imageName;
@@ -3511,22 +3517,50 @@ class AdminController extends Controller
         $validated = request()->validate([
             'mainSearch' => 'string|nullable',
         ]);
-        $mainSearch = $validated['mainSearch'] ?? null;
-        $query = Help::query();
+        $search = $validated['mainSearch'] ?? null;
 
+        $userEmail = Auth::user()->email;
+        $receivedQuery = Help::where('to', $userEmail)
+            ->select('helps.*')
+            ->join(DB::raw('(SELECT MAX(id) as id FROM helps WHERE `to` = "' . $userEmail . '" GROUP BY subject, `from`) as latest_help'), function ($join) {
+                $join->on('helps.id', '=', 'latest_help.id');
+            });
+        $sentQuery = Help::where('from', $userEmail)->where('to', '!=', 'all')
+            ->select('helps.*')
+            ->join(DB::raw('(SELECT MAX(id) as id FROM helps WHERE `from` = "' . $userEmail . '" and `to` != "' . 'all' . '" GROUP BY subject, `to`) as latest_help'), function ($join) {
+                $join->on('helps.id', '=', 'latest_help.id');
+            });
+        $noticeQuery = Help::where('to', 'all')
+            ->select('helps.*')
+            ->join(DB::raw('(SELECT MAX(id) as id FROM helps WHERE `to` = "' . 'all' . '" GROUP BY subject) as latest_help'), function ($join) {
+                $join->on('helps.id', '=', 'latest_help.id');
+            });
+        if ($search) {
+            $receivedQuery->where(function ($q) use ($search) {
+                $q->where('to', 'LIKE', "%{$search}%")
+                    ->orWhere('from', 'LIKE', "%{$search}%")
+                    ->orWhere('subject', 'LIKE', "%{$search}%")
+                    ->orWhere('body', 'LIKE', "%{$search}%");
+            });
 
-        if ($mainSearch != null) {
-            $query->where(function ($query) use ($mainSearch) {
-                $query->where('title', 'like', '%' . $mainSearch . '%');
+            $sentQuery->where(function ($q) use ($search) {
+                $q->where('to', 'LIKE', "%{$search}%")
+                    ->orWhere('from', 'LIKE', "%{$search}%")
+                    ->orWhere('subject', 'LIKE', "%{$search}%")
+                    ->orWhere('body', 'LIKE', "%{$search}%");
+            });
+
+            $noticeQuery->where(function ($q) use ($search) {
+                $q->where('to', 'LIKE', "%{$search}%")
+                    ->orWhere('from', 'LIKE', "%{$search}%")
+                    ->orWhere('subject', 'LIKE', "%{$search}%")
+                    ->orWhere('body', 'LIKE', "%{$search}%");
             });
         }
 
-        $email = 'admin@asia-hd.com';
-        $received = Help::where('to', $email)->latest()->paginate(10);
-
-        $sent = Help::where('from', $email)->where('noshow', null)->latest()->paginate(10);
-
-        $notice = Help::where('to', 'all')->latest()->paginate(10);
+        $received = $receivedQuery->orderBy('created_at', 'desc')->paginate($limit);
+        $sent = $sentQuery->orderBy('created_at', 'desc')->paginate($limit);
+        $notice = $noticeQuery->orderBy('created_at', 'desc')->paginate($limit);
 
         $ttl = $received->total();
         $ttlpage = (ceil($ttl / $limit));
@@ -3539,6 +3573,7 @@ class AdminController extends Controller
 
         return view('admin.indexhelp', compact('received', 'sent', 'notice', 'ttl', 'ttlpage', 'sent_ttl', 'sent_ttlpage', 'notice_ttl', 'notice_ttlpage'));
     }
+
     public function addToSpecial(Request $request)
     {
         $validated = request()->validate([

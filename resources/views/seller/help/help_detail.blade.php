@@ -19,41 +19,45 @@
                                                 <h5>Contact</h5>
                                             </div>
                                             <div class="mb-4 row">
-                                                <div class="mb-4 row align-items-center">
-                                                    <label
-                                                        class="form-label-title col-lg-2 col-md-3 mb-0">Subject</label>
-                                                    <div class="col-md-9 col-lg-10">
-                                                        <p>{{ $start->subject }}</p>
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-4">
+                                                        <label class="col-form-label form-label-title">
+                                                            Conversation with
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <h4>
+                                                            @if ($start->from == Auth::user()->email)
+                                                                @php
+                                                                $converWith = DB::table('users')->where('email', $start->to)->first();
+                                                                @endphp
+                                                            @else
+                                                                @php
+                                                                $converWith = DB::table('users')->where('email', $start->from)->first();
+                                                                @endphp
+                                                            @endif
+                                                            {{ $converWith->name }}
+                                                        </h4>
                                                     </div>
                                                 </div>
 
-                                                @if (!empty($start->img))
-                                                    <div class="mb-4 row align-items-center">
-                                                        <label class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
-                                                        <div class="col-md-9 col-lg-10">
-                                                            <img width="100" src="{{ asset('images/'.$start->img) }}">
-                                                        </div>
-                                                    </div>
-                                                @endif
-
                                                 <div class="row align-items-center">
-                                                    <label
-                                                        class="col-lg-2 col-md-3 col-form-label form-label-title">
-                                                        @if ($start->from == Auth::user()->mail)
-                                                            Me
-                                                        @elseif ($start->from != Auth::user()->mail)
-                                                            {{ $start->name }}
-                                                        @endif
-                                                    </label>
-                                                    <div class="col-md-9 col-lg-10">
-                                                        <p>{{ $start->body }}</p>
+                                                    <div class="col-md-4">
+                                                        <label class="col-form-label form-label-title">
+                                                            Subject
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <h4>
+                                                            {{ $start->subject }}
+                                                        </h4>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             @if(isset($reply))
                                                 @foreach ($reply as $item)
-                                                <div class="mb-4 row">
+                                                <div class="mb-4 row" style="background-color: #F3F3F3;">
                                                     @if (!empty($item->img))
                                                         <div class="mb-4 row align-items-center">
                                                             <label class="col-lg-2 col-md-3 col-form-label form-label-title"></label>
@@ -64,9 +68,13 @@
                                                     @endif
 
                                                     <div class="row align-items-center">
-                                                        <label
-                                                            class="col-lg-2 col-md-3 col-form-label form-label-title">Me
-                                                            </label>
+                                                        <label class="col-lg-2 col-md-3 col-form-label form-label-title">
+                                                            @if ($item->from == Auth::user()->email)
+                                                            Me
+                                                            @else
+                                                            {{ $converWith->name }}
+                                                            @endif
+                                                        </label>
                                                         <div class="col-md-9 col-lg-10">
                                                             <p>{{ $item->body }}</p>
                                                         </div>
@@ -78,7 +86,7 @@
 
                                             <div class="d-grid gap-2 d-md-block"  style="margin-top: 20px;">
                                                 <a href="#" data-bs-toggle="modal" data-bs-target="#replyModal">
-                                                    <button class="btn btn-animation" type="submit">Reply</button>
+                                                    <button class="btn btn-animation" type="button">Reply</button>
                                                 </a>
                                             </div>
                                         </form>
@@ -99,57 +107,73 @@
 <!-- Page Sidebar End -->
 
 <!-- Reply Modal -->
-@if(isset($reply))
-    @foreach ($reply as $item)
-    <div class="modal fade theme-modal remove-coupon" id="replyModal" aria-hidden="true" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header d-block">
-                    <h5 class="modal-title" >Reply</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('review.update')}}" method="POST">
-                        <input type="hidden" name="review_id" value="{{ $item->id }}">
-                        @csrf
-                        <div class="mb-2 row align-items-center">
-                            <label
-                                class="col-lg-2 col-md-3 col-form-label form-label-title">Image</label>
-                            <div class="col-md-9 col-lg-10">
-                                <input class="form-control" type="file" name="image" onchange="mainThamUrl(this)">
-                                <img src="" id="mainThmb">
-                            </div>
+<div class="modal fade theme-modal remove-coupon" id="replyModal" aria-hidden="true" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header d-block">
+                <h5 class="modal-title" >Reply</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ route('reply.sent') }}" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="{{ $start->id }}">
+                    @csrf
+                    <div class="mb-2 row align-items-center">
+                        <label
+                            class="col-lg-2 col-md-3 col-form-label form-label-title">Image</label>
+                        <div class="col-md-9 col-lg-10">
+                            <input class="form-control" type="file" name="image" onchange="validateImage(this)">
+                            <img src="" id="mainThmb">
                         </div>
+                    </div>
 
-                        <div class="row align-items-center">
-                            <label
-                                class="col-lg-2 col-md-3 col-form-label form-label-title">Body
-                                </label>
-                            <div class="col-md-9 col-lg-10">
-                                <textarea class="form-control" name="body" id="" rows="8"></textarea>
-                                <p style="display:none" class="body error text-danger"></p>
-                                @if (!empty($error['body']))
-                                    @foreach ($error['body'] as  $key => $value)
-                                        <p class="body error text-danger">{{ $value }}</p>
-                                    @endforeach
-                                @endif
-                            </div>
+                    <div class="row align-items-center">
+                        <label
+                            class="col-lg-2 col-md-3 col-form-label form-label-title">Body
+                            </label>
+                        <div class="col-md-9 col-lg-10">
+                            <textarea class="form-control" name="body" id="" rows="8"></textarea>
+                            <p style="display:none" class="body error text-danger"></p>
+                            @if (!empty($error['body']))
+                                @foreach ($error['body'] as  $key => $value)
+                                    <p class="body error text-danger">{{ $value }}</p>
+                                @endforeach
+                            @endif
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <form method="POST" action="{{ route('reply.sent') }}">
-                        @csrf
-                        <button type="submit" class="btn btn-animation">Reply</button>
-                    </form>
-                    <button type="button" class="btn btn-animation btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                    <button type="submit" class="btn btn-animation">Reply</button>
+                </form>
+                <button type="button" class="btn btn-animation btn-secondary" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
-    @endforeach
-@endif
+</div>
 <!-- Reply Modal End-->
+<script>
+    function validateImage(input) {
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+        if (!allowedExtensions.exec(input.value)) {
+            // alert('Invalid file type. Only images (JPG, JPEG, PNG, GIF) are allowed.');
+            document.getElementById('error-image').textContent =
+                'Invalid file type. Only images (JPG, JPEG, PNG, GIF) are allowed.';
+            input.value = '';
+            return false;
+        } else {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var img = document.getElementById('mainThmb');
+                    img.src = e.target.result;
+                    img.style.width = '100px';
+                    img.style.height = '100px';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    }
+</script>
 @endsection
