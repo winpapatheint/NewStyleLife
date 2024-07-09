@@ -82,7 +82,7 @@
             padding: 10px;
             border: 1px solid #fff;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 14px;
             margin: 0 auto;
         }
 
@@ -148,11 +148,11 @@
             }
 
             input.form-control1 {
-                font-size: 16px;
+                font-size: 14px;
             }
 
             button.btn1 {
-                font-size: 16px;
+                font-size: 14px;
                 padding: 0 15px;
             }
         }
@@ -164,11 +164,11 @@
             }
 
             input.form-control1 {
-                font-size: 16px;
+                font-size: 14px;
             }
 
             button.btn1 {
-                font-size: 16px;
+                font-size: 14px;
                 padding: 0 15px;
             }
         }
@@ -180,11 +180,11 @@
             }
 
             input.form-control1 {
-                font-size: 18px;
+                font-size: 14px;
             }
 
             button.btn1 {
-                font-size: 18px;
+                font-size: 14px;
                 padding: 0 20px;
             }
         }

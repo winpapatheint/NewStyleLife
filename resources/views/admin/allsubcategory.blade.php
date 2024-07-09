@@ -1,12 +1,31 @@
 <x-auth-layout>
     <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-    <!--<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>-->
-    <!-- bootstrap  css -->
     <style>
         .table>:not(caption)>*>* {
             border-bottom-width: 0px !important;
+        }
+        /* Extra small devices (phones, less than 576px) */
+        @media (max-width: 575.98px) {
+            .d-inline-flex {
+                display: block !important;
+            }
+            .d-inline-flex .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+
+        /* Small devices (phones, 576px and up) */
+        @media (min-width: 576px) {
+            .d-inline-flex {
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: space-between;
+            }
+            .d-inline-flex .btn {
+                width: auto;
+                margin-bottom: 0;
+            }
         }
     </style>
 

@@ -129,7 +129,7 @@
                                                     Register
                                                 @else
                                                     <i class="fa fa-edit" aria-hidden="true"></i>
-                                                     Updated
+                                                     Update
                                                 @endif
                                             </button>
 

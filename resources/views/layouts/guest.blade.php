@@ -563,8 +563,8 @@
             <div class="main-footer">
                 <div class="row g-md-4 gy-sm-5">
                     <div class="col-xxl-3 col-xl-4 col-sm-6">
-                        <a href="index.html" class="foot-logo theme-logo">
-                            <img src="../assets/images/logo/4.png" class="img-fluid blur-up lazyload" alt="">
+                        <a href="/" class="foot-logo theme-logo">
+                            <img src="{{ asset('backend/assets/images/logo/nsl-logo.png') }}" class="img-fluid blur-up lazyload" alt="">
                         </a>
                         <p class="information-text information-text-2">
                             Infusing style into everyday living, our curated collection elevates your space.
@@ -604,7 +604,7 @@
 
                     <div class="col-xxl-2 col-xl-4 col-sm-6">
                         <div class="footer-title">
-                            <h4 class="text-white">Useful Link</h4>
+                            <h4 class="text-white">Useful Links</h4>
                         </div>
                         <ul class="footer-list footer-list-light footer-contact">
                             <li>
@@ -955,6 +955,9 @@
 
     <!-- theme setting js -->
     <script src="{{ asset('frontend/assets/js/theme-setting.js') }}"></script>
+
+    <!-- sidebar open js -->
+    <script src="{{ asset('frontend/assets/js/filter-sidebar.js') }}"></script>
 
     <script>
         $(document).ready(function() {

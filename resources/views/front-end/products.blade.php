@@ -519,7 +519,7 @@
                                             </ul>
                                             <span>(<?php echo number_format($starRating, 1); ?>)</span>
                                         </div>
-                                            <h6 class="unit">{{ $product->product_size }}</h6>
+                                        <h6 class="unit">{{ mb_substr($product->product_size, 0, 20) }}</h6>
                                         <h5 class="price">
                                         @if ($product->discount_percent != 0)
                                             <h4 class="price"><span class="theme-color">¥{{ number_format($product->selling_price, 0, '', ',') }}</span>

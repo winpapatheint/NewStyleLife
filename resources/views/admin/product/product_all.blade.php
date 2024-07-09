@@ -16,18 +16,21 @@
         .table thead th.sticky-1,
         .table tbody td.sticky-1 {
             left: 0;
+            min-width: 50px;
             z-index: 2;
         }
 
         .table thead th.sticky-2,
         .table tbody td.sticky-2 {
             left: 50px;
+            min-width: 200px;
             z-index: 2;
         }
 
         .table thead th.sticky-3,
         .table tbody td.sticky-3 {
             left: 250px;
+            min-width: 300px;
             z-index: 2;
         }
 
@@ -58,6 +61,46 @@
 
         .table tbody tr:hover .sticky {
             background-color: #f1f1f1;
+        }
+
+        @media (max-width: 575.98px) {
+            .table thead th.sticky-1,
+            .table tbody td.sticky-1 {
+                left: 0px;
+                min-width: 20px;
+            }
+            .table thead th.sticky-2,
+            .table tbody td.sticky-2 {
+                left: 40px;
+                min-width: 30px;
+            }
+
+            .table thead th.sticky-3,
+            .table tbody td.sticky-3 {
+                left: 40px;
+                min-width: 50px;
+                max-width: 140px;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .table thead th.sticky-1,
+            .table tbody td.sticky-1 {
+                left: 0px;
+                min-width: 20px;
+            }
+            .table thead th.sticky-2,
+            .table tbody td.sticky-2 {
+                left: 40px;
+                min-width: 30px;
+            }
+
+            .table thead th.sticky-3,
+            .table tbody td.sticky-3 {
+                left: 40px;
+                min-width: 50px;
+                max-width: 140px;
+            }
         }
     </style>
 

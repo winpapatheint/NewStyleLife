@@ -78,6 +78,10 @@
             font-weight: normal;
             font-size: 15px;
         }
+        .detail-img {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 
@@ -96,7 +100,7 @@
 
             <p class="detail">
                 @if($imagePath != null)
-                    <img src="{{ $message->embed($imagePath) }}" alt="Embedded Image">
+                    <img class="detail-img" src="{{ $message->embed($imagePath) }}" alt="Embedded Image">
                 @else
 
                 @endif
