@@ -40,33 +40,39 @@
                                         </thead>
 
                                         <tbody>
-                                            @foreach( $bankAccs as $key => $list )
+                                            @if ($bankAccs->isEmpty())
+                                                        <tr>
+                                                            <td colspan="9">No data available</td>
+                                                        </tr>
+                                            @else
+                                                @foreach( $bankAccs as $key => $list )
 
-                                                <tr>
-                                                    <td data-label="id" class="text-center">{{ ($ttl+1) - ($bankAccs->firstItem() + $key) }}</td>
-                                                    <td data-label="bank_name">{{ $list->bank_name }}</td>
-                                                    <td data-label="branch_name">{{ $list->branch_name }}</td>
-                                                    <td data-label="account_type">{{ $list->account_type }}</td>
-                                                    <td data-label="account_number">{{ $list->account_number }}</td>
-                                                    <td data-label="account_name">{{ $list->account_name }}</td>
-                                                    <td>
-                                                        <ul>
-                                                            <li>
-                                                                <a href='{{ url("/admin/edit-bank-account/".$list->id ) }}'>
-                                                                    <i class="ri-pencil-line"></i>
-                                                                </a>
-                                                            </li>
+                                                    <tr>
+                                                        <td data-label="id" class="text-center">{{ ($ttl+1) - ($bankAccs->firstItem() + $key) }}</td>
+                                                        <td data-label="bank_name">{{ $list->bank_name }}</td>
+                                                        <td data-label="branch_name">{{ $list->branch_name }}</td>
+                                                        <td data-label="account_type">{{ $list->account_type }}</td>
+                                                        <td data-label="account_number">{{ $list->account_number }}</td>
+                                                        <td data-label="account_name">{{ $list->account_name }}</td>
+                                                        <td>
+                                                            <ul>
+                                                                <li>
+                                                                    <a href='{{ url("/admin/edit-bank-account/".$list->id ) }}'>
+                                                                        <i class="ri-pencil-line"></i>
+                                                                    </a>
+                                                                </li>
 
-                                                            <li>
-                                                                <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                                    data-bs-target="#deleteConfirmModal{{ $list->id }}">
-                                                                    <i class="ri-delete-bin-line"></i>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
+                                                                <li>
+                                                                    <a href="javascript:void(0)" data-bs-toggle="modal"
+                                                                        data-bs-target="#deleteConfirmModal{{ $list->id }}">
+                                                                        <i class="ri-delete-bin-line"></i>
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
