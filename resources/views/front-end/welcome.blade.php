@@ -141,7 +141,7 @@
                                             <use xlink:href="{{ asset('frontend/assets/svg/leaf.svg#leaf') }}"></use>
                                         </svg>
                                     </span>
-                                    <p>Don't miss this opportunity at a special discount just for this week.</p>
+                                    <p>Grab these special deals available with exclusive discounts!</p>
                                 </div>
                                 <div class="timing-box">
                                     <div class="timing">
@@ -471,7 +471,7 @@
                                     <use xlink:href="{{ asset('frontend/assets/svg/leaf.svg#leaf') }}"></use>
                                 </svg>
                             </span>
-                            <p>Top Categories Of The Week</p>
+                            <p>Explore the top categories and find your favorites.</p>
                         </div>
 
                         <div class="category-slider-2 product-wrapper no-arrow">
@@ -543,7 +543,7 @@
                                     <use xlink:href="{{ asset('frontend/assets/svg/leaf.svg#leaf') }}"></use>
                                 </svg>
                             </span>
-                            <p>A virtual assistant collects the products from your list</p>
+                            <p>Discover the latest additions to our collection, handpicked just for you.</p>
                         </div>
 
                         <div class="row row-cols-xxl-5 row-cols-md-4 row-cols-sm-3 row-cols-2 g-sm-4 g-3 no-arrow">
@@ -940,7 +940,7 @@
                                 <use xlink:href="{{ asset('frontend/assets/svg/leaf.svg#leaf') }}"></use>
                             </svg>
                         </span>
-                        <p>A virtual assistant collects the products from your list</p>
+                        <p>Explore our most popular products, loved by our customers.</p>
                     </div>
                 </div>
                 <div class="banner-slider product-wrapper wow fadeInUp">

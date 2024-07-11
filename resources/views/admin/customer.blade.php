@@ -108,9 +108,9 @@
                                                     <img id="preview-image-before-upload" alt="your image"
                                                         @if(!empty($data->image))
                                                             src="{{ asset('images/'.($data->image ?? 'images/'.($data->image))  ) }}"
-                                                            style="max-width: 100%;"
+                                                            style="max-width: 100px;"
                                                         @else
-                                                            style="display: none; max-width: 100%;"
+                                                            style="display: none; max-width: 100px;"
                                                         @endif
                                                     />
                                                     <p style="display:none" class="image error text-danger"></p>
