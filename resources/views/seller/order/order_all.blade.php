@@ -23,23 +23,21 @@
                         </div>
 
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                            @php $activeTab = request()->query('tab', 'list'); @endphp
+                            @php
+                                $activeTab = request()->tab ?? 'list';
+                            @endphp
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link @if($activeTab == 'list') active @endif" id="pills-home-tab"
-                                    href="{{ request()->fullUrlWithQuery(['tab' => 'list', 'page' => 1]) }}">
-                                    List
-                                </a>
+                                <button class="nav-link {{ $activeTab == 'list' ? 'active' : '' }}" 
+                                    id="pills-home-tab" data-bs-toggle="tab" data-bs-target="#pills-home" type="button" role="tab">List</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link @if($activeTab == 'cancelled') active @endif" id="pills-profile-tab"
-                                    href="{{ request()->fullUrlWithQuery(['tab' => 'cancelled', 'page' => 1]) }}">
-                                    Cancelled Order
-                                </a>
+                                <button class="nav-link {{ $activeTab == 'second' ? 'active' : '' }}" 
+                                    id="pills-profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile" type="button" role="tab">Cancelled Order</button>
                             </li>
                         </ul>
 
                         <div class="tab-content" id="pills-tabContent">
-                            <div class="tab-pane fade @if($activeTab == 'list') show active @endif" id="pills-home" role="tabpanel">
+                            <div class="tab-pane fade {{ $activeTab == 'list' ? 'show active' : '' }}" id="pills-home" role="tabpanel">
                                 <div class="table-responsive">
                                     <table class="table all-package order-table theme-table dataTable no-footer" id="table_id">
                                         <thead>
@@ -101,9 +99,10 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                @include('components.pagination')
                             </div>
 
-                            <div class="tab-pane fade @if($activeTab == 'cancelled') show active @endif" id="pills-profile" role="tabpanel">
+                            <div class="tab-pane fade {{ $activeTab == 'second' ? 'show active' : '' }}" id="pills-profile" role="tabpanel">
                                 <div class="table-responsive">
                                     <table class="table all-package order-table theme-table dataTable no-footer" id="table_id">
                                         <thead>
@@ -126,7 +125,7 @@
                                             @else
                                                 @foreach($cancelledOrder as $key => $item)
                                                     <tr>
-                                                        <td>{{ ($cancelttl + 1) - ($cancelledOrder->firstItem() + $key) }}</td>
+                                                        <td>{{ ($second_ttl + 1) - ($cancelledOrder->firstItem() + $key) }}</td>
                                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->format('Y/m/d') }}<br>
                                                             {{ \Carbon\Carbon::parse($item->created_at)->format('H:i') }}</td>
                                                         <td>{{ $item->order->order_code }}</td>
@@ -147,14 +146,13 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                @include('components.secondpagination')
                             </div>
                         </div>
-
                     </div>
                     <!-- Table End -->
                 </div>
             </div>
-            @include('components.pagination')
         </div>
     </div>
     <!-- Container-fluid Ends-->
@@ -260,22 +258,6 @@
     </div>
 @endforeach
 <!-- Modal End -->
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var urlParams = new URLSearchParams(window.location.search);
-        var activeTab = urlParams.get('tab');
-        if (activeTab) {
-            var tabLink = document.querySelector(`[href*="tab=${activeTab}"]`);
-            if (tabLink) {
-                var tabTrigger = new bootstrap.Tab(tabLink);
-                tabTrigger.show();
-            }
-        }
-    });
-</script>
-
-
 <script>
 $(document).ready(function() {
     $('.status-link').click(function(event) {
