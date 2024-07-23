@@ -2287,7 +2287,7 @@ class AdminController extends Controller
     {
         if ($request->type == '1') {
             Category::where('id', $request->id)->delete();
-        } else {
+        } elseif ($request->type == '2') {
             $cat = SubCategoryTitle::find($request->id);
             $categoryId = $cat->category_id;
             DB::table('sub_category_titles')->where('id', $request->id)->delete();
@@ -2295,8 +2295,10 @@ class AdminController extends Controller
             if (!$categoryIdExist) {
                 Category::where('id', $categoryId)->delete();
             }
+        } else {
+            SubCategory::where('id', $request->id)->delete();
         }
-        return redirect()->back()->with('success', 'deleted.');
+        return redirect()->back()->with('success', 'Deleted Successfully.');
     }
 
     public function deleteblog(Request $request)
